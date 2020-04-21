@@ -77,6 +77,7 @@ classdef pdcoO < handle
         backtrack   % specifies whether to do a backtracking linesearch
         file_id
         
+        
         % Output
         x           % primal solution
         y           % dual solution associated with Ax + D2 r = b
@@ -166,6 +167,22 @@ classdef pdcoO < handle
         solver    % Solver's name
         head3     % Solver's name to print
         need_precon
+        
+        % add for test
+        check_eigenvalue % Input specific for K2.5 :
+        % = 1 if you want to verify that eigenvalues belongs to theoritical
+        % intervals, =0 else
+        check_residu % Input specific for K2.5
+        % = 1 if you want to check the eveolution of the complementary
+        % residu
+        check_cond
+        result
+        eigenvalue
+        limit
+        rapport
+        err
+        opt_residu
+        cond
         
     end
     
@@ -341,6 +358,23 @@ classdef pdcoO < handle
                 o.file_id = 1;
             end
             
+            if isfield(options, 'check_eigenvalue')
+                o.check_eigenvalue = options.check_eigenvalue;
+            else
+                o.check_eigenvalue = false;
+            end
+            
+            if isfield(options, 'check_residu')
+                o.check_residu = options.check_residu;
+            else
+                o.check_residu = false;
+            end
+           
+            if isfield(options, 'check_cond')
+                o.check_cond = options.check_cond;
+            else
+                o.check_cond = false;
+            end
         end
           
         % TODO: slackmodel already does this!
@@ -886,6 +920,10 @@ classdef pdcoO < handle
                     complementarity_resids(o);
                     merit(o);
                     Reset_param(o);
+                    
+                    if o.check_residu
+                        o.opt_residu = [o.opt_residu o.Cinf0];
+                    end
                 end
             end
             %---------------------------------------------------------------------
