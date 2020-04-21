@@ -175,7 +175,8 @@ classdef pdcoO < handle
         check_residu % Input specific for K2.5
         % = 1 if you want to check the eveolution of the complementary
         % residu
-        check_cond
+        check_cond % Input specific for K2.5
+        % = 1 if you want to see the evolution of the conditionning
         result
         eigenvalue
         limit
@@ -183,6 +184,7 @@ classdef pdcoO < handle
         err
         opt_residu
         cond
+        evolution_mu
         
     end
     
@@ -750,9 +752,14 @@ classdef pdcoO < handle
             % Main loop.
             while ~converged
                 o.PDitns = o.PDitns + 1;
-
+                
+                if o.check_residu
+                    o.opt_residu = [o.opt_residu o.Cinf0];
+                    o.evolution_mu =  [o.evolution_mu o.mu];
+                end
                 % Compute step. This is performed in a subclass.
                 Solve_Newton(o);
+
                 
                 if o.inform == 4 
                     break 
@@ -900,7 +907,7 @@ classdef pdcoO < handle
                     o.inform = 3;
                     break
                 else
-
+                    
                     % Reduce mu, and reset certain residuals.
                     stepmu = min(stepx, stepz);
                     stepmu = min(stepmu, o.steptol);
@@ -921,9 +928,7 @@ classdef pdcoO < handle
                     merit(o);
                     Reset_param(o);
                     
-                    if o.check_residu
-                        o.opt_residu = [o.opt_residu o.Cinf0];
-                    end
+
                 end
             end
             %---------------------------------------------------------------------
