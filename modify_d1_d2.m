@@ -58,7 +58,7 @@ for i = 1 : length(d1)
         options_pdco.d1 = d1(i);
         options_pdco.d2 = d2(j);
         
-        mps_name = 'afiro.mps';
+        mps_name = 'fit1p.mps';
         fprintf('%s\n', mps_name);
 
         % Read .mps file
