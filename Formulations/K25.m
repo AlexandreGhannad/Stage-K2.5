@@ -122,6 +122,29 @@ classdef K25 < handle
 
             o.dz1(o.low) = (o.cL(o.low) - o.z1(o.low) .* o.dx1(o.low)) ./ o.x1(o.low);
             o.dz2(o.upp) = (o.cU(o.upp) - o.z2(o.upp) .* o.dx2(o.upp)) ./ o.x2(o.upp);
+            
+            if o.check_eigenvalue
+                [result, eigenvalue, limit, rapport, err] = validation_eigenvalue(o.M,o.n);
+                o.rapport = [o.rapport rapport];
+                o.err = [o.err err];
+                o.eigenvalue = [o.eigenvalue eigenvalue];
+                o.limit = [o.limit limit];
+                o.result = [o.result result];
+            end
+            
+            if o.check_cond & o.check_eigenvalue
+                lambda_min = min(abs(o.eigenvalue(:,end)));
+                lambda_max = max(abs(o.eigenvalue(:,end)));
+                cond = lambda_max/lambda_min;
+                o.cond = [o.cond cond];
+            elseif o.check_cond & not(o.check_eigenvalue)
+                eigen = eigs(o.M);
+                lambda_min = min(abs(o.eigen));
+                lambda_max = min(abs(o.eigen));
+                cond = lambda_max/lambda_min;
+                o.cond = [o.cond cond];
+            end
+            
         end
     end
 end
