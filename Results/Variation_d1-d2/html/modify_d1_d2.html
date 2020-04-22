@@ -1,0 +1,1250 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>modify_d1_d2</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-04-22"><meta name="DC.source" content="modify_d1_d2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Clean</a></li><li><a href="#2">Setup 1</a></li><li><a href="#3">Setup 2</a></li><li><a href="#4">Check eigenvalues and compare method</a></li><li><a href="#5">Loop</a></li></ul></div><h2 id="1">Clean</h2><pre class="codeinput">clear <span class="string">all</span>
+close <span class="string">all</span>
+clc
+</pre><h2 id="2">Setup 1</h2><pre class="codeinput">pdcoo_home = pwd;
+
+addpath(pdcoo_home);
+addpath(fullfile(pdcoo_home, <span class="string">'Formulations'</span>));
+addpath(fullfile(pdcoo_home, <span class="string">'Solvers'</span>));
+addpath(fullfile(pdcoo_home, <span class="string">'readmps'</span>));
+addpath(fullfile(pdcoo_home, <span class="string">'Tools'</span>));
+addpath(fullfile(pdcoo_home, <span class="string">'Problems\MPS'</span>));
+addpath(fullfile(pdcoo_home, <span class="string">'Validation-eigenvalue'</span>));
+p = genpath(fullfile(pdcoo_home, <span class="string">'addons'</span>));
+addpath(p);
+p = genpath(fullfile(pdcoo_home, <span class="string">'Results'</span>));
+addpath(p);
+<span class="keyword">if</span> exist(<span class="string">'Variants'</span>, <span class="string">'dir'</span>) ~= 7
+  mkdir(<span class="string">'Variants'</span>);
+<span class="keyword">end</span>
+addpath(fullfile(pdcoo_home, <span class="string">'Variants'</span>));
+addpath(fullfile(pdcoo_home, <span class="string">'Test'</span>));
+</pre><h2 id="3">Setup 2</h2><pre class="codeinput">import <span class="string">model.lpmodel</span>;
+import <span class="string">model.slackmodel</span>;
+
+options_pdco.file_id = 1;
+
+formulation = <span class="string">'K25'</span>;
+solver = <span class="string">'LU'</span>;
+classname = build_variant(pdcoo_home, formulation, solver);
+
+options_pdco.OptTol = 1.0e-9;
+options_solv.atol1 = 1.0e-4;
+options_solv.atol2 = 1.0e-10;
+options_solv.itnlim = 10;
+options_pdco.Print = 1;
+
+fprintf(options_pdco.file_id, <span class="keyword">...</span>
+        <span class="string">'\n    Name    Objectif   Presid   Dresid   Cresid   PDitns   Inner     Time      D2 * r\n\n'</span>);
+</pre><pre class="codeoutput">
+variants_dir =
+
+    'D:\git_repository\Stage-K2.5\Variants'
+
+
+    Name    Objectif   Presid   Dresid   Cresid   PDitns   Inner     Time      D2 * r
+
+</pre><h2 id="4">Check eigenvalues and compare method</h2><pre class="codeinput">check_eigenvalue = 1
+show_one_graphic = 1; <span class="comment">% = 1  need check_eigenvalue = 1</span>
+show_all_graphic = 0; <span class="comment">% = 1  need check_eigenvalue = 1</span>
+check_cond = 1;
+check_residu = 1;
+check_all_residu = 0; <span class="comment">% = 1  need check_residu = 1</span>
+</pre><pre class="codeoutput">
+check_eigenvalue =
+
+     1
+
+</pre><h2 id="5">Loop</h2><pre class="codeinput">clc
+
+<span class="comment">% d1 = [10^-4];</span>
+<span class="comment">% d2 = [10^-4];</span>
+d1 = [10^-4 1];
+d2 = [10^-4 1];
+
+<span class="keyword">for</span> i = 1 : length(d1)
+    <span class="keyword">for</span> j = 1 : length(d2)
+
+        options_pdco.d1 = d1(i);
+        options_pdco.d2 = d2(j);
+
+        mps_name = <span class="string">'fit1p.mps'</span>;
+        fprintf(<span class="string">'%s\n'</span>, mps_name);
+
+        <span class="comment">% Read .mps file</span>
+        mps_name = pwd + <span class="string">"\Problems\MPS\"</span> + mps_name;
+        mps_stru = readmps(mps_name);
+        lp = mpstolp(mps_stru);
+        slack = slackmodel(lp);
+        Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
+
+        options_pdco.x0 = slack.x0;
+        options_pdco.x0(slack.jLow) = slack.bL(slack.jLow) + 1;
+        options_pdco.x0(slack.jUpp) = slack.bU(slack.jUpp) - 1;
+        options_pdco.x0(slack.jTwo) = (slack.bL(slack.jTwo) + slack.bU(slack.jTwo)) / 2;
+        options_pdco.xsize = max(norm(options_pdco.x0, inf), 1);
+        options_pdco.zsize = max(norm(slack.gobj(slack.x0), inf) + sqrt(slack.n) * Anorm, 1);
+        options_pdco.z0 = options_pdco.zsize * ones(slack.n, 1);
+        options_pdco.y0 = zeros(slack.m, 1);
+        options_pdco.mu0 = options_pdco.zsize;
+        options_pdco.Maxiter = min(max(30, slack.n), 100);
+        options_pdco.check_eigenvalue = check_eigenvalue;
+        options_pdco.check_residu = check_residu;
+        options_pdco.check_cond = check_cond;
+        options_form = struct();
+
+        Problem = eval([classname, <span class="string">'(slack, options_pdco,options_form,options_solv)'</span>]);
+        Problem.solve;
+
+        show_eigenvalue(Problem.eigenvalue, Problem.limit, d1(i), d2(j))
+        show_cond(Problem.cond, Problem.limit, d1(i), d2(j))
+        show_residu(Problem.opt_residu, Problem.evolution_mu, d1(i), d2(i))
+
+
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+fclose(<span class="string">'all'</span>);
+</pre><pre class="codeoutput">fit1p.mps
+ROWS Section
+COLUMNS section
+BOUNDS section
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      627     n =     1677      nnz(A) =      9868
+max |b | =      216     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+     1278         0       1677        399       399       0       0
+  [0, bu]  [bl,  0]  excluding fixed variables
+     1677         0
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    3.3  -0.0   0.0  9.0698714e+05        1.0
+  1  5.6   3.3  -0.0   1.3  7.1621217e+06  1   205.6    12446 x2
+  2  5.6   3.3  -0.0   1.6  1.7694628e+07  1    87.6
+  3  5.6   3.3  -0.0   2.3  6.0316834e+07  1   158.3
+  4  5.6   3.3  -0.0   2.5  1.5766632e+08  1    57.2
+  5  5.6 0.001 0.001   3.3  -0.0   3.1  5.6352922e+08  1   114.5Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+  6  5.6 0.003 0.003   3.3  -0.0   3.7  1.7409811e+09  1   227.2
+  7  5.6 0.010 0.010   3.3  -0.0   4.1  5.3564573e+09  1   115.9
+  8  5.6 0.025 0.025   3.3  -0.0   4.4  1.4767185e+10  1    68.0Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 14 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+  9  5.6 0.091 0.091   3.2  -0.1   5.1  5.3052926e+10  1   138.7Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 8 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 10  5.5 0.174 0.174   3.1  -0.1   5.1  1.4489300e+11  1    52.6Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 4 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 11  5.5 0.442 0.442   2.9  -0.4   5.5  4.8358894e+11  1    88.7Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 3 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 12  5.2 0.545 0.545   2.5  -0.7   5.2  1.1113100e+12  1    32.3Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 2 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 13  4.9 0.770 0.770   1.9  -1.4   5.0  2.3920041e+12  1    41.1Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 1 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 14  4.2 0.767 0.767   1.3  -2.0   4.6  4.1260216e+12  1    32.4Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 3 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 15  3.6 0.882 0.882   0.3  -2.9   4.0  6.6593772e+12  1    42.8Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 11 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 2 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 16  2.8 0.858 0.858  -0.5  -3.8   3.3  1.0100256e+13  1    37.3Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 19 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 2 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 17  2.1 1.000 1.000  -8.9 -10.9   2.2  1.3860981e+13  1     2.8Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 19 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 3 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 18  0.9 1.000 1.000  -9.1 -11.9   1.6  4.4372163e+12  1     4.8Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 18 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 19  0.5 1.000 1.000  -9.4 -13.4   1.1  1.5174215e+12  1     3.7Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+ 20 -0.1 1.000 1.000  -9.5 -13.7   0.5  5.0893715e+11  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.988654e-16. 
+Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+ 21 -0.6 1.000 1.000  -9.9 -14.2  -0.0  1.6687325e+11  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.137082e-16. 
+
+ 22 -1.1 1.000 1.000 -10.1 -14.8  -0.5  4.9786479e+10  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  6.215539e-17. 
+
+ 23 -1.7 1.000 1.000 -10.5 -15.4  -1.1  1.2791291e+10  1    25.7Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.382839e-17. 
+
+ 24 -2.2 0.935 0.935 -10.5 -15.7  -1.6  3.5335718e+09  1    80.1Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.892076e-17. 
+
+ 25 -2.7 1.000 1.000 -10.9 -15.9  -2.2  7.7119347e+08  1     6.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  9.805917e-18. 
+
+ 26 -3.3 1.000 1.000 -11.0 -15.9  -2.7  1.6973110e+08  1     5.1Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.050511e-18. 
+
+ 27 -3.8 1.000 1.000 -11.1 -16.5  -3.3  5.0032973e+07  1     4.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.272568e-18. 
+
+ 28 -4.4 1.000 1.000 -11.6 -16.4  -3.9  1.3874108e+07  1     3.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.997647e-18. 
+
+ 29 -5.0 1.000 1.000 -11.9 -16.3  -4.6  3.3905317e+06  1     3.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.607721e-18. 
+
+ 30 -5.8 1.000 1.000 -12.3 -16.0  -5.5  5.8051787e+05  1     3.7Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.112023e-18. 
+
+ 31 -6.9 0.718 0.718 -12.8 -16.4  -5.9  2.0561216e+05  1    78.1Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.402394e-17. 
+
+ 32 -7.0 0.705 0.705 -13.5 -15.9  -6.3  9.6036904e+04  1    61.6Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.539467e-17. 
+
+ 33 -7.4 0.725 0.725 -14.0 -15.9  -6.7  4.5029234e+04  1   146.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  9.575566e-17. 
+
+ 34 -7.7 0.710 0.710 -14.5 -15.9  -7.1  2.3495541e+04  1    69.8
+ 35 -8.2 0.556 0.556 -14.8 -16.2  -7.3  1.6149096e+04  1   136.4
+ 36 -8.4 0.397 0.397 -15.0 -16.3  -7.5  1.3600979e+04  1   183.4
+ 37 -8.6 0.172 0.172 -15.1 -15.9  -7.6  1.2919099e+04  1  3400.8
+ 38 -8.6 0.484 0.484 -15.3 -15.8  -7.8  1.1367444e+04  1    96.0
+ 39 -8.9 0.253 0.253 -15.4 -16.3  -7.9  1.0872506e+04  1   155.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.574263e-16. 
+
+ 40 -9.0 0.563 0.563 -16.0 -16.2  -8.2  9.9867006e+03  1    80.7Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.255348e-16. 
+
+ 41 -9.3 0.095 0.095 -16.0 -15.7  -8.2  9.9163007e+03  1  2912.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.112044e-16. 
+
+ 42 -9.3 0.500 0.500 -15.7 -15.8  -8.4  9.5868947e+03  1    89.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.751350e-17. 
+
+ 43 -9.5 0.529 0.529 -16.0 -16.0  -8.7  9.3882203e+03  1    82.7Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.755459e-17. 
+
+ 44 -9.8 0.540 0.540 -16.0 -15.9  -9.0  9.2761866e+03  1   271.7
+   Converged
+
+max |x| =      0.347    max |y| =      0.000    max |z| =      0.011   scaled
+max |x| =    212.616    max |y| =      2.996    max |z| =   4479.011 unscaled
+PDitns =         44     LUitns =          0    cputime =      234.5
+
+Distribution of vector     x         z
+[  1e+03,   1e+04)         0         2
+[    100,   1e+03)        10         0
+[     10,     100)       380         3
+[      1,      10)       216       639
+[    0.1,       1)       528       447
+[   0.01,     0.1)       536       296
+[  0.001,    0.01)         4       284
+[ 0.0001,   0.001)         1         6
+[  1e-05,  0.0001)         2         0
+[      0,   1e-05)         0         0Elapsed time is 69.457719 seconds.
+fit1p.mps
+ROWS Section
+COLUMNS section
+BOUNDS section
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      627     n =     1677      nnz(A) =      9868
+max |b | =      216     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+     1278         0       1677        399       399       0       0
+  [0, bu]  [bl,  0]  excluding fixed variables
+     1677         0
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    3.3  -0.0   0.0  9.0698714e+05        1.0
+  1  5.6   3.3  -0.0   2.4  2.9756179e+11  1   744.1    12446 x2
+  2  5.6   3.3  -0.0   3.5  7.3321200e+11  1  1049.0Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 19 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+  3  5.6 0.001 0.001   3.3  -0.0   3.6  6.9195103e+11  1   321.7
+  4  5.6 0.004 0.004   3.3  -0.0   3.7  8.3842122e+11  1   123.7
+  5  5.6 0.011 0.011   3.3  -0.0   4.1  8.1999310e+11  1    99.0Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+  6  5.6 0.032 0.032   3.3  -0.0   4.6  7.9544673e+11  1    97.0Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 11 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+  7  5.6 0.089 0.089   3.2  -0.1   5.0  6.8727930e+11  1    91.7Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 3 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+  8  5.5 0.220 0.220   3.1  -0.2   5.3  5.7056775e+11  1    79.6Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 1 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+  9  5.4 0.439 0.439   2.9  -0.4   5.4  6.5395771e+11  1    60.2Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 0 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 10  5.2 0.700 0.700   2.3  -0.9   5.2  1.4211208e+12  1    41.2Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 0 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 11  4.7 0.816 0.816   1.6  -1.7   4.9  2.9135993e+12  1    46.5Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 0 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+ 12  3.9 0.818 0.818   0.9  -2.4   4.4  4.9348552e+12  1    48.5Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 6 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 13  3.2 0.862 0.862  -0.0  -3.3   3.7  7.8053608e+12  1    48.9Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 16 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 2 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 14  2.6 0.879 0.879  -0.9  -4.2   3.0  1.3135648e+13  1    48.0Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 18 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 2 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 15  1.8 1.000 1.000  -8.9 -11.1   2.0  1.2355947e+13  1     1.7Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+Warning: 6 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 16  0.5 1.000 1.000  -9.1 -12.2   1.4  3.5608179e+12  1     9.7Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+ 17  0.4 1.000 1.000  -9.4 -14.1   0.9  1.1993058e+12  1     3.5Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 18 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 18 -0.3 1.000 1.000  -9.5 -13.8   0.3  3.8846622e+11  1     4.1Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.874615e-16. 
+Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+ 19 -0.8 1.000 1.000  -9.8 -14.5  -0.2  1.2241074e+11  1     3.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.019463e-16. 
+
+ 20 -1.3 1.000 1.000 -10.0 -15.0  -0.8  3.3953299e+10  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.532038e-17. 
+
+ 21 -1.9 0.952 0.952 -10.1 -15.5  -1.3  9.1495291e+09  1    59.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.079642e-17. 
+
+ 22 -2.4 0.896 0.896 -10.5 -15.9  -1.7  2.6647676e+09  1   101.7Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.788734e-17. 
+
+ 23 -2.9 1.000 1.000 -10.9 -16.2  -2.3  5.4094152e+08  1     7.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  8.684639e-18. 
+
+ 24 -3.4 1.000 1.000 -11.1 -15.9  -2.8  1.3302841e+08  1     4.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.241150e-18. 
+
+ 25 -4.0 1.000 1.000 -11.3 -15.9  -3.4  3.8638873e+07  1     4.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.029650e-18. 
+
+ 26 -4.5 1.000 1.000 -11.9 -16.4  -4.0  1.0608233e+07  1     3.7Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.880089e-18. 
+
+ 27 -5.1 1.000 1.000 -12.3 -16.0  -4.7  2.4599949e+06  1     2.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.821582e-18. 
+
+ 28 -5.9 1.000 1.000 -13.0 -16.4  -5.7  3.7845335e+05  1     8.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  8.483243e-18. 
+
+ 29 -7.0 0.651 0.651 -13.4 -16.1  -6.0  1.6320852e+05  1   140.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.016475e-17. 
+
+ 30 -7.0 0.738 0.738 -13.9 -16.5  -6.4  7.5950192e+04  1   139.6Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.270010e-17. 
+
+ 31 -7.5 0.757 0.757 -14.5 -15.8  -6.8  3.4491101e+04  1    98.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.486913e-16. 
+
+ 32 -7.9 0.678 0.678 -14.7 -16.3  -7.2  1.9466272e+04  1    91.6
+ 33 -8.3 0.484 0.484 -15.1 -16.0  -7.4  1.4661561e+04  1   188.2
+ 34 -8.5 0.269 0.269 -15.1 -16.5  -7.5  1.3191722e+04  1   279.8
+ 35 -8.6 0.492 0.492 -15.5 -16.0  -7.7  1.1216909e+04  1    88.8
+ 36 -8.8 0.438 0.438 -15.5 -16.2  -7.9  1.0217403e+04  1    63.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.242881e-16. 
+
+ 37 -9.0 0.139 0.139 -15.7 -16.4  -8.0  1.0018814e+04  1   669.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.697957e-17. 
+
+ 38 -9.0 0.512 0.512 -16.0 -16.6  -8.2  9.3778016e+03  1    82.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.036766e-16. 
+
+ 39 -9.3 0.174 0.174 -15.9 -15.7  -8.3  9.2622073e+03  1  2307.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  8.284499e-17. 
+
+ 40 -9.3 0.576 0.576 -15.7 -16.0  -8.6  8.9540062e+03  1    74.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.283320e-17. 
+
+ 41 -9.7 0.586 0.586 -16.0 -15.8  -8.9  8.7857563e+03  1    88.1Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.018587e-17. 
+
+ 42 -9.9 0.562 0.562 -15.7 -16.1  -9.2  8.7088267e+03  1    75.0
+   Converged
+
+max |x| =      0.310    max |y| =      0.000    max |z| =      0.011   scaled
+max |x| =    189.507    max |y| =      2.997    max |z| =   4485.813 unscaled
+PDitns =         42     LUitns =          0    cputime =      288.4
+
+Distribution of vector     x         z
+[  1e+03,   1e+04)         0         2
+[    100,   1e+03)         9         0
+[     10,     100)       356         4
+[      1,      10)       217       642
+[    0.1,       1)        53       460
+[   0.01,     0.1)      1035       220
+[  0.001,    0.01)         5       342
+[ 0.0001,   0.001)         0         7
+[  1e-05,  0.0001)         2         0
+[      0,   1e-05)         0         0Elapsed time is 82.278448 seconds.
+fit1p.mps
+ROWS Section
+COLUMNS section
+BOUNDS section
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      627     n =     1677      nnz(A) =      9868
+max |b | =      216     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+     1278         0       1677        399       399       0       0
+  [0, bu]  [bl,  0]  excluding fixed variables
+     1677         0
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    3.3  -0.0   0.0  3.1496213e+08        1.0
+  1  5.6   3.3  -0.0   1.3  1.5008547e+10  1   207.3    12446 x2
+  2  5.6   3.3  -0.0   1.6  9.4208349e+10  1    88.8
+  3  5.6   3.3  -0.0   2.4  1.2483572e+12  1   178.6
+  4  5.6   3.3  -0.0   2.6  9.5764663e+12  1    66.5
+  5  5.6 0.003 0.003   3.3  -0.0   3.4  1.6194003e+14  1   194.1Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+  6  5.6 0.007 0.007   3.3  -0.0   4.2  6.3679245e+14  1   245.3
+  7  5.6 0.020 0.020   3.3  -0.0   4.4  2.0760253e+15  1   100.1
+  8  5.6 0.059 0.059   3.2  -0.0   4.8  6.2667045e+15  1    95.4Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 18 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+  9  5.6 0.159 0.159   3.2  -0.1   5.2  1.5990323e+16  1    87.7Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 8 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 10  5.5 0.349 0.349   3.0  -0.3   5.4  2.8271977e+16  1    69.3Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 4 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 11  5.3 0.595 0.595   2.6  -0.7   5.3  2.9719525e+16  1    47.9Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 2 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 7 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 12  4.9 0.914 0.914   1.5  -1.8   5.0  1.6085660e+16  1    33.7Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 1 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 5 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 13  3.9 1.000 1.000 -11.4  -8.9   4.5  4.6471828e+15  1     9.1Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 0 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 5 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 14  3.3 1.000 1.000 -11.7  -9.8   3.9  1.3408657e+15  1    11.1Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 1 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 1 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 15  2.8 1.000 1.000 -12.0 -10.0   3.4  3.8686745e+14  1     7.2Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 1 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 14 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 16  2.3 1.000 1.000 -12.3 -10.7   2.9  1.1161952e+14  1     5.8Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 1 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 13 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 17  1.7 1.000 1.000 -12.6 -10.6   2.3  3.2204273e+13  1     5.1Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 2 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 13 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 18  1.2 1.000 1.000 -12.9 -11.2   1.8  9.2914545e+12  1     4.7Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 7 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 11 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 19  0.6 1.000 1.000 -13.2 -11.3   1.2  2.6807085e+12  1     4.4Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 12 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 10 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 20  0.1 1.000 1.000 -13.4 -11.7   0.7  7.7341077e+11  1     4.2Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 13 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 10 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 21 -0.4 1.000 1.000 -13.7 -11.9   0.2  2.2313352e+11  1     4.1Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 14 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 1 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 22 -1.0 1.000 1.000 -13.9 -12.3  -0.4  6.4374986e+10  1     4.1Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 14 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 1 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 23 -1.5 1.000 1.000 -14.2 -12.5  -0.9  1.8573473e+10  1     4.0Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 14 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 4 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 24 -2.1 1.000 1.000 -14.5 -12.8  -1.5  5.3606477e+09  1     4.2Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 14 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 25 -2.6 1.000 1.000 -14.7 -13.2  -2.0  1.5492175e+09  1     5.3Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 16 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 3 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 26 -3.1 1.000 1.000 -14.9 -13.2  -2.5  4.4959065e+08  1     7.5Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 11 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 2 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 27 -3.7 1.000 1.000 -15.3 -13.3  -3.1  1.3177419e+08  1     8.1Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 16 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 2 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 28 -4.2 1.000 1.000 -15.5 -13.5  -3.6  3.9186000e+07  1     8.2Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 18 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 29 -4.7 1.000 1.000 -15.7 -14.7  -4.2  1.1840863e+07  1     8.1Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+ 30 -5.3 1.000 1.000 -15.9 -14.1  -4.7  3.6599537e+06  1     9.2Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+ 31 -5.8 1.000 1.000 -15.7 -14.2  -5.2  1.1864143e+06  1    18.5Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+ 32 -6.4 1.000 1.000 -16.0 -14.2  -5.8  4.4007447e+05  1     5.2Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+ 33 -6.9 0.953 0.953 -16.0 -14.3  -6.3  2.2677694e+05  1    69.0
+ 34 -7.4 1.000 1.000 -16.0 -14.6  -6.8  1.5883963e+05  1     6.3
+ 35 -8.0 1.000 1.000 -15.7 -15.4  -7.4  1.4140299e+05  1     5.4
+ 36 -8.5 1.000 1.000 -15.7 -14.6  -7.9  1.3748570e+05  1     5.5
+ 37 -9.0 1.000 1.000 -16.0 -14.4  -8.4  1.3665886e+05  1     6.0
+ 38 -9.6 1.000 1.000 -15.7 -14.9  -9.0  1.3648211e+05  1    17.4
+ 39-10.0 0.998 0.998 -15.7 -15.0  -9.5  1.3644415e+05  1    39.6
+   Converged
+
+max |x| =      0.281    max |y| =      0.000    max |z| =      0.351   scaled
+max |x| =    172.252    max |y| =    173.252    max |z| = 139063.106 unscaled
+PDitns =         39     LUitns =          0    cputime =      479.1
+
+Distribution of vector     x         z
+[  1e+05,   1e+06)         0         2
+[  1e+04,   1e+05)         0         1
+[  1e+03,   1e+04)         0         2
+[    100,   1e+03)         1         8
+[     10,     100)       346       845
+[      1,      10)       434       762
+[    0.1,       1)        46        54
+[   0.01,     0.1)        24         2
+[  0.001,    0.01)       624         0
+[      0,   0.001)       202         1Elapsed time is 132.885010 seconds.
+fit1p.mps
+ROWS Section
+COLUMNS section
+BOUNDS section
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      627     n =     1677      nnz(A) =      9868
+max |b | =      216     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+     1278         0       1677        399       399       0       0
+  [0, bu]  [bl,  0]  excluding fixed variables
+     1677         0
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    3.3  -0.0   0.0  3.1496213e+08        1.0
+  1  5.6   3.3  -0.0   2.4  5.1454568e+11  1   745.4    12446 x2
+  2  5.6   3.3  -0.0   3.5  9.1773836e+12  1  1013.7Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 17 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+  3  5.6 0.001 0.001   3.3  -0.0   3.6  6.6294302e+13  1   305.2
+  4  5.6 0.004 0.004   3.3  -0.0   3.6  2.7913873e+14  1    99.5Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+  5  5.6 0.011 0.011   3.3  -0.0   4.1  1.0252237e+15  1    99.0Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+  6  5.6 0.032 0.032   3.3  -0.0   4.6  3.3264567e+15  1    97.0Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 13 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+  7  5.6 0.089 0.089   3.2  -0.1   5.0  9.3951685e+15  1    91.7Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 10 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+  8  5.5 0.220 0.220   3.1  -0.2   5.3  2.0905063e+16  1    79.7Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 13 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+  9  5.4 0.438 0.438   2.9  -0.4   5.4  3.0719352e+16  1    60.3Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 2 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 7 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 10  5.2 0.698 0.698   2.3  -0.9   5.2  2.5880100e+16  1    41.3Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 0 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 19 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 11  4.7 1.000 1.000 -11.4  -9.2   4.8  1.0525943e+16  1     2.3Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 0 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 15 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 12  3.3 1.000 1.000 -11.5  -9.5   4.3  2.8075901e+15  1    10.7Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 0 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 17 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 13  3.2 1.000 1.000 -11.8 -10.8   3.7  8.3036622e+14  1     3.6Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 1 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 13 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 14  2.6 1.000 1.000 -11.9 -10.3   3.2  2.3783514e+14  1     4.3Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 1 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 13 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 15  2.1 1.000 1.000 -12.3 -11.1   2.6  6.8768499e+13  1     4.0Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 2 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 13 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 16  1.5 1.000 1.000 -12.7 -11.3   2.1  1.9827600e+13  1     4.0Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 7 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 9 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 17  1.0 1.000 1.000 -13.0 -11.7   1.6  5.7215888e+12  1     4.0Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 12 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 10 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 18  0.4 1.000 1.000 -13.1 -11.7   1.0  1.6506364e+12  1     3.9Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 14 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 10 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 19 -0.1 1.000 1.000 -13.4 -12.0   0.5  4.7623023e+11  1     3.9Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 15 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 9 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 20 -0.6 1.000 1.000 -13.6 -11.8  -0.1  1.3739548e+11  1     3.9Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 14 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 9 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 21 -1.2 1.000 1.000 -14.0 -12.4  -0.6  3.9640712e+10  1     3.9Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 14 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 10 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 22 -1.7 1.000 1.000 -14.2 -12.8  -1.1  1.1438410e+10  1     3.9Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 14 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 2 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 23 -2.3 1.000 1.000 -14.6 -12.9  -1.7  3.3022941e+09  1     4.3Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 9 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 0 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 24 -2.8 1.000 1.000 -14.8 -13.5  -2.2  9.5511187e+08  1     5.7Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 5 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: 0 of the 40 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 25 -3.3 1.000 1.000 -15.1 -13.8  -2.8  2.7772366e+08  1     7.0Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 5 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 26 -3.9 1.000 1.000 -15.4 -13.9  -3.3  8.1689969e+07  1     7.7Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 10 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: 0 of the 20 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+
+ 27 -4.4 1.000 1.000 -15.5 -14.3  -3.8  2.4381414e+07  1     7.6Warning: 0 of the 1 requested eigenvalues converged. Eigenvalues that did not
+converge are NaN. 
+Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 12 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 28 -5.0 1.000 1.000 -15.5 -14.1  -4.4  7.3799695e+06  1     8.5Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 17 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 29 -5.5 1.000 1.000 -15.7 -14.3  -4.9  2.2731520e+06  1     9.2Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+Warning: Only 18 of the 20 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 30 -6.0 1.000 1.000 -15.7 -14.4  -5.5  7.2889117e+05  1     7.5Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+ 31 -6.6 1.000 1.000 -16.0 -15.1  -6.0  2.6432683e+05  1     5.1Warning: Only 0 of the 1 requested singular values converged. Singular values
+that did not converge are NaN. 
+
+ 32 -7.1 0.946 0.946 -16.0 -15.2  -6.5  1.3066010e+05  1    54.2Warning: Returned singular values might not be the smallest. Increase
+'MaxIterations' value. 
+
+ 33 -7.6 1.000 1.000 -15.7 -15.0  -7.0  8.5763256e+04  1     4.6
+ 34 -8.2 1.000 1.000 -15.7 -15.2  -7.6  7.3365578e+04  1    10.9
+ 35 -8.7 1.000 1.000 -15.7 -15.2  -8.1  7.0377124e+04  1     4.5
+ 36 -9.2 1.000 1.000 -16.0 -14.8  -8.6  6.9736227e+04  1     5.1
+ 37 -9.8 1.000 1.000 -15.7 -14.8  -9.2  6.9603512e+04  1     7.8
+   Converged
+
+max |x| =      0.141    max |y| =      0.000    max |z| =      0.178   scaled
+max |x| =     86.584    max |y| =     87.583    max |z| =  70636.584 unscaled
+PDitns =         37     LUitns =          0    cputime =      631.7
+
+Distribution of vector     x         z
+[  1e+04,   1e+05)         0         3
+[  1e+03,   1e+04)         0         1
+[    100,   1e+03)         0         5
+[     10,     100)       106       377
+[      1,      10)       607      1163
+[    0.1,       1)       116       116
+[   0.01,     0.1)       199        11
+[  0.001,    0.01)       636         1
+[ 0.0001,   0.001)         8         0
+[      0,  0.0001)         5         0Elapsed time is 171.566435 seconds.
+</pre><img vspace="5" hspace="5" src="modify_d1_d2_01.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_02.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_03.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_04.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_05.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_06.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_07.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_08.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_09.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_10.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_11.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_12.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_13.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_14.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_15.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_16.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Clean
+clear all
+close all
+clc
+%% Setup 1
+pdcoo_home = pwd;
+
+addpath(pdcoo_home);
+addpath(fullfile(pdcoo_home, 'Formulations'));
+addpath(fullfile(pdcoo_home, 'Solvers'));
+addpath(fullfile(pdcoo_home, 'readmps'));
+addpath(fullfile(pdcoo_home, 'Tools'));
+addpath(fullfile(pdcoo_home, 'Problems\MPS'));
+addpath(fullfile(pdcoo_home, 'Validation-eigenvalue'));
+p = genpath(fullfile(pdcoo_home, 'addons'));
+addpath(p);
+p = genpath(fullfile(pdcoo_home, 'Results'));
+addpath(p);
+if exist('Variants', 'dir') ~= 7
+  mkdir('Variants');
+end
+addpath(fullfile(pdcoo_home, 'Variants'));
+addpath(fullfile(pdcoo_home, 'Test'));
+%% Setup 2
+import model.lpmodel;
+import model.slackmodel;
+
+options_pdco.file_id = 1;
+
+formulation = 'K25';
+solver = 'LU';
+classname = build_variant(pdcoo_home, formulation, solver);
+
+options_pdco.OptTol = 1.0e-9;
+options_solv.atol1 = 1.0e-4;
+options_solv.atol2 = 1.0e-10;
+options_solv.itnlim = 10;
+options_pdco.Print = 1;
+
+fprintf(options_pdco.file_id, ...
+        '\n    Name    Objectif   Presid   Dresid   Cresid   PDitns   Inner     Time      D2 * r\n\n');
+%% Check eigenvalues and compare method
+check_eigenvalue = 1
+show_one_graphic = 1; % = 1  need check_eigenvalue = 1
+show_all_graphic = 0; % = 1  need check_eigenvalue = 1
+check_cond = 1;
+check_residu = 1;
+check_all_residu = 0; % = 1  need check_residu = 1
+%% Loop
+clc
+
+% d1 = [10^-4];
+% d2 = [10^-4];
+d1 = [10^-4 1];
+d2 = [10^-4 1];
+
+for i = 1 : length(d1)
+    for j = 1 : length(d2)
+        
+        options_pdco.d1 = d1(i);
+        options_pdco.d2 = d2(j);
+        
+        mps_name = 'fit1p.mps';
+        fprintf('%s\n', mps_name);
+
+        % Read .mps file
+        mps_name = pwd + "\Problems\MPS\" + mps_name;
+        mps_stru = readmps(mps_name);
+        lp = mpstolp(mps_stru);
+        slack = slackmodel(lp);
+        Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
+
+        options_pdco.x0 = slack.x0;
+        options_pdco.x0(slack.jLow) = slack.bL(slack.jLow) + 1;
+        options_pdco.x0(slack.jUpp) = slack.bU(slack.jUpp) - 1;
+        options_pdco.x0(slack.jTwo) = (slack.bL(slack.jTwo) + slack.bU(slack.jTwo)) / 2;
+        options_pdco.xsize = max(norm(options_pdco.x0, inf), 1);
+        options_pdco.zsize = max(norm(slack.gobj(slack.x0), inf) + sqrt(slack.n) * Anorm, 1);
+        options_pdco.z0 = options_pdco.zsize * ones(slack.n, 1);
+        options_pdco.y0 = zeros(slack.m, 1);
+        options_pdco.mu0 = options_pdco.zsize;
+        options_pdco.Maxiter = min(max(30, slack.n), 100);
+        options_pdco.check_eigenvalue = check_eigenvalue;
+        options_pdco.check_residu = check_residu;
+        options_pdco.check_cond = check_cond;
+        options_form = struct();
+
+        Problem = eval([classname, '(slack, options_pdco,options_form,options_solv)']);
+        Problem.solve;
+        
+        show_eigenvalue(Problem.eigenvalue, Problem.limit, d1(i), d2(j))
+        show_cond(Problem.cond, Problem.limit, d1(i), d2(j))
+        show_residu(Problem.opt_residu, Problem.evolution_mu, d1(i), d2(i))
+        
+        
+    end
+end
+
+fclose('all');
+##### SOURCE END #####
+--></body></html>

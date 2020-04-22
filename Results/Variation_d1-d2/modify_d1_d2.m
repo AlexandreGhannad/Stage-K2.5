@@ -14,6 +14,8 @@ addpath(fullfile(pdcoo_home, 'Problems\MPS'));
 addpath(fullfile(pdcoo_home, 'Validation-eigenvalue'));
 p = genpath(fullfile(pdcoo_home, 'addons'));
 addpath(p);
+p = genpath(fullfile(pdcoo_home, 'Results'));
+addpath(p);
 if exist('Variants', 'dir') ~= 7
   mkdir('Variants');
 end
@@ -87,8 +89,8 @@ for i = 1 : length(d1)
         Problem.solve;
         
         show_eigenvalue(Problem.eigenvalue, Problem.limit, d1(i), d2(j))
-        show_cond(Problem.cond, Problem.limit)
-        show_residu(Problem.opt_residu, Problem.evolution_mu)
+        show_cond(Problem.cond, Problem.limit, d1(i), d2(j))
+        show_residu(Problem.opt_residu, Problem.evolution_mu, d1(i), d2(i))
         
         
     end
