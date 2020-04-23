@@ -39,7 +39,7 @@ formulation3 = 'K2';
 solver = 'LU';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
-list_problem ={'25fv47.mps';'adlittle.mps';'afiro.mps';...
+list_problem = {'25fv47.mps';'adlittle.mps';'afiro.mps';...
     'agg.mps';'agg2.mps';'agg3.mps';'bandm.mps';'beaconfd.mps';...
     'blend.mps';'bnl1.mps';'boeing1.mps';'boeing2.mps';'bore3d.mps';'brandy.mps';...
     'capri.mps';'czprob.mps';...
@@ -53,7 +53,12 @@ list_problem ={'25fv47.mps';'adlittle.mps';'afiro.mps';...
     'ship08s.mps';...
     'sierra.mps';'stair.mps';'standata.mps';'standgub.mps';...
     'standmps.mps';'stocfor1.mps';'stocfor2.mps';'tuff.mps';...
-    'vtp_base.mps'};
+    'vtp_base.mps';...
+    'bnl2.mps';'cycle.mps' ; '80bau3b.mps';'d2q06c.mps';'d6cube.mps';...
+    'degen3.mps';'dfl001.mps';'fit2d.mps';'fit2p.mps'; 'greenbeb.mps'; ...
+    'greenbea.mps';'maros.mps'; 'nesm.mps'; 'pilot.mps';'pilot87.mps';...
+    'scagr25.mps'; 'ship08l.mps';'ship12l.mps';'ship12s.mps';...
+    'wood1p.mps'}
 
 n_problem = length(list_problem);
 
@@ -118,12 +123,8 @@ save("D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results"+num2st
 clc
 clear all
 n_results = 50;
-mat_results = zeros(4,3,50,n_results);
-for i = 1:n_results
-    load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results"+num2str(i)+".mat")
-    mat_results(:,:,:,i) = results;
-end
-results = mean(mat_results,4);
+
+load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results_mean_50_tests.mat")
 
 iter = double(squeeze(results(1,:,:)));
 reason = results(2,:,:);
@@ -175,12 +176,7 @@ title("Best and worst execution time")
 ylabel("Time (s)")
 
 
-n1 = sum(imax == 1);
-n2 = sum(imax == 2);
-n3 = sum(imax == 3);
-fprintf("\nNombre de fois que K2.5 est meilleur : %g\n", n1)
-fprintf("Nombre de fois que K3.5 est meilleur : %g\n", n2)
-fprintf("Nombre de fois que K2 est meilleur : %g\n\n", n3)
+
 
 % Compare efficiency in duel
 figure(3)
@@ -211,9 +207,13 @@ hold on
 semilogy(t3, "r+", "LineWidth", 2)
 title("K3.5 vs K2")
 legend("K3.5", "K2")
-
-
-
-
-
 ylabel("Time (s)")
+
+n1 = sum(imin == 1);
+n2 = sum(imin == 2);
+n3 = sum(imin == 3);
+fprintf("\nNombre de fois que K2.5 est meilleur : %g\n", n1)
+fprintf("Nombre de fois que K3.5 est meilleur : %g\n", n2)
+fprintf("Nombre de fois que K2 est meilleur : %g\n\n", n3)
+
+
