@@ -117,13 +117,13 @@ save("D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results"+num2st
 %% Show results with graphics
 clc
 clear all
-n_results = 50;
+n_results = 10
 mat_results = zeros(4,3,50,n_results);
 for i = 1:n_results
     load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results"+num2str(i)+".mat")
     mat_results(:,:,:,i) = results;
 end
-results = mean(mat_results,4);
+results = mean(mat_results,4)
 
 iter = double(squeeze(results(1,:,:)));
 reason = results(2,:,:);
@@ -181,39 +181,3 @@ n3 = sum(imax == 3);
 fprintf("\nNombre de fois que K2.5 est meilleur : %g\n", n1)
 fprintf("Nombre de fois que K3.5 est meilleur : %g\n", n2)
 fprintf("Nombre de fois que K2 est meilleur : %g\n\n", n3)
-
-% Compare efficiency in duel
-figure(3)
-clf(3)
-
-% K2.5 vs K3.5
-subplot(221)
-semilogy(t1, "b+", "LineWidth", 2)
-hold on
-semilogy(t2, "k+", "LineWidth", 2)
-title("K2.5 vs K3.5")
-legend("K2.5", "K3.5")
-ylabel("Time (s)")
-
-% K2.5 vs K2
-subplot(222)
-semilogy(t1, "b+", "LineWidth", 2)
-hold on
-semilogy(t3, "r+", "LineWidth", 2)
-title("K2.5 vs K2")
-legend("K2.5", "K2")
-ylabel("Time (s)")
-
-% K3.5 vs K2
-subplot(223)
-semilogy(t2, "k+", "LineWidth", 2)
-hold on
-semilogy(t3, "r+", "LineWidth", 2)
-title("K3.5 vs K2")
-legend("K3.5", "K2")
-
-
-
-
-
-ylabel("Time (s)")
