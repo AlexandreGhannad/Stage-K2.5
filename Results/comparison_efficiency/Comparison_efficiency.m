@@ -123,7 +123,7 @@ save("D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results"+num2st
 close all
 clear all
 clc
-load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results_one_test_all_problems.mat")
+load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results_mean_50_tests.mat")
 
 iter = double(squeeze(results(1,:,:)));
 reason = results(2,:,:);
@@ -215,9 +215,9 @@ fprintf("\nNombre de fois que K2.5 est meilleur : %g\n", n1)
 fprintf("Nombre de fois que K3.5 est meilleur : %g\n", n2)
 fprintf("Nombre de fois que K2 est meilleur : %g\n\n", n3)
 %% Show results with graphics (large problem)
-close all
+% close all
 clear all
-clc
+% clc
 load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results_ten_test_all_problems.mat")
 
 iter = double(squeeze(results(1,:,:)));
@@ -227,8 +227,8 @@ time = double(squeeze(results(4,:,:)));
 
 n_largest_problems = 25;
 
-figure(1)
-clf(1)
+figure(4)
+clf(4)
 time = sort(time, 2);
 time = time(:, end - n_largest_problems+1:end);
 t1 = time(1,:);
@@ -260,8 +260,8 @@ tmin2(imin~=2) = NaN;
 tmin3 = tmin;
 tmin3(imin~=3) = NaN;
 
-figure(2)
-clf(2)
+figure(5)
+clf(5)
 semilogy(tmax1, "b+", "LineWidth", 2)
 hold on
 semilogy(tmin1, "b+", "LineWidth", 2)
@@ -276,8 +276,8 @@ ylabel("Time (s)")
 
 
 % Compare efficiency in duel
-figure(3)
-clf(3)
+figure(6)
+clf(6)
 
 % K2.5 vs K3.5
 subplot(221)
