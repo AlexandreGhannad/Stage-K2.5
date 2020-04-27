@@ -136,10 +136,10 @@ time = sort(time, 2);
 t1 = time(1,:);
 t2 = time(2,:);
 t3 = time(3,:);
-plot(t1, "b+", "LineWidth", 2)
+semilogy(t1, "b+", "LineWidth", 2)
 hold on
-plot(t2, "k+", "LineWidth", 2)
-plot(t3, "r+", "LineWidth", 2)
+semilogy(t2, "k+", "LineWidth", 2)
+semilogy(t3, "r+", "LineWidth", 2)
 title("Execution time of the different formulations")
 legend("K2.5", "K3.5", "K2")
 ylabel("Time (s)")
@@ -164,13 +164,13 @@ tmin3(imin~=3) = NaN;
 
 figure(2)
 clf(2)
-plot(tmax1, "b+", "LineWidth", 2)
+semilogy(tmax1, "b+", "LineWidth", 2)
 hold on
-plot(tmin1, "b+", "LineWidth", 2)
-plot(tmax2, "k+", "LineWidth", 2)
-plot(tmin2, "k+", "LineWidth", 2)
-plot(tmax3, "r+", "LineWidth", 2)
-plot(tmin3, "r+", "LineWidth", 2)
+semilogy(tmin1, "b+", "LineWidth", 2)
+semilogy(tmax2, "k+", "LineWidth", 2)
+semilogy(tmin2, "k+", "LineWidth", 2)
+semilogy(tmax3, "r+", "LineWidth", 2)
+semilogy(tmin3, "r+", "LineWidth", 2)
 title("Best and worst execution time")
 ylabel("Time (s)")
 
@@ -183,27 +183,27 @@ clf(3)
 
 % K2.5 vs K3.5
 subplot(221)
-plot(t1, "b+", "LineWidth", 2)
+semilogy(t1, "b+", "LineWidth", 2)
 hold on
-plot(t2, "k+", "LineWidth", 2)
+semilogy(t2, "k+", "LineWidth", 2)
 title("K2.5 vs K3.5")
 legend("K2.5", "K3.5")
 ylabel("Time (s)")
 
 % K2.5 vs K2
 subplot(222)
-plot(t1, "b+", "LineWidth", 2)
+semilogy(t1, "b+", "LineWidth", 2)
 hold on
-plot(t3, "r+", "LineWidth", 2)
+semilogy(t3, "r+", "LineWidth", 2)
 title("K2.5 vs K2")
 legend("K2.5", "K2")
 ylabel("Time (s)")
 
 % K3.5 vs K2
 subplot(223)
-plot(t2, "k+", "LineWidth", 2)
+semilogy(t2, "k+", "LineWidth", 2)
 hold on
-plot(t3, "r+", "LineWidth", 2)
+semilogy(t3, "r+", "LineWidth", 2)
 title("K3.5 vs K2")
 legend("K3.5", "K2")
 ylabel("Time (s)")
@@ -218,7 +218,7 @@ fprintf("Nombre de fois que K2 est meilleur : %g\n\n", n3)
 close all
 clear all
 clc
-load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results_one_test_all_problems.mat")
+load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results_ten_test_all_problems.mat")
 
 iter = double(squeeze(results(1,:,:)));
 reason = results(2,:,:);
@@ -234,10 +234,10 @@ time = time(:, end - n_largest_problems+1:end);
 t1 = time(1,:);
 t2 = time(2,:);
 t3 = time(3,:);
-plot(t1, "b+", "LineWidth", 2)
+semilogy(t1, "b+", "LineWidth", 2)
 hold on
-plot(t2, "k+", "LineWidth", 2)
-plot(t3, "r+", "LineWidth", 2)
+semilogy(t2, "k+", "LineWidth", 2)
+semilogy(t3, "r+", "LineWidth", 2)
 title("Execution time of the different formulations")
 legend("K2.5", "K3.5", "K2")
 ylabel("Time (s)")
@@ -262,13 +262,13 @@ tmin3(imin~=3) = NaN;
 
 figure(2)
 clf(2)
-plot(tmax1, "b+", "LineWidth", 2)
+semilogy(tmax1, "b+", "LineWidth", 2)
 hold on
-plot(tmin1, "b+", "LineWidth", 2)
-plot(tmax2, "k+", "LineWidth", 2)
-plot(tmin2, "k+", "LineWidth", 2)
-plot(tmax3, "r+", "LineWidth", 2)
-plot(tmin3, "r+", "LineWidth", 2)
+semilogy(tmin1, "b+", "LineWidth", 2)
+semilogy(tmax2, "k+", "LineWidth", 2)
+semilogy(tmin2, "k+", "LineWidth", 2)
+semilogy(tmax3, "r+", "LineWidth", 2)
+semilogy(tmin3, "r+", "LineWidth", 2)
 title("Best and worst execution time")
 ylabel("Time (s)")
 
@@ -281,27 +281,27 @@ clf(3)
 
 % K2.5 vs K3.5
 subplot(221)
-plot(t1, "b+", "LineWidth", 2)
+semilogy(t1, "b+", "LineWidth", 2)
 hold on
-plot(t2, "k+", "LineWidth", 2)
+semilogy(t2, "k+", "LineWidth", 2)
 title("K2.5 vs K3.5")
 legend("K2.5", "K3.5")
 ylabel("Time (s)")
 
 % K2.5 vs K2
 subplot(222)
-plot(t1, "b+", "LineWidth", 2)
+semilogy(t1, "b+", "LineWidth", 2)
 hold on
-plot(t3, "r+", "LineWidth", 2)
+semilogy(t3, "r+", "LineWidth", 2)
 title("K2.5 vs K2")
 legend("K2.5", "K2")
 ylabel("Time (s)")
 
 % K3.5 vs K2
 subplot(223)
-plot(t2, "k+", "LineWidth", 2)
+semilogy(t2, "k+", "LineWidth", 2)
 hold on
-plot(t3, "r+", "LineWidth", 2)
+semilogy(t3, "r+", "LineWidth", 2)
 title("K3.5 vs K2")
 legend("K3.5", "K2")
 ylabel("Time (s)")
@@ -312,5 +312,3 @@ n3 = sum(imin == 3);
 fprintf("\nNombre de fois que K2.5 est meilleur : %g\n", n1)
 fprintf("Nombre de fois que K3.5 est meilleur : %g\n", n2)
 fprintf("Nombre de fois que K2 est meilleur : %g\n\n", n3)
-
-
