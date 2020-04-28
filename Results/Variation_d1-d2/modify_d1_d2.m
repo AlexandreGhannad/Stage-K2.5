@@ -46,15 +46,16 @@ show_all_graphic = 0; % = 1  need check_eigenvalue = 1
 check_cond = 1;
 check_residu = 1;
 check_all_residu = 0; % = 1  need check_residu = 1
+check_limits = 1;
 %% Loop
 clc
 
-% d1 = [10^-4];
-% d2 = [10^-4];
+d1 = [10^-4];
+d2 = [10^-4];
 % d1 = [10^-4 1];
 % d2 = [10^-4 1];
-d1 = logspace(-4,0,3);
-d2 = logspace(-4,0,3);
+% d1 = logspace(-4,0,3);
+% d2 = logspace(-4,0,3);
 
 for i = 1 : length(d1)
     for j = 1 : length(d2)
@@ -62,7 +63,7 @@ for i = 1 : length(d1)
         options_pdco.d1 = d1(i);
         options_pdco.d2 = d2(j);
         
-        mps_name = 'fit1p.mps';
+        mps_name = 'afiro.mps';
         fprintf('%s\n', mps_name);
 
         % Read .mps file
@@ -85,16 +86,15 @@ for i = 1 : length(d1)
         options_pdco.check_eigenvalue = check_eigenvalue;
         options_pdco.check_residu = check_residu;
         options_pdco.check_cond = check_cond;
+        options_pdco.check_limits = check_limits;
         options_form = struct();
 
         Problem = eval([classname, '(slack, options_pdco,options_form,options_solv)']);
         Problem.solve;
         
-        show_eigenvalue(Problem.eigenvalue, Problem.limit, d1(i), d2(j))
+        show_eigenvalue(Problem.eigenvalue, Problem.limit, d1(i), d2(j), Problem.features_limits)
         show_cond(Problem.cond, Problem.limit, d1(i), d2(j))
         show_residu(Problem.opt_residu, Problem.evolution_mu, d1(i), d2(i))
-        
-        
     end
 end
 

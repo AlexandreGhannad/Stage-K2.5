@@ -1,4 +1,6 @@
-function [result, eigenvalue, limit, rapport, err] = validation_eigenvalue(M,n)
+function [result, eigenvalue, limit, rapport, err, lambda_max, lambda_min, sigma_max, sigma_min] = validation_eigenvalue(M,n)
+% the values of the different rho are based on the proposition 1
+% (Friedlader and Orban, 2012, Theorem 5.1) 
 H = - M(1:n,1:n);
 A = M(n+1:end, 1:n);
 Delta = diag(M(n+1:end, n+1:end));

@@ -175,8 +175,11 @@ classdef pdcoO < handle
         check_residu % Input specific for K2.5
         % = 1 if you want to check the eveolution of the complementary
         % residu
-        check_cond % Input specific for K2.5
+        check_cond % Input specific for K2.5 and K3.5
         % = 1 if you want to see the evolution of the conditionning
+        check_limits % Input specific for K2.5
+        % = 1 if you want to save the values of xmin, xamax, sigma min,
+        % sigma max
         result
         eigenvalue
         limit
@@ -185,6 +188,7 @@ classdef pdcoO < handle
         opt_residu
         cond
         evolution_mu
+        features_limits
         
     end
     
@@ -376,6 +380,12 @@ classdef pdcoO < handle
                 o.check_cond = options.check_cond;
             else
                 o.check_cond = false;
+            end
+            
+            if isfield(options, 'check_limits')
+                o.check_limits = options.check_limits;
+            else
+                o.check_limits = false;
             end
         end
           

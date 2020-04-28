@@ -100,6 +100,13 @@ classdef K35 < handle
 
             o.dx1(o.low)  = -o.rL(o.low) + o.dx(o.low);
             o.dx2(o.upp)  = -o.rU(o.upp) - o.dx(o.upp);
+            
+            
+            if o.check_cond
+                lambda_min = min(abs(eigs(o.M, 10, "smallestabs")));
+                lambda_max = max(abs(eigs(o.M, 10, "largestabs")));
+                o.cond = [o.cond lambda_max/lambda_min];
+            end
         end
     end
 end

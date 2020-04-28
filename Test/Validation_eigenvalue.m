@@ -84,14 +84,14 @@ fprintf(options_pdco.file_id, ...
 
 result = zeros(9,3,n_problem);
 %% Check eigenvalues and compare method
-n_problem = min(n_problem, 2000);
-check_eigenvalue = 1
+n_problem = min(n_problem, 10);
+check_eigenvalue = 0
 show_one_graphic = 0; % = 1  need check_eigenvalue = 1
-show_all_graphic = 1; % = 1  need check_eigenvalue = 1
+show_all_graphic = 0; % = 1  need check_eigenvalue = 1
 check_cond = 1;
 compare_formulations = 0;
-check_residu = 1;
-check_all_residu = 1; % = 1  need check_residu = 1
+check_residu = 0;
+check_all_residu = 0; % = 1  need check_residu = 1
 %% Loop
 clc
 for i = 1:n_problem
@@ -183,7 +183,7 @@ for i = 1:n_problem
     if check_cond & check_eigenvalue
         show_cond(Problem1.cond, Problem1.limit);
     else
-        show_cond(Problem1.cond);
+        show_cond(Problem1.cond,[], Problem1.d1,Problem1.d2, Problem2.cond,"K3.5");
     end
 end
 
