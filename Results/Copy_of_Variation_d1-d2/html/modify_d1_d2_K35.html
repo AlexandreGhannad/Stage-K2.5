@@ -1,0 +1,1417 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>modify_d1_d2_K35</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-05-01"><meta name="DC.source" content="modify_d1_d2_K35.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Clean</a></li><li><a href="#2">Setup 1</a></li><li><a href="#3">Setup 2</a></li><li><a href="#4">Check eigenvalues and compare method</a></li><li><a href="#5">Loop</a></li></ul></div><h2 id="1">Clean</h2><pre class="codeinput">clear <span class="string">all</span>
+close <span class="string">all</span>
+clc
+</pre><h2 id="2">Setup 1</h2><pre class="codeinput">pdcoo_home = pwd;
+
+addpath(pdcoo_home);
+addpath(fullfile(pdcoo_home, <span class="string">'Formulations'</span>));
+addpath(fullfile(pdcoo_home, <span class="string">'Solvers'</span>));
+addpath(fullfile(pdcoo_home, <span class="string">'readmps'</span>));
+addpath(fullfile(pdcoo_home, <span class="string">'Tools'</span>));
+addpath(fullfile(pdcoo_home, <span class="string">'Problems\MPS'</span>));
+addpath(fullfile(pdcoo_home, <span class="string">'Validation-eigenvalue'</span>));
+p = genpath(fullfile(pdcoo_home, <span class="string">'addons'</span>));
+addpath(p);
+p = genpath(fullfile(pdcoo_home, <span class="string">'Results'</span>));
+addpath(p);
+<span class="keyword">if</span> exist(<span class="string">'Variants'</span>, <span class="string">'dir'</span>) ~= 7
+    mkdir(<span class="string">'Variants'</span>);
+<span class="keyword">end</span>
+addpath(fullfile(pdcoo_home, <span class="string">'Variants'</span>));
+addpath(fullfile(pdcoo_home, <span class="string">'Test'</span>));
+</pre><h2 id="3">Setup 2</h2><pre class="codeinput">import <span class="string">model.lpmodel</span>;
+import <span class="string">model.slackmodel</span>;
+
+options_pdco.file_id = 1;
+
+formulation1 = <span class="string">'K25'</span>;
+solver = <span class="string">'LU'</span>;
+classname1 = build_variant(pdcoo_home, formulation1, solver);
+
+formulation2 = <span class="string">'K35'</span>;
+solver = <span class="string">'LU'</span>;
+classname2 = build_variant(pdcoo_home, formulation2, solver);
+
+formulation3 = <span class="string">'K2'</span>;
+solver = <span class="string">'LU'</span>;
+classname3 = build_variant(pdcoo_home, formulation3, solver);
+
+<span class="comment">% path_lp = "D:\git_repository\Stage-K2.5\Problems\lp_prob\";</span>
+<span class="comment">% list_problem = ls(path_lp);</span>
+<span class="comment">% list_problem = path_lp + cellstr(list_problem(3:end,:));</span>
+
+<span class="comment">% path_milp = "D:\git_repository\Stage-K2.5\Problems\milp_prob\";</span>
+<span class="comment">% list_problem = ls(path_milp);</span>
+<span class="comment">% list_problem = path_milp + cellstr(list_problem(3:end,:));</span>
+
+path_qp = <span class="string">''</span>;
+<span class="comment">% list_problem = ls(path_qp);</span>
+<span class="comment">% list_problem = path_qp + cellstr(list_problem(3:end,:));</span>
+list_problem = {<span class="string">'D:\git_repository\Stage-K2.5\Problems\qp_prob\primal3.qps'</span>}
+
+
+
+n_problem = length(list_problem);
+
+options_pdco.d1 = 1.0e-2;
+options_pdco.d2 = 1.0e-2;
+options_pdco.OptTol = 1.0e-9;
+options_solv.atol1 = 1.0e-4;
+options_solv.atol2 = 1.0e-10;
+options_solv.itnlim = 10;
+options_pdco.Print = 1;
+
+fprintf(options_pdco.file_id, <span class="keyword">...</span>
+    <span class="string">'\n    Name    Objectif   Presid   Dresid   Cresid   PDitns   Inner     Time      D2 * r\n\n'</span>);
+
+result = zeros(9,3,n_problem);
+</pre><pre class="codeoutput">
+variants_dir =
+
+    'D:\git_repository\Stage-K2.5\Variants'
+
+
+variants_dir =
+
+    'D:\git_repository\Stage-K2.5\Variants'
+
+
+variants_dir =
+
+    'D:\git_repository\Stage-K2.5\Variants'
+
+
+list_problem =
+
+  1&times;1 cell array
+
+    {'D:\git_repository\Stage-K2.5\Problems\qp_prob\primal3.qps'}
+
+
+    Name    Objectif   Presid   Dresid   Cresid   PDitns   Inner     Time      D2 * r
+
+</pre><h2 id="4">Check eigenvalues and compare method</h2><pre class="codeinput">n_problem = min(n_problem, 20000);
+check_eigenvalue = 1;
+check_eigenvalueK35 = 1;
+show_one_graphic = 0; <span class="comment">% = 1  need check_eigenvalue = 1</span>
+show_all_graphic = 0; <span class="comment">% = 1  need check_eigenvalue = 1</span>
+check_cond = 0;
+compare_formulations = 0;
+check_residu = 0;
+check_all_residu = 0; <span class="comment">% = 1  need check_residu = 1</span>
+</pre><h2 id="5">Loop</h2><pre class="codeinput">clc
+
+d1 = 10^-4;
+d2 = [0 10^-16 10^-12 10^-4 1];
+options_pdco.d1 = d1;
+
+<span class="keyword">for</span> j = 1:length(d2)
+    options_pdco.d2 = d2(j);
+
+    mps_name = list_problem{1};
+
+    <span class="comment">% Read .mps file</span>
+    mps_stru = readmps(mps_name);
+    lp = mpstolp(mps_stru);
+    slack = slackmodel(lp);
+    Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
+
+    options_pdco.x0 = slack.x0;
+    options_pdco.x0(slack.jLow) = slack.bL(slack.jLow) + 1;
+    options_pdco.x0(slack.jUpp) = slack.bU(slack.jUpp) - 1;
+    options_pdco.x0(slack.jTwo) = (slack.bL(slack.jTwo) + slack.bU(slack.jTwo)) / 2;
+    options_pdco.xsize = max(norm(options_pdco.x0, inf), 1);
+    options_pdco.zsize = max(norm(slack.gobj(slack.x0), inf) + sqrt(slack.n) * Anorm, 1);
+    options_pdco.z0 = options_pdco.zsize * ones(slack.n, 1);
+    options_pdco.y0 = zeros(slack.m, 1);
+    options_pdco.mu0 = options_pdco.zsize;
+    options_pdco.Maxiter = min(max(30, slack.n), 100);
+    options_pdco.check_eigenvalue = check_eigenvalue;
+    options_pdco.check_eigenvalueK35 = check_eigenvalueK35;
+    options_pdco.check_residu = check_residu;
+    options_pdco.check_cond = check_cond;
+    options_form = struct();
+
+    Problem1 = eval([classname1, <span class="string">'(slack, options_pdco,options_form,options_solv)'</span>]);
+    Problem1.solve;
+    Problem2 = eval([classname2, <span class="string">'(slack, options_pdco,options_form,options_solv)'</span>]);
+    Problem2.solve;
+
+    show_eigenvalue(Problem1.eigenvalue, Problem1.limit, d1, d2(j))
+    show_eigenvalueK35(Problem2.eigenvalue, d1, d2(j))
+
+<span class="keyword">end</span>
+
+fclose(<span class="string">'all'</span>);
+</pre><pre class="codeoutput">ROWS Section
+COLUMNS section
+BOUNDS section
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      111     n =      856      nnz(A) =     21658
+max |b | =        0     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+        1         1          1        111         0       0     744
+  [0, bu]  [bl,  0]  excluding fixed variables
+        1         1
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    0.3   0.0   0.0 -9.9999959e-01        1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  1  3.0 0.989 0.989  -1.7  -2.0   1.0 -9.3052066e+02  1     1.1    28730 x2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  2  2.0 0.896 0.896  -2.6  -2.9   1.0 -9.2350904e+03  1    10.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659122e-25. 
+
+  3  1.0 0.096 0.096  -2.7  -3.0   1.0 -2.6650276e+04  1   356.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658162e-25. 
+
+  4  0.9 0.990 0.990  -4.7  -5.0   2.7 -7.6130807e+05  1  2683.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658474e-25. 
+
+  5  0.9 1.000 1.000  -6.5 -18.8   2.0 -3.5018263e+05  1    18.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.648801e-25. 
+
+  6  0.9 1.000 1.000  -6.9 -18.7   1.3 -1.2535335e+05  1     2.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646432e-25. 
+
+  7  0.1 0.854 0.854  -7.3 -18.9   0.6 -5.3986664e+05  1    14.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646300e-25. 
+
+  8 -0.6 1.000 1.000  -8.1 -18.4   0.0 -7.5559699e+05  1     4.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.650339e-25. 
+
+  9 -1.1 1.000 1.000  -8.0 -18.0  -0.5 -8.0490035e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.653627e-25. 
+
+ 10 -1.7 1.000 1.000  -8.2 -18.3  -1.1 -8.1599652e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654780e-25. 
+
+ 11 -2.2 1.000 1.000  -8.3 -18.9  -1.6 -8.1856106e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654970e-25. 
+
+ 12 -2.7 1.000 1.000  -8.2 -18.7  -2.2 -8.1922703e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655013e-25. 
+
+ 13 -3.3 1.000 1.000  -7.8 -18.5  -2.7 -8.1939480e+05  1     3.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655025e-25. 
+
+ 14 -3.8 1.000 1.000  -7.9 -19.3  -3.3 -8.1943758e+05  1     3.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655029e-25. 
+
+ 15 -4.4 1.000 1.000  -8.1 -19.1  -4.0 -8.1944902e+05  1     2.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 16 -5.2 1.000 1.000  -8.1 -19.4  -4.9 -8.1945207e+05  1     1.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 17 -6.3 1.000 1.000  -8.2 -18.2  -6.2 -8.1945270e+05  1     1.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 18 -8.0 1.000 1.000  -8.1 -18.8  -8.0 -8.1945275e+05  1     1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 19 -9.1 1.000 1.000  -8.2 -18.7  -9.1 -8.1945275e+05  1     1.0
+   Converged
+
+max |x| = 1638905.380    max |y| =      0.000    max |z| =      0.000   scaled
+max |x| = 1638905.380    max |y| =      0.034    max |z| =      0.034 unscaled
+PDitns =         19     LUitns =          0    cputime =        7.3
+
+Distribution of vector     x         z
+[  1e+06,   1e+07)        37         0
+[  1e+05,   1e+06)       523         0
+[  1e+04,   1e+05)       105         0
+[  1e+03,   1e+04)         9         0
+[    100,   1e+03)         0         0
+[     10,     100)         1         0
+[      1,      10)         0         0
+[    0.1,       1)       104         0
+[   0.01,     0.1)         4        73
+[      0,    0.01)        73       783Elapsed time is 2.859879 seconds.
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      111     n =      856      nnz(A) =     21658
+max |b | =        0     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+        1         1          1        111         0       0     744
+  [0, bu]  [bl,  0]  excluding fixed variables
+        1         1
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    0.3   0.0   0.0 -9.9999959e-01        1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  1  3.0 0.989 0.989  -1.7  -2.0   1.0 -9.3052066e+02  1     1.1    28954 x2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  2  2.0 0.896 0.896  -2.6  -2.9   1.0 -9.2350904e+03  1    10.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659122e-25. 
+
+  3  1.0 0.096 0.096  -2.7  -3.0   1.0 -2.6650276e+04  1   356.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658162e-25. 
+
+  4  0.9 0.990 0.990  -4.7  -5.0   2.7 -7.6130807e+05  1  2683.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658474e-25. 
+
+  5  0.9 1.000 1.000  -6.5 -18.8   2.0 -3.5018263e+05  1    18.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.648801e-25. 
+
+  6  0.9 1.000 1.000  -6.9 -18.5   1.3 -1.2535335e+05  1     2.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646432e-25. 
+
+  7  0.1 0.854 0.854  -7.3 -18.8   0.6 -5.3986664e+05  1    14.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646300e-25. 
+
+  8 -0.6 1.000 1.000  -8.1 -18.4   0.0 -7.5559699e+05  1     4.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.650339e-25. 
+
+  9 -1.1 1.000 1.000  -8.1 -18.0  -0.5 -8.0490035e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.653627e-25. 
+
+ 10 -1.7 1.000 1.000  -8.3 -18.5  -1.1 -8.1599652e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654780e-25. 
+
+ 11 -2.2 1.000 1.000  -8.2 -18.9  -1.6 -8.1856106e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654970e-25. 
+
+ 12 -2.7 1.000 1.000  -8.1 -18.7  -2.2 -8.1922703e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655013e-25. 
+
+ 13 -3.3 1.000 1.000  -8.1 -18.5  -2.7 -8.1939480e+05  1     3.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655025e-25. 
+
+ 14 -3.8 1.000 1.000  -8.2 -18.6  -3.3 -8.1943758e+05  1     3.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655029e-25. 
+
+ 15 -4.4 1.000 1.000  -8.1 -18.9  -4.0 -8.1944902e+05  1     2.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 16 -5.2 1.000 1.000  -8.2 -19.4  -4.9 -8.1945207e+05  1     1.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 17 -6.3 1.000 1.000  -8.1 -18.2  -6.2 -8.1945270e+05  1     1.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 18 -8.0 1.000 1.000  -8.1 -18.8  -8.0 -8.1945275e+05  1     1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 19 -9.1 1.000 1.000  -8.1 -19.3  -9.1 -8.1945275e+05  1     1.0
+   Converged
+
+max |x| = 1638905.380    max |y| =      0.000    max |z| =      0.000   scaled
+max |x| = 1638905.380    max |y| =      0.034    max |z| =      0.034 unscaled
+PDitns =         19     LUitns =          0    cputime =        6.0
+
+Distribution of vector     x         z
+[  1e+06,   1e+07)        37         0
+[  1e+05,   1e+06)       523         0
+[  1e+04,   1e+05)       105         0
+[  1e+03,   1e+04)         9         0
+[    100,   1e+03)         0         0
+[     10,     100)         1         0
+[      1,      10)         0         0
+[    0.1,       1)       104         0
+[   0.01,     0.1)         4        73
+[      0,    0.01)        73       783Elapsed time is 2.014084 seconds.
+ROWS Section
+COLUMNS section
+BOUNDS section
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      111     n =      856      nnz(A) =     21658
+max |b | =        0     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+        1         1          1        111         0       0     744
+  [0, bu]  [bl,  0]  excluding fixed variables
+        1         1
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    0.3   0.0   0.0 -9.9999959e-01        1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  1  3.0 0.989 0.989  -1.7  -2.0   1.0 -9.3052066e+02  1     1.1    28730 x2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  2  2.0 0.896 0.896  -2.6  -2.9   1.0 -9.2350904e+03  1    10.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659122e-25. 
+
+  3  1.0 0.096 0.096  -2.7  -3.0   1.0 -2.6650276e+04  1   356.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658162e-25. 
+
+  4  0.9 0.990 0.990  -4.7  -5.0   2.7 -7.6130807e+05  1  2683.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658474e-25. 
+
+  5  0.9 1.000 1.000  -6.5 -18.8   2.0 -3.5018263e+05  1    18.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.648801e-25. 
+
+  6  0.9 1.000 1.000  -6.9 -18.7   1.3 -1.2535335e+05  1     2.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646432e-25. 
+
+  7  0.1 0.854 0.854  -7.3 -18.9   0.6 -5.3986664e+05  1    14.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646300e-25. 
+
+  8 -0.6 1.000 1.000  -8.1 -18.4   0.0 -7.5559699e+05  1     4.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.650339e-25. 
+
+  9 -1.1 1.000 1.000  -8.0 -18.0  -0.5 -8.0490035e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.653627e-25. 
+
+ 10 -1.7 1.000 1.000  -8.2 -18.3  -1.1 -8.1599652e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654780e-25. 
+
+ 11 -2.2 1.000 1.000  -8.3 -18.9  -1.6 -8.1856106e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654970e-25. 
+
+ 12 -2.7 1.000 1.000  -8.2 -18.7  -2.2 -8.1922703e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655013e-25. 
+
+ 13 -3.3 1.000 1.000  -7.8 -18.5  -2.7 -8.1939480e+05  1     3.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655025e-25. 
+
+ 14 -3.8 1.000 1.000  -7.9 -19.3  -3.3 -8.1943758e+05  1     3.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655029e-25. 
+
+ 15 -4.4 1.000 1.000  -8.1 -19.1  -4.0 -8.1944902e+05  1     2.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 16 -5.2 1.000 1.000  -8.1 -19.4  -4.9 -8.1945207e+05  1     1.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 17 -6.3 1.000 1.000  -8.2 -18.2  -6.2 -8.1945270e+05  1     1.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 18 -8.0 1.000 1.000  -8.1 -18.8  -8.0 -8.1945275e+05  1     1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 19 -9.1 1.000 1.000  -8.2 -18.7  -9.1 -8.1945275e+05  1     1.0
+   Converged
+
+max |x| = 1638905.380    max |y| =      0.000    max |z| =      0.000   scaled
+max |x| = 1638905.380    max |y| =      0.034    max |z| =      0.034 unscaled
+PDitns =         19     LUitns =          0    cputime =        5.8
+
+Distribution of vector     x         z
+[  1e+06,   1e+07)        37         0
+[  1e+05,   1e+06)       523         0
+[  1e+04,   1e+05)       105         0
+[  1e+03,   1e+04)         9         0
+[    100,   1e+03)         0         0
+[     10,     100)         1         0
+[      1,      10)         0         0
+[    0.1,       1)       104         0
+[   0.01,     0.1)         4        73
+[      0,    0.01)        73       783Elapsed time is 2.108385 seconds.
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      111     n =      856      nnz(A) =     21658
+max |b | =        0     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+        1         1          1        111         0       0     744
+  [0, bu]  [bl,  0]  excluding fixed variables
+        1         1
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    0.3   0.0   0.0 -9.9999959e-01        1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  1  3.0 0.989 0.989  -1.7  -2.0   1.0 -9.3052066e+02  1     1.1    28954 x2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  2  2.0 0.896 0.896  -2.6  -2.9   1.0 -9.2350904e+03  1    10.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659122e-25. 
+
+  3  1.0 0.096 0.096  -2.7  -3.0   1.0 -2.6650276e+04  1   356.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658162e-25. 
+
+  4  0.9 0.990 0.990  -4.7  -5.0   2.7 -7.6130807e+05  1  2683.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658474e-25. 
+
+  5  0.9 1.000 1.000  -6.5 -18.8   2.0 -3.5018263e+05  1    18.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.648801e-25. 
+
+  6  0.9 1.000 1.000  -6.9 -18.5   1.3 -1.2535335e+05  1     2.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646432e-25. 
+
+  7  0.1 0.854 0.854  -7.3 -18.8   0.6 -5.3986664e+05  1    14.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646300e-25. 
+
+  8 -0.6 1.000 1.000  -8.1 -18.4   0.0 -7.5559699e+05  1     4.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.650339e-25. 
+
+  9 -1.1 1.000 1.000  -8.1 -18.0  -0.5 -8.0490035e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.653627e-25. 
+
+ 10 -1.7 1.000 1.000  -8.3 -18.5  -1.1 -8.1599652e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654780e-25. 
+
+ 11 -2.2 1.000 1.000  -8.2 -18.9  -1.6 -8.1856106e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654970e-25. 
+
+ 12 -2.7 1.000 1.000  -8.1 -18.7  -2.2 -8.1922703e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655013e-25. 
+
+ 13 -3.3 1.000 1.000  -8.1 -18.5  -2.7 -8.1939480e+05  1     3.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655025e-25. 
+
+ 14 -3.8 1.000 1.000  -8.2 -18.6  -3.3 -8.1943758e+05  1     3.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655029e-25. 
+
+ 15 -4.4 1.000 1.000  -8.1 -18.9  -4.0 -8.1944902e+05  1     2.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 16 -5.2 1.000 1.000  -8.2 -19.4  -4.9 -8.1945207e+05  1     1.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 17 -6.3 1.000 1.000  -8.1 -18.2  -6.2 -8.1945270e+05  1     1.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 18 -8.0 1.000 1.000  -8.1 -18.8  -8.0 -8.1945275e+05  1     1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 19 -9.1 1.000 1.000  -8.1 -19.3  -9.1 -8.1945275e+05  1     1.0
+   Converged
+
+max |x| = 1638905.380    max |y| =      0.000    max |z| =      0.000   scaled
+max |x| = 1638905.380    max |y| =      0.034    max |z| =      0.034 unscaled
+PDitns =         19     LUitns =          0    cputime =        5.8
+
+Distribution of vector     x         z
+[  1e+06,   1e+07)        37         0
+[  1e+05,   1e+06)       523         0
+[  1e+04,   1e+05)       105         0
+[  1e+03,   1e+04)         9         0
+[    100,   1e+03)         0         0
+[     10,     100)         1         0
+[      1,      10)         0         0
+[    0.1,       1)       104         0
+[   0.01,     0.1)         4        73
+[      0,    0.01)        73       783Elapsed time is 1.953303 seconds.
+ROWS Section
+COLUMNS section
+BOUNDS section
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      111     n =      856      nnz(A) =     21658
+max |b | =        0     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+        1         1          1        111         0       0     744
+  [0, bu]  [bl,  0]  excluding fixed variables
+        1         1
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    0.3   0.0   0.0 -9.9999959e-01        1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  1  3.0 0.989 0.989  -1.7  -2.0   1.0 -9.3052066e+02  1     1.1    28730 x2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  2  2.0 0.896 0.896  -2.6  -2.9   1.0 -9.2350904e+03  1    10.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659122e-25. 
+
+  3  1.0 0.096 0.096  -2.7  -3.0   1.0 -2.6650276e+04  1   356.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658162e-25. 
+
+  4  0.9 0.990 0.990  -4.7  -5.0   2.7 -7.6130807e+05  1  2683.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658474e-25. 
+
+  5  0.9 1.000 1.000  -6.5 -18.8   2.0 -3.5018263e+05  1    18.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.648801e-25. 
+
+  6  0.9 1.000 1.000  -6.9 -18.7   1.3 -1.2535335e+05  1     2.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646432e-25. 
+
+  7  0.1 0.854 0.854  -7.3 -18.9   0.6 -5.3986664e+05  1    14.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646300e-25. 
+
+  8 -0.6 1.000 1.000  -8.1 -18.4   0.0 -7.5559699e+05  1     4.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.650339e-25. 
+
+  9 -1.1 1.000 1.000  -8.0 -18.0  -0.5 -8.0490035e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.653627e-25. 
+
+ 10 -1.7 1.000 1.000  -8.2 -18.3  -1.1 -8.1599652e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654780e-25. 
+
+ 11 -2.2 1.000 1.000  -8.3 -18.9  -1.6 -8.1856106e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654970e-25. 
+
+ 12 -2.7 1.000 1.000  -8.2 -18.7  -2.2 -8.1922703e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655013e-25. 
+
+ 13 -3.3 1.000 1.000  -7.8 -18.5  -2.7 -8.1939480e+05  1     3.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655025e-25. 
+
+ 14 -3.8 1.000 1.000  -7.9 -19.3  -3.3 -8.1943758e+05  1     3.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655029e-25. 
+
+ 15 -4.4 1.000 1.000  -8.1 -19.1  -4.0 -8.1944902e+05  1     2.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 16 -5.2 1.000 1.000  -8.1 -19.4  -4.9 -8.1945207e+05  1     1.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 17 -6.3 1.000 1.000  -8.2 -18.2  -6.2 -8.1945270e+05  1     1.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 18 -8.0 1.000 1.000  -8.1 -18.8  -8.0 -8.1945275e+05  1     1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 19 -9.1 1.000 1.000  -8.2 -18.7  -9.1 -8.1945275e+05  1     1.0
+   Converged
+
+max |x| = 1638905.380    max |y| =      0.000    max |z| =      0.000   scaled
+max |x| = 1638905.380    max |y| =      0.034    max |z| =      0.034 unscaled
+PDitns =         19     LUitns =          0    cputime =        5.8
+
+Distribution of vector     x         z
+[  1e+06,   1e+07)        37         0
+[  1e+05,   1e+06)       523         0
+[  1e+04,   1e+05)       105         0
+[  1e+03,   1e+04)         9         0
+[    100,   1e+03)         0         0
+[     10,     100)         1         0
+[      1,      10)         0         0
+[    0.1,       1)       104         0
+[   0.01,     0.1)         4        73
+[      0,    0.01)        73       783Elapsed time is 2.127030 seconds.
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      111     n =      856      nnz(A) =     21658
+max |b | =        0     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+        1         1          1        111         0       0     744
+  [0, bu]  [bl,  0]  excluding fixed variables
+        1         1
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    0.3   0.0   0.0 -9.9999959e-01        1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  1  3.0 0.989 0.989  -1.7  -2.0   1.0 -9.3052066e+02  1     1.1    28954 x2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  2  2.0 0.896 0.896  -2.6  -2.9   1.0 -9.2350904e+03  1    10.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659122e-25. 
+
+  3  1.0 0.096 0.096  -2.7  -3.0   1.0 -2.6650276e+04  1   356.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658162e-25. 
+
+  4  0.9 0.990 0.990  -4.7  -5.0   2.7 -7.6130807e+05  1  2683.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658474e-25. 
+
+  5  0.9 1.000 1.000  -6.5 -18.8   2.0 -3.5018263e+05  1    18.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.648801e-25. 
+
+  6  0.9 1.000 1.000  -6.9 -18.5   1.3 -1.2535335e+05  1     2.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646432e-25. 
+
+  7  0.1 0.854 0.854  -7.3 -18.8   0.6 -5.3986664e+05  1    14.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646300e-25. 
+
+  8 -0.6 1.000 1.000  -8.1 -18.4   0.0 -7.5559699e+05  1     4.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.650339e-25. 
+
+  9 -1.1 1.000 1.000  -8.1 -18.0  -0.5 -8.0490035e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.653627e-25. 
+
+ 10 -1.7 1.000 1.000  -8.3 -18.5  -1.1 -8.1599652e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654780e-25. 
+
+ 11 -2.2 1.000 1.000  -8.2 -18.9  -1.6 -8.1856106e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654970e-25. 
+
+ 12 -2.7 1.000 1.000  -8.1 -18.7  -2.2 -8.1922703e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655013e-25. 
+
+ 13 -3.3 1.000 1.000  -8.1 -18.5  -2.7 -8.1939480e+05  1     3.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655025e-25. 
+
+ 14 -3.8 1.000 1.000  -8.2 -18.6  -3.3 -8.1943758e+05  1     3.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655029e-25. 
+
+ 15 -4.4 1.000 1.000  -8.1 -18.9  -4.0 -8.1944902e+05  1     2.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 16 -5.2 1.000 1.000  -8.2 -19.4  -4.9 -8.1945207e+05  1     1.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 17 -6.3 1.000 1.000  -8.1 -18.2  -6.2 -8.1945270e+05  1     1.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 18 -8.0 1.000 1.000  -8.1 -18.8  -8.0 -8.1945275e+05  1     1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 19 -9.1 1.000 1.000  -8.1 -19.3  -9.1 -8.1945275e+05  1     1.0
+   Converged
+
+max |x| = 1638905.380    max |y| =      0.000    max |z| =      0.000   scaled
+max |x| = 1638905.380    max |y| =      0.034    max |z| =      0.034 unscaled
+PDitns =         19     LUitns =          0    cputime =        6.5
+
+Distribution of vector     x         z
+[  1e+06,   1e+07)        37         0
+[  1e+05,   1e+06)       523         0
+[  1e+04,   1e+05)       105         0
+[  1e+03,   1e+04)         9         0
+[    100,   1e+03)         0         0
+[     10,     100)         1         0
+[      1,      10)         0         0
+[    0.1,       1)       104         0
+[   0.01,     0.1)         4        73
+[      0,    0.01)        73       783Elapsed time is 2.183431 seconds.
+ROWS Section
+COLUMNS section
+BOUNDS section
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      111     n =      856      nnz(A) =     21658
+max |b | =        0     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+        1         1          1        111         0       0     744
+  [0, bu]  [bl,  0]  excluding fixed variables
+        1         1
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    0.3   0.0   0.0 -9.9999959e-01        1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  1  3.0 0.989 0.989  -1.7  -2.0   1.0 -9.3052066e+02  1     1.1    28730 x2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  2  2.0 0.896 0.896  -2.6  -2.9   1.0 -9.2350904e+03  1    10.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659122e-25. 
+
+  3  1.0 0.096 0.096  -2.7  -3.0   1.0 -2.6650276e+04  1   356.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658162e-25. 
+
+  4  0.9 0.990 0.990  -4.7  -5.0   2.7 -7.6130807e+05  1  2683.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658474e-25. 
+
+  5  0.9 1.000 1.000  -6.5 -18.6   2.0 -3.5018263e+05  1    18.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.648801e-25. 
+
+  6  0.9 1.000 1.000  -7.0 -18.4   1.3 -1.2535335e+05  1     2.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646432e-25. 
+
+  7  0.1 0.854 0.854  -7.3 -18.9   0.6 -5.3986664e+05  1    14.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646300e-25. 
+
+  8 -0.6 1.000 1.000  -8.1 -18.4   0.0 -7.5559699e+05  1     4.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.650339e-25. 
+
+  9 -1.1 1.000 1.000  -8.2 -18.0  -0.5 -8.0490035e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.653627e-25. 
+
+ 10 -1.7 1.000 1.000  -8.1 -18.5  -1.1 -8.1599652e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654780e-25. 
+
+ 11 -2.2 1.000 1.000  -8.1 -18.9  -1.6 -8.1856106e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654970e-25. 
+
+ 12 -2.7 1.000 1.000  -8.1 -18.7  -2.2 -8.1922703e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655013e-25. 
+
+ 13 -3.3 1.000 1.000  -8.1 -18.5  -2.7 -8.1939480e+05  1     3.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655025e-25. 
+
+ 14 -3.8 1.000 1.000  -8.1 -18.6  -3.3 -8.1943758e+05  1     3.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655029e-25. 
+
+ 15 -4.4 1.000 1.000  -8.1 -18.9  -4.0 -8.1944902e+05  1     2.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 16 -5.2 1.000 1.000  -8.1 -18.6  -4.9 -8.1945207e+05  1     1.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 17 -6.3 1.000 1.000  -8.1 -18.7  -6.2 -8.1945270e+05  1     1.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 18 -8.0 1.000 1.000  -8.1 -18.8  -8.0 -8.1945275e+05  1     1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 19 -9.1 1.000 1.000  -8.1 -18.4  -9.1 -8.1945275e+05  1     1.0
+   Converged
+
+max |x| = 1638905.380    max |y| =      0.000    max |z| =      0.000   scaled
+max |x| = 1638905.380    max |y| =      0.034    max |z| =      0.034 unscaled
+PDitns =         19     LUitns =          0    cputime =        6.0
+
+Distribution of vector     x         z
+[  1e+06,   1e+07)        37         0
+[  1e+05,   1e+06)       523         0
+[  1e+04,   1e+05)       105         0
+[  1e+03,   1e+04)         9         0
+[    100,   1e+03)         0         0
+[     10,     100)         1         0
+[      1,      10)         0         0
+[    0.1,       1)       104         0
+[   0.01,     0.1)         4        73
+[      0,    0.01)        73       783Elapsed time is 2.018910 seconds.
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      111     n =      856      nnz(A) =     21658
+max |b | =        0     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+        1         1          1        111         0       0     744
+  [0, bu]  [bl,  0]  excluding fixed variables
+        1         1
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    0.3   0.0   0.0 -9.9999959e-01        1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  1  3.0 0.989 0.989  -1.7  -2.0   1.0 -9.3052066e+02  1     1.1    28954 x2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  2  2.0 0.896 0.896  -2.6  -2.9   1.0 -9.2350904e+03  1    10.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659122e-25. 
+
+  3  1.0 0.096 0.096  -2.7  -3.0   1.0 -2.6650276e+04  1   356.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658162e-25. 
+
+  4  0.9 0.990 0.990  -4.7  -5.0   2.7 -7.6130807e+05  1  2683.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658474e-25. 
+
+  5  0.9 1.000 1.000  -6.5 -18.8   2.0 -3.5018263e+05  1    18.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.648801e-25. 
+
+  6  0.9 1.000 1.000  -6.9 -18.2   1.3 -1.2535335e+05  1     2.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646432e-25. 
+
+  7  0.1 0.854 0.854  -7.3 -18.9   0.6 -5.3986664e+05  1    14.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646300e-25. 
+
+  8 -0.6 1.000 1.000  -8.1 -18.7   0.0 -7.5559699e+05  1     4.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.650339e-25. 
+
+  9 -1.1 1.000 1.000  -8.1 -18.0  -0.5 -8.0490035e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.653627e-25. 
+
+ 10 -1.7 1.000 1.000  -8.0 -18.3  -1.1 -8.1599652e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654780e-25. 
+
+ 11 -2.2 1.000 1.000  -8.1 -18.9  -1.6 -8.1856106e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654970e-25. 
+
+ 12 -2.7 1.000 1.000  -8.2 -18.7  -2.2 -8.1922703e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655013e-25. 
+
+ 13 -3.3 1.000 1.000  -8.0 -18.5  -2.7 -8.1939480e+05  1     3.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655025e-25. 
+
+ 14 -3.8 1.000 1.000  -8.1 -18.6  -3.3 -8.1943758e+05  1     3.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655029e-25. 
+
+ 15 -4.4 1.000 1.000  -8.1 -18.9  -4.0 -8.1944902e+05  1     2.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 16 -5.2 1.000 1.000  -8.1 -18.7  -4.9 -8.1945207e+05  1     1.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 17 -6.3 1.000 1.000  -8.3 -18.2  -6.2 -8.1945270e+05  1     1.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 18 -8.0 1.000 1.000  -8.2 -18.8  -8.0 -8.1945275e+05  1     1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 19 -9.2 1.000 1.000  -8.1 -18.3  -9.2 -8.1945275e+05  1     1.0
+   Converged
+
+max |x| = 1638905.380    max |y| =      0.000    max |z| =      0.000   scaled
+max |x| = 1638905.380    max |y| =      0.034    max |z| =      0.034 unscaled
+PDitns =         19     LUitns =          0    cputime =        6.3
+
+Distribution of vector     x         z
+[  1e+06,   1e+07)        37         0
+[  1e+05,   1e+06)       523         0
+[  1e+04,   1e+05)       105         0
+[  1e+03,   1e+04)         9         0
+[    100,   1e+03)         0         0
+[     10,     100)         1         0
+[      1,      10)         0         0
+[    0.1,       1)       104         0
+[   0.01,     0.1)         4        73
+[      0,    0.01)        73       783Elapsed time is 2.018581 seconds.
+ROWS Section
+COLUMNS section
+BOUNDS section
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      111     n =      856      nnz(A) =     21658
+max |b | =        0     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+        1         1          1        111         0       0     744
+  [0, bu]  [bl,  0]  excluding fixed variables
+        1         1
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    0.3   0.0   0.0 -9.9999959e-01        1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  1  3.0 0.989 0.989  -1.7  -2.0   1.0 -9.3052066e+02  1     1.1    28730 x2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  2  2.0 0.896 0.896  -2.6  -2.9   1.0 -9.2350904e+03  1    10.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659122e-25. 
+
+  3  1.0 0.096 0.096  -2.7  -3.0   1.0 -2.6650276e+04  1   356.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658162e-25. 
+
+  4  0.9 0.990 0.990  -4.7  -5.0   2.7 -7.6130808e+05  1  2683.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658474e-25. 
+
+  5  0.9 1.000 1.000  -6.5 -18.0   2.0 -3.5018264e+05  1    18.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.648801e-25. 
+
+  6  0.9 1.000 1.000  -6.9 -18.6   1.3 -1.2535336e+05  1     2.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646432e-25. 
+
+  7  0.1 0.854 0.854  -7.3 -18.5   0.6 -5.3986665e+05  1    14.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646300e-25. 
+
+  8 -0.6 1.000 1.000  -7.9 -18.7   0.0 -7.5559700e+05  1     4.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.650339e-25. 
+
+  9 -1.1 1.000 1.000  -8.1 -18.4  -0.5 -8.0490036e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.653627e-25. 
+
+ 10 -1.7 1.000 1.000  -8.0 -18.3  -1.1 -8.1599652e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654780e-25. 
+
+ 11 -2.2 1.000 1.000  -8.1 -18.2  -1.6 -8.1856107e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654970e-25. 
+
+ 12 -2.7 1.000 1.000  -8.1 -19.2  -2.2 -8.1922704e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655013e-25. 
+
+ 13 -3.3 1.000 1.000  -8.2 -18.0  -2.7 -8.1939481e+05  1     3.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655025e-25. 
+
+ 14 -3.8 1.000 1.000  -8.1 -18.1  -3.3 -8.1943758e+05  1     3.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655029e-25. 
+
+ 15 -4.4 1.000 1.000  -8.0 -18.6  -4.0 -8.1944902e+05  1     2.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 16 -5.2 1.000 1.000  -8.1 -18.8  -4.9 -8.1945208e+05  1     1.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 17 -6.3 1.000 1.000  -8.2 -18.3  -6.2 -8.1945271e+05  1     1.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 18 -8.0 1.000 1.000  -8.2 -18.1  -8.0 -8.1945276e+05  1     1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 19 -9.2 1.000 1.000  -8.2 -18.1  -9.2 -8.1945276e+05  1     1.0
+   Converged
+
+max |x| = 1638905.395    max |y| =      0.000    max |z| =      0.000   scaled
+max |x| = 1638905.395    max |y| =      0.034    max |z| =      0.034 unscaled
+PDitns =         19     LUitns =          0    cputime =        5.9
+
+Distribution of vector     x         z
+[  1e+06,   1e+07)        37         0
+[  1e+05,   1e+06)       523         0
+[  1e+04,   1e+05)       105         0
+[  1e+03,   1e+04)         9         0
+[    100,   1e+03)         0         0
+[     10,     100)         1         0
+[      1,      10)         0         0
+[    0.1,       1)       104         0
+[   0.01,     0.1)         4        73
+[      0,    0.01)        73       783Elapsed time is 1.936349 seconds.
+
+   --------------------------------------------------------
+   pdco.m                            Version of 23 Nov 2013
+   Primal-dual barrier method to minimize a convex function
+   subject to linear constraints Ax + r = b,  bl &lt;= x &lt;= bu
+                                                           
+   Michael Saunders       SOL and ICME, Stanford University
+   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)
+                     Santiago Akle (ICME), Matt Zahr (ICME)
+   --------------------------------------------------------
+
+A is a sparse matrix
+
+m =      111     n =      856      nnz(A) =     21658
+max |b | =        0     max |x0| =       xsize = 
+max |y0| =        0     max |z0| =       zsize = 
+
+x0min =        1     featol =       d1max = 
+z0min =        1     opttol =       d2max = 
+mu0 =      bigcenter =     1000
+
+Method   = LU
+
+
+Bounds:
+  [0, inf]  [-inf, 0]  Finite bl  Finite bu  Two bnds   Fixed    Free
+        1         1          1        111         0       0     744
+  [0, bu]  [bl,  0]  excluding fixed variables
+        1         1
+
+Itn   mu stepx stepz  Pinf  Dinf  Cinf   Objective    nf  center       LU
+  0                    0.3   0.0   0.0 -9.9999959e-01        1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  1  3.0 0.989 0.989  -1.7  -2.0   1.0 -9.3052066e+02  1     1.1    28954 x2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659129e-25. 
+
+  2  2.0 0.896 0.896  -2.6  -2.9   1.0 -9.2350904e+03  1    10.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.659122e-25. 
+
+  3  1.0 0.096 0.096  -2.7  -3.0   1.0 -2.6650276e+04  1   356.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658162e-25. 
+
+  4  0.9 0.990 0.990  -4.7  -5.0   2.7 -7.6130808e+05  1  2683.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.658474e-25. 
+
+  5  0.9 1.000 1.000  -6.5 -18.2   2.0 -3.5018264e+05  1    18.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.648801e-25. 
+
+  6  0.9 1.000 1.000  -6.9 -18.7   1.3 -1.2535336e+05  1     2.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646432e-25. 
+
+  7  0.1 0.854 0.854  -7.3 -18.8   0.6 -5.3986665e+05  1    14.3Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.646300e-25. 
+
+  8 -0.6 1.000 1.000  -8.0 -19.4   0.0 -7.5559700e+05  1     4.4Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.650339e-25. 
+
+  9 -1.1 1.000 1.000  -8.2 -18.8  -0.5 -8.0490036e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.653627e-25. 
+
+ 10 -1.7 1.000 1.000  -8.2 -18.5  -1.1 -8.1599652e+05  1     4.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654780e-25. 
+
+ 11 -2.2 1.000 1.000  -8.1 -18.4  -1.6 -8.1856107e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.654970e-25. 
+
+ 12 -2.7 1.000 1.000  -8.2 -18.7  -2.2 -8.1922704e+05  1     3.9Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655013e-25. 
+
+ 13 -3.3 1.000 1.000  -8.2 -18.5  -2.7 -8.1939481e+05  1     3.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655025e-25. 
+
+ 14 -3.8 1.000 1.000  -8.1 -18.3  -3.3 -8.1943758e+05  1     3.5Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655029e-25. 
+
+ 15 -4.4 1.000 1.000  -8.1 -19.2  -4.0 -8.1944902e+05  1     2.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 16 -5.2 1.000 1.000  -8.2 -19.2  -4.9 -8.1945208e+05  1     1.8Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 17 -6.3 1.000 1.000  -8.2 -18.0  -6.2 -8.1945271e+05  1     1.2Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 18 -8.0 1.000 1.000  -8.0 -18.1  -8.0 -8.1945276e+05  1     1.0Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.655030e-25. 
+
+ 19 -9.0 1.000 1.000  -8.1 -18.7  -9.0 -8.1945276e+05  1     1.0
+   Converged
+
+max |x| = 1638905.395    max |y| =      0.000    max |z| =      0.000   scaled
+max |x| = 1638905.395    max |y| =      0.034    max |z| =      0.034 unscaled
+PDitns =         19     LUitns =          0    cputime =        5.7
+
+Distribution of vector     x         z
+[  1e+06,   1e+07)        37         0
+[  1e+05,   1e+06)       523         0
+[  1e+04,   1e+05)       105         0
+[  1e+03,   1e+04)         9         0
+[    100,   1e+03)         0         0
+[     10,     100)         1         0
+[      1,      10)         0         0
+[    0.1,       1)       104         0
+[   0.01,     0.1)         4        73
+[      0,    0.01)        73       783Elapsed time is 1.870993 seconds.
+</pre><img vspace="5" hspace="5" src="modify_d1_d2_K35_01.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_02.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_03.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_04.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_05.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_06.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_07.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_08.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_09.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_10.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_11.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_12.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_13.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_14.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_15.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_16.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_17.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_18.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_19.png" alt=""> <img vspace="5" hspace="5" src="modify_d1_d2_K35_20.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Clean
+clear all
+close all
+clc
+%% Setup 1
+pdcoo_home = pwd;
+
+addpath(pdcoo_home);
+addpath(fullfile(pdcoo_home, 'Formulations'));
+addpath(fullfile(pdcoo_home, 'Solvers'));
+addpath(fullfile(pdcoo_home, 'readmps'));
+addpath(fullfile(pdcoo_home, 'Tools'));
+addpath(fullfile(pdcoo_home, 'Problems\MPS'));
+addpath(fullfile(pdcoo_home, 'Validation-eigenvalue'));
+p = genpath(fullfile(pdcoo_home, 'addons'));
+addpath(p);
+p = genpath(fullfile(pdcoo_home, 'Results'));
+addpath(p);
+if exist('Variants', 'dir') ~= 7
+    mkdir('Variants');
+end
+addpath(fullfile(pdcoo_home, 'Variants'));
+addpath(fullfile(pdcoo_home, 'Test'));
+%% Setup 2
+import model.lpmodel;
+import model.slackmodel;
+
+options_pdco.file_id = 1;
+
+formulation1 = 'K25';
+solver = 'LU';
+classname1 = build_variant(pdcoo_home, formulation1, solver);
+
+formulation2 = 'K35';
+solver = 'LU';
+classname2 = build_variant(pdcoo_home, formulation2, solver);
+
+formulation3 = 'K2';
+solver = 'LU';
+classname3 = build_variant(pdcoo_home, formulation3, solver);
+
+% path_lp = "D:\git_repository\Stage-K2.5\Problems\lp_prob\";
+% list_problem = ls(path_lp);
+% list_problem = path_lp + cellstr(list_problem(3:end,:));
+
+% path_milp = "D:\git_repository\Stage-K2.5\Problems\milp_prob\";
+% list_problem = ls(path_milp);
+% list_problem = path_milp + cellstr(list_problem(3:end,:));
+
+path_qp = '';
+% list_problem = ls(path_qp);
+% list_problem = path_qp + cellstr(list_problem(3:end,:));
+list_problem = {'D:\git_repository\Stage-K2.5\Problems\qp_prob\primal3.qps'}
+
+
+
+n_problem = length(list_problem);
+
+options_pdco.d1 = 1.0e-2;
+options_pdco.d2 = 1.0e-2;
+options_pdco.OptTol = 1.0e-9;
+options_solv.atol1 = 1.0e-4;
+options_solv.atol2 = 1.0e-10;
+options_solv.itnlim = 10;
+options_pdco.Print = 1;
+
+fprintf(options_pdco.file_id, ...
+    '\n    Name    Objectif   Presid   Dresid   Cresid   PDitns   Inner     Time      D2 * r\n\n');
+
+result = zeros(9,3,n_problem);
+%% Check eigenvalues and compare method
+n_problem = min(n_problem, 20000);
+check_eigenvalue = 1;
+check_eigenvalueK35 = 1;
+show_one_graphic = 0; % = 1  need check_eigenvalue = 1
+show_all_graphic = 0; % = 1  need check_eigenvalue = 1
+check_cond = 0;
+compare_formulations = 0;
+check_residu = 0;
+check_all_residu = 0; % = 1  need check_residu = 1
+%% Loop
+clc
+
+d1 = 10^-4;
+d2 = [0 10^-16 10^-12 10^-4 1];
+options_pdco.d1 = d1;
+
+for j = 1:length(d2)
+    options_pdco.d2 = d2(j);
+    
+    mps_name = list_problem{1};
+    
+    % Read .mps file
+    mps_stru = readmps(mps_name);
+    lp = mpstolp(mps_stru);
+    slack = slackmodel(lp);
+    Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
+    
+    options_pdco.x0 = slack.x0;
+    options_pdco.x0(slack.jLow) = slack.bL(slack.jLow) + 1;
+    options_pdco.x0(slack.jUpp) = slack.bU(slack.jUpp) - 1;
+    options_pdco.x0(slack.jTwo) = (slack.bL(slack.jTwo) + slack.bU(slack.jTwo)) / 2;
+    options_pdco.xsize = max(norm(options_pdco.x0, inf), 1);
+    options_pdco.zsize = max(norm(slack.gobj(slack.x0), inf) + sqrt(slack.n) * Anorm, 1);
+    options_pdco.z0 = options_pdco.zsize * ones(slack.n, 1);
+    options_pdco.y0 = zeros(slack.m, 1);
+    options_pdco.mu0 = options_pdco.zsize;
+    options_pdco.Maxiter = min(max(30, slack.n), 100);
+    options_pdco.check_eigenvalue = check_eigenvalue;
+    options_pdco.check_eigenvalueK35 = check_eigenvalueK35;
+    options_pdco.check_residu = check_residu;
+    options_pdco.check_cond = check_cond;
+    options_form = struct();
+    
+    Problem1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
+    Problem1.solve;
+    Problem2 = eval([classname2, '(slack, options_pdco,options_form,options_solv)']);
+    Problem2.solve;
+    
+    show_eigenvalue(Problem1.eigenvalue, Problem1.limit, d1, d2(j))
+    show_eigenvalueK35(Problem2.eigenvalue, d1, d2(j))
+    
+end
+
+fclose('all');
+##### SOURCE END #####
+--></body></html>

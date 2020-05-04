@@ -180,6 +180,9 @@ classdef pdcoO < handle
         check_limits % Input specific for K2.5
         % = 1 if you want to save the values of xmin, xamax, sigma min,
         % sigma max
+        check_eigenvalueK35 % Input specific for K2.5 :
+        % = 1 if you want to verify that eigenvalues belongs to theoritical
+        % intervals, =0 else
         result
         eigenvalue
         limit
@@ -368,6 +371,12 @@ classdef pdcoO < handle
                 o.check_eigenvalue = options.check_eigenvalue;
             else
                 o.check_eigenvalue = false;
+            end
+            
+            if isfield(options, 'check_eigenvalueK35')
+                o.check_eigenvalueK35 = options.check_eigenvalueK35;
+            else
+                o.check_eigenvalueK35 = false;
             end
             
             if isfield(options, 'check_residu')

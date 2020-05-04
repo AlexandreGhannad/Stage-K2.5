@@ -40,13 +40,13 @@ options_pdco.Print = 1;
 fprintf(options_pdco.file_id, ...
         '\n    Name    Objectif   Presid   Dresid   Cresid   PDitns   Inner     Time      D2 * r\n\n');
 %% Check eigenvalues and compare method
-check_eigenvalue = 1
-show_one_graphic = 1; % = 1  need check_eigenvalue = 1
+check_eigenvalue = 0
+show_one_graphic = 0; % = 1  need check_eigenvalue = 1
 show_all_graphic = 0; % = 1  need check_eigenvalue = 1
-check_cond = 1;
-check_residu = 1;
+check_cond = 0;
+check_residu = 0;
 check_all_residu = 0; % = 1  need check_residu = 1
-check_limits = 1;
+check_limits = 0;
 %% Loop
 clc
 

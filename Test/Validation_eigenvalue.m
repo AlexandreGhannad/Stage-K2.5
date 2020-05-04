@@ -14,8 +14,10 @@ addpath(fullfile(pdcoo_home, 'Problems\MPS'));
 addpath(fullfile(pdcoo_home, 'Validation-eigenvalue'));
 p = genpath(fullfile(pdcoo_home, 'addons'));
 addpath(p);
+p = genpath(fullfile(pdcoo_home, 'Results'));
+addpath(p);
 if exist('Variants', 'dir') ~= 7
-  mkdir('Variants');
+    mkdir('Variants');
 end
 addpath(fullfile(pdcoo_home, 'Variants'));
 addpath(fullfile(pdcoo_home, 'Test'));

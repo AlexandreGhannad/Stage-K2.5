@@ -1,0 +1,11 @@
+dual1.qps
+dual2.qps
+dual3.qps
+dual4.qps
+dualc1.qps
+dualc2.qps
+dualc5.qps
+dualc8.qps
+genhs28.qps
+gouldqp2.qps
+gouldqp3.qps
