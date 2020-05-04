@@ -28,15 +28,15 @@ import model.slackmodel;
 options_pdco.file_id = 1;
 
 formulation1 = 'K25';
-solver = 'LU';
+solver = 'LDL';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
 formulation2 = 'K35';
-solver = 'LU';
+solver = 'LDL';
 classname2 = build_variant(pdcoo_home, formulation2, solver);
 
 formulation3 = 'K2';
-solver = 'LU';
+solver = 'LDL';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
 path_qp = '';
@@ -48,7 +48,9 @@ n_problem = length(list_problem);
 
 options_pdco.d1 = 1.0e-2;
 options_pdco.d2 = 1.0e-2;
-options_pdco.OptTol = 1.0e-9;
+options_pdco.OptTol = 1.0e-10;
+options_pdco.FeaTol = 1.0e-10;
+
 options_solv.atol1 = 1.0e-4;
 options_solv.atol2 = 1.0e-10;
 options_solv.itnlim = 10;
@@ -71,7 +73,8 @@ check_all_residu = 0; % = 1  need check_residu = 1
 %% Loop
 clc
 
-d1 = 10^-4;
+% d1 = 10^-4;
+d1 = 0;
 d2 = [0 10^-16 10^-4 10^-2 10^-1 1];
 options_pdco.d1 = d1;
 for j = 1:length(d2)
