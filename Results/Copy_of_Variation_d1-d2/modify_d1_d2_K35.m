@@ -72,7 +72,7 @@ check_all_residu = 0; % = 1  need check_residu = 1
 clc
 
 d1 = 10^-4;
-d2 = [0 10^-16 10^-12 10^-4 1];
+d2 = [0 10^-16 10^-4 10^-2 10^-1 1];
 options_pdco.d1 = d1;
 for j = 1:length(d2)
     options_pdco.d2 = d2(j);
