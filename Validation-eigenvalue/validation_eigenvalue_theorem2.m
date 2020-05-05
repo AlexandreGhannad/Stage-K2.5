@@ -1,12 +1,13 @@
-function [result, eigenvalue, limit, rapport, err, lambda_max, lambda_min, sigma_max, sigma_min] = validation_eigenvalue(o)
+function [result, eigenvalue, limit, rapport, err, lambda_max, lambda_min, sigma_max, sigma_min] = validation_eigenvalue_theorem2(o)
 % Calculate the bounds with the theorem 1
 %% Save different values
 A = o.A;
 hess_eigen = eigs(o.hess);
 xmax = max(abs(o.x));
-xmin = min(abs(o.x));
 zmax = max(o.z1-o.z2);
-zmin = min(o.z1-o.z2);
+
+xmin = min(abs(o.x));
+
 
 % Maximal and minimal eigenvalue of H
 lambda_max = max(hess_eigen);
@@ -42,11 +43,11 @@ end
 
 %% Calcul of the bounds
 
-eta_max = (lambda_max + o.d1^2) * xmax + zmax;
-eta_min = (lambda_min + o.d1^2) * xmin + zmin;
+eta_max = (lambda_max + o.d1^2) * xmax;
+eta_min = (lambda_min + o.d1^2) * xmin;
 
 rho_min_negative = 0.5 * ( o.d2^2 - eta_max - ( (eta_max+o.d2^2)^2 + 4*xmax * sigma_max^2 )^0.5 );
-rho_max_negative = -max( eta_min - zmin , min((o.d1^2)*o.x+o.z1-o.z2));
+rho_max_negative = -eta_min;
 rho_min_positive = 0.5 * ( o.d2^2 - eta_max + ( (eta_max+o.d2^2)^2 + 4*xmin * sigma_min^2 )^0.5 );
 rho_max_positive = 0.5 * ( o.d2^2 - eta_min + ( (eta_min+o.d2^2)^2 + 4*xmax * sigma_max^2 )^0.5 );
 limit = [rho_min_negative;rho_max_negative;rho_min_positive;rho_max_positive];

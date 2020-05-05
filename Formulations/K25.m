@@ -125,10 +125,10 @@ classdef K25 < handle
             
             if o.check_eigenvalue
                 if o.check_limits
-                    [result, eigenvalue, limit, rapport, err, lambda_max, lambda_min, sigma_max, sigma_min] = validation_eigenvalue(o.M,o.n);
+                    [result, eigenvalue, limit, rapport, err, lambda_max, lambda_min, sigma_max, sigma_min] = validation_eigenvalue(o);
                     o.features_limits = [o.features_limits [lambda_max; lambda_min; sigma_max; sigma_min]];
                 else
-                    [result, eigenvalue, limit, rapport, err] = validation_eigenvalue(o.M,o.n);
+                    [result, eigenvalue, limit, rapport, err] = validation_eigenvalue(o);
                 end
                 o.rapport = [o.rapport rapport];
                 o.err = [o.err err];

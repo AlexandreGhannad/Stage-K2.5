@@ -1,16 +1,12 @@
-function [result, eigenvalue, limit, rapport, err, lambda_max, lambda_min, sigma_max, sigma_min] = validation_eigenvalue(o)
-% Calculate the bounds with the theorem 1
-%% Save different values
-A = o.A;
-hess_eigen = eigs(o.hess);
-xmax = max(abs(o.x));
-xmin = min(abs(o.x));
-zmax = max(o.z1-o.z2);
-zmin = min(o.z1-o.z2);
-
+function [result, eigenvalue, limit, rapport, err, lambda_max, lambda_min, sigma_max, sigma_min] = validation_eigenvalue_proposition_1(o)
+% the values of the different rho are based on the proposition 1
+% (Friedlader and Orban, 2012, Theorem 5.1)
+H = - o.M(1:o.n,1:o.n);
+A = o.M(o.n+1:end, 1:o.n);
+Delta = diag(o.M(o.n+1:end, o.n+1:end));
 % Maximal and minimal eigenvalue of H
-lambda_max = max(hess_eigen);
-lambda_min = min(hess_eigen);
+lambda_max = eigs(H,1, "largestab");
+lambda_min = eigs(H,1, "smallestabs");
 % Maximal and minimal singular value of H
 sigma_max = svds(A,1, "largest");
 sigma_min = svds(A,1, "smallest");
@@ -40,15 +36,15 @@ while(isnan(lambda_max))
     cpt = cpt+1;
 end
 
-%% Calcul of the bounds
+%% Calcul of bounds for eigenvalue
+% First method for little problem: all the eigenvalues are verified
 
-eta_max = (lambda_max + o.d1^2) * xmax + zmax;
-eta_min = (lambda_min + o.d1^2) * xmin + zmin;
+delta = max(Delta);
 
-rho_min_negative = 0.5 * ( o.d2^2 - eta_max - ( (eta_max+o.d2^2)^2 + 4*xmax * sigma_max^2 )^0.5 );
-rho_max_negative = -max( eta_min - zmin , min((o.d1^2)*o.x+o.z1-o.z2));
-rho_min_positive = 0.5 * ( o.d2^2 - eta_max + ( (eta_max+o.d2^2)^2 + 4*xmin * sigma_min^2 )^0.5 );
-rho_max_positive = 0.5 * ( o.d2^2 - eta_min + ( (eta_min+o.d2^2)^2 + 4*xmax * sigma_max^2 )^0.5 );
+rho_min_negative = 0.5 * ( delta - lambda_max - ( (lambda_max+delta)^2 + 4*sigma_max^2 )^0.5 );
+rho_max_negative = -lambda_min;
+rho_min_positive = 0.5 * ( delta - lambda_max + ( (lambda_max+delta)^2 + 4*sigma_min^2 )^0.5 );
+rho_max_positive = 0.5 * ( delta - lambda_min + ( (lambda_min+delta)^2 + 4*sigma_max^2 )^0.5 );
 limit = [rho_min_negative;rho_max_negative;rho_min_positive;rho_max_positive];
 
 eigenvalue = eigs(o.M, size(o.M,1));

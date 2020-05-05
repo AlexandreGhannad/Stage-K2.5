@@ -41,8 +41,9 @@ if exist("features_limits")
     % Plot positive eigenvalue
     figure()
     subplot(211)
-    semilogy(limit(3:4,:)', "LineWidth", 3)
+    semilogy(limit(4,:)', "LineWidth", 3)
     hold on
+    semilogy(limit(3,:)', "LineWidth", 3)
     tmp = eigenvalue';
     tmp(tmp<0) = NaN; % Negative eigenvalue are set at NaN in order to have gaps when we display them
     semilogy(tmp, "k.")
@@ -95,8 +96,9 @@ else
     
     % Plot positive eigenvalue
     figure()
-    semilogy(limit(3:4,:)', "LineWidth", 3)
+    semilogy(limit(4,:)', "LineWidth", 3)
     hold on
+    semilogy(limit(3,:)', "LineWidth", 3)
     tmp = eigenvalue';
     tmp(tmp<0) = NaN; % Negative eigenvalue are set at NaN in order to have gaps when we display them
     semilogy(tmp, "k.")
