@@ -1,8 +1,8 @@
-function [result, eigenvalue, limit, rapport, err, lambda_max, lambda_min, sigma_max, sigma_min] = validation_eigenvalue(o)
+function [result, eigenvalue, limit, rapport, err, lambda_max, lambda_min, sigma_max, sigma_min, xmax, xmin, zmax, zmin] = validation_eigenvalue(o)
 % Calculate the bounds with the theorem 1
 %% Save different values
 A = o.A;
-hess_eigen = eigs(o.hess);
+hess_eigen = eigs(o.hess, size(o.hess, 1));
 xmax = max(abs(o.x));
 xmin = min(abs(o.x));
 zmax = max(o.z1-o.z2);
@@ -25,18 +25,6 @@ end
 cpt = 1;
 while(isnan(sigma_max))
     sigma_max = max(svds(A, cpt * 20, "largest"), [], "all");
-    cpt = cpt+1;
-end
-
-cpt = 1;
-while(isnan(lambda_min))
-    lambda_min = min(eigs(H, cpt * 20, "smallestab"), [], "all");
-    cpt = cpt+1;
-end
-
-cpt = 1;
-while(isnan(lambda_max))
-    lambda_max = max(eigs(H, cpt * 20, "largestab"), [], "all");
     cpt = cpt+1;
 end
 

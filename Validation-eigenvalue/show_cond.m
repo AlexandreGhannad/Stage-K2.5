@@ -6,7 +6,7 @@ xlabel("Iteration")
 ylabel("conditionning")
 title("Evolution of the conditionning")
 
-if not(isempty(limits))
+if exist("limits")
     hold on
     tmp = max(abs(limits)) ./ min(abs(limits));
     semilogy(tmp)
@@ -17,19 +17,15 @@ if(exist("cond2"))
     semilogy(cond2, "b+")
 end
 
-if not(isempty(limits)) & exist("cond2")
+if not(exist("limits")) & exist("cond2")
     legend("Conditionning", "Bound on the conditionning",formulation)
-elseif not(isempty(limits)) & not(exist("cond2"))
+elseif not(exist("limits")) & not(exist("cond2"))
     legend("Conditionning", "Bound on the conditionning")
-elseif isempty(limits) & exist("cond2")
+elseif exist("limits") & exist("cond2")
     legend("Conditionning", formulation)
 else
     legend("Conditionning")
 end
-
-    
-
-
 
 if exist("d1") & exist("d2")
     title("Evolution of the conditionning, (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
@@ -40,7 +36,4 @@ elseif exist("d2")
 else
     title("Evolution of the conditionning)")
 end
-
-
-
 end

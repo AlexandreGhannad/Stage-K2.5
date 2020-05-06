@@ -1,4 +1,4 @@
-classdef pdcoO < handle 
+classdef pdcoO < handle
     %-----------------------------------------------------------------------
     % pdcoO.m: Primal-Dual Barrier Method for Convex Objectives
     %-----------------------------------------------------------------------
@@ -83,16 +83,16 @@ classdef pdcoO < handle
         y           % dual solution associated with Ax + D2 r = b
         z           % dual solution associated with bl <= x <= bu
         inform      % final solver status
-                    % inform = 0 if a solution is found
-                    % = 1 if too many iterations were required
-                    % = 2 if the linesearch failed too often
-                    % = 3 if the step lengths became too small
-                    % = 4 if other errors occured.
+        % inform = 0 if a solution is found
+        % = 1 if too many iterations were required
+        % = 2 if the linesearch failed too often
+        % = 3 if the step lengths became too small
+        % = 4 if other errors occured.
         PDitns      % number of primal-dual barrier iterations required
         inner_itns  % number of inner iterations required in a given outer iteration
         inner_total % total number of inner iterations required
         time        % the cpu time used (via cputime)
-                    % (we also use tic/toc to allow for multicore systems.)
+        % (we also use tic/toc to allow for multicore systems.)
         
         explicitA
         zn
@@ -178,13 +178,11 @@ classdef pdcoO < handle
         check_cond % Input specific for K2.5 and K3.5
         % = 1 if you want to see the evolution of the conditionning
         check_limits % Input specific for K2.5
-        % = 1 if you want to save the values of xmin, xamax, sigma min,
+        % = 1 if you want to save the values of xmin, xmax, sigma min,
         % sigma max
         check_eigenvalueK35 % Input specific for K3.5 :
         % = 1 if you want to verify that eigenvalues belongs to theoritical
         % intervals, =0 else
-        check_features_eigenvalue % Input specific for K3.5 :
-        % = 1 if you want to save values linked to the eigenvalues bounds
         result
         eigenvalue
         limit
@@ -195,16 +193,23 @@ classdef pdcoO < handle
         evolution_mu
         features_limits
         
+        
+        check_theorem2 % Input specific for K2.5 :
+        % = 1 if you want to verify that eigenvalues belongs to theoritical
+        % intervals of theorem 2, =0 else
+        method % Specific to K2.5, to use the theorem 2
+        features_theorem2;
+        
     end
     
     methods (Abstract) % Should be defined in subclasses
-       
+        
         Print_param(o)      % Print parameters which are specific to the subclass
         Init_param(o)       % Initialize some parameters for the subclass
         Solve_Newton(o)           % Solve Newton system
         Print_results(o)    % Print some results specific to the subclass
         Reset_param(o)      % Reset some parameters specific to the subclass at the end of the loop
-  
+        
     end
     
     methods
@@ -212,7 +217,7 @@ classdef pdcoO < handle
         % Builder
         function o = pdcoO(slack, options)
             % PDCO contructor :
-            % Inputs : 
+            % Inputs :
             %   slack         : a slackmodel or slackmodel_spot object
             %
             %   options is a structure that may contains following
@@ -237,7 +242,7 @@ classdef pdcoO < handle
             %                   ifndef FeaTol = 1.0e-6
             %       OptTol    : scalar of accuracy in inequality constraints
             %                   ifndef OptTol = 1.0e-6
-            %       Print     : 1 for give output, else 0 
+            %       Print     : 1 for give output, else 0
             %                   ifndef Print = 1
             %       StepTol   : scalar which control how x and z reach the
             %                   bounds
@@ -386,7 +391,7 @@ classdef pdcoO < handle
             else
                 o.check_residu = false;
             end
-           
+            
             if isfield(options, 'check_cond')
                 o.check_cond = options.check_cond;
             else
@@ -398,8 +403,21 @@ classdef pdcoO < handle
             else
                 o.check_limits = false;
             end
+            
+            if isfield(options, 'check_theorem2')
+                o.check_theorem2 = options.check_theorem2;
+            else
+                o.check_theorem2 = false;
+            end
+            
+            if isfield(options, 'method')
+                o.method = options.method;
+            else
+                o.method = "Threshold";
+            end
+            
         end
-          
+        
         % TODO: slackmodel already does this!
         function categorize_bounds(o)
             % Categorize various types of bounds.
@@ -411,7 +429,7 @@ classdef pdcoO < handle
             % 26 Feb 2010: zlo and zup now point to variables with bl = 0 or bu = 0
             %              respectively, with bl < bu.  Needed to keep x
             %              strictly positive or negative.
-
+            
             bigL = -9.9e+19;
             bigU = 9.9e+19;
             pos = find(o.bl == 0 & o.bu >= bigU);
@@ -425,7 +443,7 @@ classdef pdcoO < handle
             free = find(o.bl <= bigL & o.bu >= bigU);
             o.zlo = find(o.bl == 0 & o.bl < o.bu);
             o.zup = find(o.bu == 0 & o.bl < o.bu);
-
+            
             if o.Prilev > 0
                 fprintf(o.file_id, '\n\nBounds:\n  [0, inf]  [-inf, 0]');
                 fprintf(o.file_id, '  Finite bl  Finite bu  Two bnds   Fixed    Free');
@@ -442,16 +460,16 @@ classdef pdcoO < handle
             % distribution of 1 or 2 vectors.
             %
             % 18 Dec 2000.  First version with 2 vectors.
-
+            
             two2 = nargin > 1;
             fprintf(o.file_id, '\n\nDistribution of vector     x');
             if two2, fprintf(o.file_id, '         z'); end
-
+            
             x1_d = 10^(floor(log10(max(x)+eps)) + 1);
             z1_d = 10^(floor(log10(max(z)+eps)) + 1);
             x1_d = max(x1_d, z1_d);
             kmax = 10;
-
+            
             for k = 1:kmax
                 x2_d = x1_d;    x1_d = x1_d/10;
                 if k == kmax, x1_d = 0; end
@@ -463,17 +481,17 @@ classdef pdcoO < handle
                 end
             end
         end
-            
+        
         function merit(o)
             % Evaluate the merit function for Newton's method.
             % It is the 2-norm of the three sets of residuals.
-
+            
             f = [norm(o.r1)
-                 norm(o.r2)
-                 norm(o.rL(o.low))
-                 norm(o.rU(o.upp))
-                 norm(o.cL(o.low))
-                 norm(o.cU(o.upp))];
+                norm(o.r2)
+                norm(o.rL(o.low))
+                norm(o.rU(o.upp))
+                norm(o.cL(o.low))
+                norm(o.cU(o.upp))];
             o.fmerit = norm(f);
         end
         
@@ -489,7 +507,7 @@ classdef pdcoO < handle
             x_res1(o.fix) = 0;
             o.r1 = o.A * x_res1;
             o.r2 = o.A' * o.y ;
-
+            
             o.r1 = o.b - o.r1 - (o.d2.^2) .* o.y;
             o.r2 = o.grad - o.r2;  % + (z2-z1);        % grad includes (d1.^2)*x
             o.r2(o.fix) = 0;
@@ -497,7 +515,7 @@ classdef pdcoO < handle
             o.r2(o.low) = o.r2(o.low) - o.z1(o.low);
             o.rL(o.low) = (o.bl(o.low) - o.x(o.low)) + o.x1(o.low);
             o.rU(o.upp) = (- o.bu(o.upp) + o.x(o.upp)) + o.x2(o.upp);
-
+            
             o.Pinf = max([norm(o.r1, inf) norm(o.rL(o.low), inf) norm(o.rU(o.upp), inf)]);
             o.Dinf = norm(o.r2, inf);
             o.Pinf = max(o.Pinf, 1.0e-99);
@@ -514,12 +532,12 @@ classdef pdcoO < handle
             %                      Now changed to Cinf0 = 0;
             % 03 Apr 2010: If all variables are free, we need to define center.
             %              Set center = 1.0 arbitrarily.
-
+            
             x1z1 = o.x1(o.low) .* o.z1(o.low);
             x2z2 = o.x2(o.upp) .* o.z2(o.upp);
             o.cL(o.low) = o.mu - x1z1;
             o.cU(o.upp) = o.mu - x2z2;
-
+            
             maxXz = max([max(x1z1) max(x2z2)]);
             minXz = min([min(x1z1) min(x2z2)]);
             maxXz = max(maxXz, 1.0e-99);
@@ -536,7 +554,7 @@ classdef pdcoO < handle
         function stepf = step_to_boundary(~, x, dx)
             % Assumes x > 0.
             % Finds the maximum step such that x + step*dx >= 0.
-
+            
             stepf = 1.0e+20;
             blocking = find(dx < 0);
             if ~isempty(blocking)
@@ -549,15 +567,15 @@ classdef pdcoO < handle
         function solve(o)
             
             if o.Prilev > 0
-               fprintf(o.file_id, '\n   --------------------------------------------------------');
-               fprintf(o.file_id, '\n   pdco.m                            Version of 23 Nov 2013');
-               fprintf(o.file_id, '\n   Primal-dual barrier method to minimize a convex function');
-               fprintf(o.file_id, '\n   subject to linear constraints Ax + r = b,  bl <= x <= bu');
-               fprintf(o.file_id, '\n                                                           ');
-               fprintf(o.file_id, '\n   Michael Saunders       SOL and ICME, Stanford University');
-               fprintf(o.file_id, '\n   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)');
-               fprintf(o.file_id, '\n                     Santiago Akle (ICME), Matt Zahr (ICME)');
-               fprintf(o.file_id, '\n   --------------------------------------------------------\n');
+                fprintf(o.file_id, '\n   --------------------------------------------------------');
+                fprintf(o.file_id, '\n   pdco.m                            Version of 23 Nov 2013');
+                fprintf(o.file_id, '\n   Primal-dual barrier method to minimize a convex function');
+                fprintf(o.file_id, '\n   subject to linear constraints Ax + r = b,  bl <= x <= bu');
+                fprintf(o.file_id, '\n                                                           ');
+                fprintf(o.file_id, '\n   Michael Saunders       SOL and ICME, Stanford University');
+                fprintf(o.file_id, '\n   Contributors:     Byunggyoo Kim (SOL), Chris Maes (ICME)');
+                fprintf(o.file_id, '\n                     Santiago Akle (ICME), Matt Zahr (ICME)');
+                fprintf(o.file_id, '\n   --------------------------------------------------------\n');
             end
             
             %---------------------------------------------------------------------
@@ -579,23 +597,23 @@ classdef pdcoO < handle
                     fprintf(o.file_id, '\n\nm = %8d     n = %8d', o.m, o.n);
                 end
             end
-
+            
             normb = norm(o.b , inf);   normx0 = norm(o.x0, inf);
             normy0 = norm(o.y0, inf);   normz0 = norm(o.z0, inf);
-
+            
             if o.Prilev > 0
                 fprintf(o.file_id, '\nmax |b | = %8d     max |x0| = %8.1.0e', normb , normx0);
                 fprintf(o.file_id,                '      xsize = %8.1.0e', o.xsize);
                 fprintf(o.file_id, '\nmax |y0| = %8d     max |z0| = %8.1.0e', normy0, normz0);
                 fprintf(o.file_id,                '      zsize = %8.1.0e', o.zsize);
             end
-
+            
             % Initialize.
             o.zn = zeros(o.n, 1);
             o.inner_itns = 0;
             o.inner_total = 0;
             o.inform = 0;
-
+            
             % Set other parameters.
             o.eta = 1.0e-4;         % Linesearch tolerance for "sufficient descent"
             o.maxf = 10;            % Linesearch backtrack limit (function evaluations)
@@ -611,10 +629,10 @@ classdef pdcoO < handle
                 fprintf(o.file_id,                  '      d2max = %8.1.0e', o.delta);
                 fprintf(o.file_id,  '\nmu0 = %8.1.0e     steptol = %8g', o.mu0  , o.steptol);
                 fprintf(o.file_id,                  '     bigcenter = %8g'  , o.bigcenter);
-            
+                
                 Print_param(o);
             end
-
+            
             % Check for valid Method.
             o.time = cputime;
             if o.Prilev > 0
@@ -623,7 +641,7 @@ classdef pdcoO < handle
             
             % Categorize bounds and allow for fixed variables by modifying b.
             categorize_bounds(o);
-
+            
             if o.nfix > 0
                 o.x1 = o.zn;
                 o.x1(o.fix) = o.bl(o.fix);
@@ -631,7 +649,7 @@ classdef pdcoO < handle
                 o.b = o.b - o.r1;
                 % At some stage, might want to look at normfix = norm(r1, inf);
             end
-
+            
             % Scale the input data.
             % The scaled variables are
             %    xbar = x / beta,
@@ -648,17 +666,17 @@ classdef pdcoO < handle
             o.theta = o.beta * o.zeta;                             % theta scales obj.
             % (theta could be anything, but theta = beta * zeta makes
             % scaled grad = grad / zeta = 1 approximately if zeta is chosen right.)
-
+            
             o.bl(o.fix) = o.bl(o.fix) / o.beta;
             o.bu(o.fix) = o.bu(o.fix) / o.beta;
             o.bl(o.low) = o.bl(o.low) / o.beta;
             o.bu(o.upp) = o.bu(o.upp) / o.beta;
             o.d1 = o.d1 * (o.beta / sqrt(o.theta));
             o.d2 = o.d2 * (sqrt(o.theta) / o.beta);
-
+            
             o.b = o.b / o.beta;   o.y0 = o.y0 / o.zeta;
             o.x0 = o.x0 / o.beta; o.z0 = o.z0 / o.zeta;
-
+            
             % Initialize vectors that are not fully used if bounds are missing.
             o.rL = o.zn;   o.rU = o.zn;
             o.cL = o.zn;   o.cU = o.zn;
@@ -666,7 +684,7 @@ classdef pdcoO < handle
             o.z1 = o.zn;   o.z2 = o.zn;
             o.dx1 = o.zn;   o.dx2 = o.zn;
             o.dz1 = o.zn;   o.dz2 = o.zn;
-
+            
             % Initialize x, y, z1, z2, objective, etc.
             % 10 Aug 2003: z isn't needed here -- just at end for output.
             % 03 Jul 2008: Use pos to ensure that x = x1 for vanilla bounds.
@@ -700,7 +718,7 @@ classdef pdcoO < handle
                     error('Hessian size mismatch');
                 end
             end
-  
+            
             o.obj = o.obj / o.theta; % Scaled obj.
             o.grad = o.grad*(o.beta / o.theta) + (o.d1.^2) .* o.x; % grad includes x regularization.
             o.H = o.hess * (o.beta * o.beta / o.theta);
@@ -709,13 +727,13 @@ classdef pdcoO < handle
             else
                 o.H = o.H + sparse(1:o.n, 1:o.n, (o.d1.^2), o.n, o.n); % H includes x regularization.
             end
-
+            
             % Compute primal and dual feasibility residuals:
             %    r1 = b - A*x - d2.^2*y
             %    r2 = grad - A'*y + (z2-z1)
             %    rL = bl - x + x1
             feasibility_resids(o);
-
+            
             % Initialize mu and complementarity residuals:
             %    cL = mu*e - X1*z1.
             %    cU = mu*e - X2*z2.
@@ -745,21 +763,21 @@ classdef pdcoO < handle
             o.mufirst = max(o.mufirst, o.mulast);
             o.mu = o.mufirst;
             complementarity_resids(o);
-
+            
             % Compute initial merit function value.
             merit(o);
-
+            
             % Initialize other things.
             o.PDitns = 0;
             converged = 0;
             Init_param(o);
-
+            
             %  Iteration log.
             o.nfail = 0;
             o.regterm = norm(o.d1 .* o.x)^2 + norm(o.d2 .* o.y)^2;
             o.objreg = o.obj + 0.5 * o.regterm;
             o.objtrue = o.objreg * o.theta;
-
+            
             if o.Prilev > 0
                 head1 = '\n\nItn   mu stepx stepz  Pinf  Dinf';
                 head2 = '  Cinf   Objective    nf  center';
@@ -769,7 +787,7 @@ classdef pdcoO < handle
                 fprintf(o.file_id, '%6.1f%15.7e', log10(o.Cinf0), o.objtrue);
                 fprintf(o.file_id, '   %8.1f', o.center);
             end
-
+            
             % Main loop.
             while ~converged
                 o.PDitns = o.PDitns + 1;
@@ -780,12 +798,12 @@ classdef pdcoO < handle
                 end
                 % Compute step. This is performed in a subclass.
                 Solve_Newton(o);
-
                 
-                if o.inform == 4 
-                    break 
+                
+                if o.inform == 4
+                    break
                 end
-
+                
                 % Find the maximum step size.
                 % 13 Aug 2003: We need stepxL, stepxU also to keep x feasible
                 %              so that nonlinear functions are defined.
@@ -805,11 +823,11 @@ classdef pdcoO < handle
                     stepx = min(stepx, stepz);   % (true Newton method)
                     stepz = stepx;
                 end
-
+                
                 % Backtracking linesearch.
                 fail = true;
                 o.nf = 0;
-
+                
                 while o.nf < o.maxf
                     o.nf = o.nf + 1;
                     o.x1(o.low) = o.x1(o.low) + stepx * o.dx1(o.low);
@@ -820,7 +838,7 @@ classdef pdcoO < handle
                     o.y = o.y + stepz * o.dy;
                     o.x(o.zlo) = o.x1(o.zlo);
                     o.x(o.zup) = -o.x2(o.zup);
-
+                    
                     [o.obj, o.grad, o.hess] = o.slack.obj(o.x * o.beta);
                     if o.diagHess
                         if mH>1 && nH>1
@@ -835,17 +853,17 @@ classdef pdcoO < handle
                     else
                         o.H = o.H + sparse(1:o.n, 1:o.n, (o.d1.^2), o.n, o.n); % H includes x regularization.
                     end
-
+                    
                     feasibility_resids(o);
                     complementarity_resids(o);
                     merit(o);
                     o.step = min(stepx, stepz);
-
+                    
                     if ~o.backtrack || fmeritnew <= (1 - o.eta*o.step)*o.fmerit
                         fail = false;
                         break;
                     end
-
+                    
                     % Merit function didn't decrease.
                     % Restore variables to previous values.
                     % (This introduces a little error, but save lots of space.)
@@ -857,7 +875,7 @@ classdef pdcoO < handle
                     o.z2(o.upp) = o.z2(o.upp) - stepz * o.dz2(o.upp);
                     o.x(o.zlo) = o.x1(o.zlo);
                     o.x(o.zup) = -o.x2(o.zup);
-
+                    
                     % Back-track.
                     % If it's the first time,
                     % make stepx and stepz the same.
@@ -866,27 +884,27 @@ classdef pdcoO < handle
                     elseif o.nf < o.maxf
                         stepx = stepx / 2;
                     end;
-                        stepz = stepx;
+                    stepz = stepx;
                 end
-
+                
                 if fail
                     fprintf(o.file_id, '\n     Linesearch failed (nf too big)');
                     o.nfail = o.nfail + 1;
                 else
                     o.nfail = 0;
                 end
-
+                
                 % Set convergence measures.
                 o.regterm = norm(o.d1.*o.x)^2 + norm(o.d2.*o.y)^2;
                 o.objreg = o.obj + 0.5 * o.regterm;
                 o.objtrue = o.objreg * o.theta;
-
+                
                 primalfeas = o.Pinf <= o.featol;
                 dualfeas = o.Dinf <= o.featol;
                 complementary = o.Cinf0 <= o.opttol;
                 enough = o.PDitns >= 4; % Prevent premature termination.
                 converged = primalfeas & dualfeas & complementary & enough;
-
+                
                 % Iteration log.
                 if o.Prilev > 0
                     str1 = sprintf('\n%3g%5.1f', o.PDitns, log10(o.mu));
@@ -903,7 +921,7 @@ classdef pdcoO < handle
                     fprintf(o.file_id, [str1 str2 str3 str4 str5]);
                     Print_results(o);
                 end
-
+                
                 % Test for termination.
                 if converged
                     if o.Prilev > 0
@@ -935,33 +953,33 @@ classdef pdcoO < handle
                     muold = o.mu;
                     mumin = 0.1 * max([o.Pinf o.Dinf o.Cinf]); % Target mu shouldn't be too small.
                     mumin = min(o.mu, mumin); % mu should be monotonic.
-
+                    
                     o.mu = o.mu - stepmu * o.mu; % mu being treated as a variable.
                     if o.center >= o.bigcenter, o.mu = muold; end  % Keep old mu if far from center.
                     o.mu = max(o.mu, mumin); % 04 May 2008: No smaller than target.
                     o.mu = max(o.mu, o.mulast); % 13 Jun 1998: No need for smaller mu.
-
+                    
                     % mutrad = mu0 * (sum(Xz) / n); % 24 May 1998: Traditional value, but
                     % mu = min(mu, mutrad); % it seemed to decrease mu too much.
-
+                    
                     o.mu = max(o.mu, o.mulast);  % 13 Jun 1998: No need for smaller mu.
                     complementarity_resids(o);
                     merit(o);
                     Reset_param(o);
                     
-
+                    
                 end
             end
             %---------------------------------------------------------------------
             % End of main loop.
             %---------------------------------------------------------------------
-
+            
             % Reconstruct z.
             o.x(o.fix) = 0; % Exclude x(fix) temporarily from |x|.
             o.z = zeros(o.n, 1); % Exclude z(fix) also.
             o.z(o.low) = o.z1(o.low);
             o.z(o.upp) = o.z(o.upp) - o.z2(o.upp);
-
+            
             % Print statistics.
             if o.Prilev > 0
                 fprintf(o.file_id, '\n\nmax |x| = %10.3f', norm(o.x, inf));
@@ -969,21 +987,21 @@ classdef pdcoO < handle
                 fprintf(o.file_id, '    max |z| = %10.3f', norm(o.z, inf));  % excludes z(fix)
                 fprintf(o.file_id, '   scaled');
             end
-
+            
             o.bl(o.fix) = o.bl(o.fix) * o.beta; % Unscale bl, bu, x, y, z.
             o.bu(o.fix) = o.bu(o.fix) * o.beta;
             o.bl(o.low) = o.bl(o.low) * o.beta;
             o.bu(o.upp) = o.bu(o.upp) * o.beta;
-
+            
             o.x = o.x * o.beta; o.y = o.y * o.zeta; o.z = o.z * o.zeta;
-
+            
             if o.Prilev > 0
                 fprintf(o.file_id,  '\nmax |x| = %10.3f', norm(o.x, inf));
                 fprintf(o.file_id, '    max |y| = %10.3f', norm(o.y, inf));
                 fprintf(o.file_id, '    max |z| = %10.3f', norm(o.z, inf));  % excludes z(fix)
                 fprintf(o.file_id, ' unscaled');
             end
-
+            
             % Reconstruct x(fix) and z(fix).
             o.r2 = o.A' * o.y ;
             if o.nfix > 0
@@ -992,7 +1010,7 @@ classdef pdcoO < handle
                 o.z1(o.fix) = max(o.z(o.fix), 0);
                 o.z2(o.fix) = max(-o.z(o.fix), 0);
             end
-
+            
             % Reconstruct b.
             o.b = o.b * o.beta;
             if o.nfix > 0
@@ -1004,18 +1022,18 @@ classdef pdcoO < handle
                     fprintf(o.file_id, '\nmax |x| and max |z| exclude fixed variables');
                 end
             end
-
+            
             % Evaluate function at final point.
             % Recompute all of z.
             % 03 Apr 2010: z now includes (d1.^2).*x from the primal regularization.
             [o.obj, o.grad, o.hess] = o.slack.obj(o.x);
             o.z = o.grad + (o.d1.^2) .* o.x - o.r2; % z = grad + (d1.^2).*x - A'y
-
+            
             o.time = cputime - o.time;
             if o.Prilev > 0
                 fprintf(o.file_id, ...
-                        '\nPDitns = %10g %sitns = %10g    cputime = %10.1f', ...
-                        o.PDitns, o.solver, o.inner_total, o.time);
+                    '\nPDitns = %10g %sitns = %10g    cputime = %10.1f', ...
+                    o.PDitns, o.solver, o.inner_total, o.time);
                 distrib(o, abs(o.x), abs(o.z));
                 toc
             end
