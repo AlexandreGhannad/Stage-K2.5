@@ -799,6 +799,17 @@ classdef pdcoO < handle
                 % Compute step. This is performed in a subclass.
                 Solve_Newton(o);
                 
+                % Add to save the evolution of the conditionning            
+                if o.check_cond & o.check_eigenvalue
+                    lambda_min = min(abs(o.eigenvalue(:,end)));
+                    lambda_max = max(abs(o.eigenvalue(:,end)));
+                    o.cond = [o.cond lambda_max/lambda_min];
+                elseif o.check_cond & not(o.check_eigenvalue)
+                    lambda_min = min(abs(eigs(o.M, 10, "smallestabs")));
+                    lambda_max = max(abs(eigs(o.M, 10, "largestabs")));
+                    o.cond = [o.cond lambda_max/lambda_min ];
+                end
+            
                 
                 if o.inform == 4
                     break

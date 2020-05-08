@@ -136,17 +136,7 @@ classdef K25 < handle
                 o.limit = [o.limit limit];
                 o.result = [o.result result];
             end
-            
-            if o.check_cond & o.check_eigenvalue
-                lambda_min = min(abs(o.eigenvalue(:,end)));
-                lambda_max = max(abs(o.eigenvalue(:,end)));
-                o.cond = [o.cond lambda_max/lambda_min];
-            elseif o.check_cond & not(o.check_eigenvalue)
-                lambda_min = min(abs(eigs(o.M, 10, "smallestabs")));
-                lambda_max = max(abs(eigs(o.M, 10, "largestabs")));
-                o.cond = [o.cond lambda_max/lambda_min ];
-            end
-            
+
             if o.check_theorem2
                 [eigenvalue, features_theorem2] = validation_eigenvalue_theorem2(o);
                 if not(o.check_eigenvalue)

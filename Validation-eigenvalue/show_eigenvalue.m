@@ -16,7 +16,7 @@ if exist("features_limits")
     bisemilogy(eigenvalue, limit)
     xlabel("Iteration")
     ylabel("Eigenvalues and bounds")
-    legend("Lower bounds", "Upper bounds", "Eigenvalues")
+    legend({"Lower bounds", "Upper bounds", "Eigenvalues"}, 'Location', 'bestoutside')
     if exist("d1") & exist("d2")
         title("Eigenvalues, (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
     elseif exist("d1")
@@ -40,7 +40,7 @@ if exist("features_limits")
     
     xlabel("Iteration")
     ylabel("Intern values of the bounds")
-    legend("nu max", "nu min", "sigma max", "sigma min", "xmax", "xmin", "zmax", "zmin")
+    legend({"nu max", "nu min", "sigma max", "sigma min", "xmax", "xmin", "zmax", "zmin"}, 'Location', 'best')
     
 else
     % Plot Eigenvalue
@@ -49,7 +49,7 @@ else
     
     xlabel("Iteration")
     ylabel("Eigenvalues and bounds")
-    legend("Lower bounds", "Upper bounds", "Eigenvalues")
+    legend({"Lower bounds", "Upper bounds", "Eigenvalues"}, 'Location', 'best')
     
     if exist("d1") & exist("d2")
         title("Eigenvalues, (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")

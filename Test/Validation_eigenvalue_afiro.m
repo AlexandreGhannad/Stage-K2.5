@@ -28,15 +28,15 @@ import model.slackmodel;
 options_pdco.file_id = 1;
 
 formulation1 = 'K25';
-solver = 'LU';
+solver = 'LDL';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
 formulation2 = 'K35';
-solver = 'LU';
+solver = 'LDL';
 classname2 = build_variant(pdcoo_home, formulation2, solver);
 
 formulation3 = 'K2';
-solver = 'LU';
+solver = 'LDL';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
 list_problem ={'afiro.mps'};
@@ -44,10 +44,10 @@ n_problem = length(list_problem);
 
 options_pdco.d1 = 1.0e-2;
 options_pdco.d2 = 1.0e-2;
-options_pdco.OptTol = 1.0e-9;
-options_solv.atol1 = 1.0e-4;
+options_pdco.OptTol = 1.0e-10;
+options_solv.atol1 = 1.0e-10;
 options_solv.atol2 = 1.0e-10;
-options_solv.itnlim = 10;
+options_solv.itnlim = 100;
 options_pdco.Print = 1;
 
 fprintf(options_pdco.file_id, ...
@@ -64,9 +64,14 @@ compare_formulations = 0;
 check_residu = 0;
 check_all_residu = 0; % = 1  need check_residu = 1
 check_limits = 0;
+check_eigenvalueK35 = 0;
+check_all_eigenvalueK35 = 0;
 check_theorem2 = 1;
 check_all_theorem2 = 0;
 method_theorem2 = "MaxGap";
+
+options_pdco.d1 = 0;
+options_pdco.d2 = 0;
 %% Loop
 clc
 for i = 1:n_problem
@@ -96,6 +101,7 @@ for i = 1:n_problem
     options_pdco.check_cond = check_cond;
     options_pdco.check_limits = check_limits;
     options_pdco.check_theorem2 = check_theorem2;
+    options_pdco.check_eigenvalueK35 = check_eigenvalueK35;
     options_pdco.method = method_theorem2;
     options_form = struct();
     
@@ -173,6 +179,10 @@ for i = 1:n_problem
     elseif check_cond & not(check_eigenvalue)
         show_cond(Problem1.cond);
     end
+    
+    if check_all_eigenvalueK35
+        show_eigenvalueK35(Problem2.eigenvalue, options_pdco.d1, options_pdco.d2)
+    end
 end
 
 fclose('all');
@@ -195,4 +205,8 @@ end
 
 if check_theorem2 & not(check_all_theorem2)
     show_eigenvalue_theorem2(prob1.eigenvalue, prob1.features_theorem2);
+end
+
+if check_eigenvalueK35 & not(check_eigenvalueK35)
+    show_eigenvalueK35(prob2.eigenvalue, options_pdco.d1, options_pdco.d2)
 end
