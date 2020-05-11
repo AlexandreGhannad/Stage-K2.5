@@ -18,11 +18,11 @@ time2 = Problem2.time;
 time3 = Problem3.time;
 
 result = [iter1 iter2 iter3 ;...
-    reason1 reason2 reason3;...
+    Problem1.inform Problem2.inform Problem3.inform;...
     complementarity_resid1 complementarity_resid2 complementarity_resid3;...
     time1 time2 time3];
 
-if show
+if exist("show")
     disp("   Iteration   Complementary Residu     Time       Arrest")
     fprintf("K2.5 :   %g        %g        %g    %s", iter1, complementarity_resid1, time1, reason1)
     fprintf("\nK3.5 :   %g        %g        %g    %s", iter2, complementarity_resid2, time2, reason2)

@@ -39,7 +39,10 @@ formulation3 = 'K2';
 solver = 'LDL';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
-list_problem ={'afiro.mps'};
+path_problem = pwd + "/Problems/lp_prob";
+list_problem = dir(path_problem);
+list_problem = {list_problem.name};
+list_problem = list_problem(3:end);
 n_problem = length(list_problem);
 
 options_pdco.d1 = 1.0e-2;
@@ -56,22 +59,20 @@ fprintf(options_pdco.file_id, ...
 result = zeros(9,3,n_problem);
 %% Check eigenvalues and compare method
 n_problem = min(n_problem, 2000);
-check_eigenvalue = 1
-show_one_graphic = 1; % = 1  need check_eigenvalue = 1
+check_eigenvalue = 0;
+show_one_graphic = 0; % = 1  need check_eigenvalue = 1
 show_all_graphic = 0; % = 1  need check_eigenvalue = 1
 check_cond = 0;
-compare_formulations = 0;
+compare_formulations = 1;
 check_residu = 0;
 check_all_residu = 0; % = 1  need check_residu = 1
 check_limits = 0;
 check_eigenvalueK35 = 0;
 check_all_eigenvalueK35 = 0;
-check_theorem2 = 1;
+check_theorem2 = 0;
 check_all_theorem2 = 0;
 method_theorem2 = "MaxGap";
-
-options_pdco.d1 = 0;
-options_pdco.d2 = 0;
+results = zeros(n_problem, 4,3);
 %% Loop
 clc
 for i = 1:n_problem
@@ -80,7 +81,7 @@ for i = 1:n_problem
     fprintf('%s\n', mps_name);
     
     % Read .mps file
-    mps_name = pwd + "\Problems\MPS\" + mps_name;
+    mps_name = pwd + "\Problems\lp_prob\" + mps_name;
     mps_stru = readmps(mps_name);
     lp = mpstolp(mps_stru);
     slack = slackmodel(lp);
@@ -149,7 +150,7 @@ for i = 1:n_problem
         end
     end
     if check_all_theorem2
-        show_eigenvalue_theorem2(o.eigenvalue, o.features_theorem2);
+        show_eigenvalue_theorem2(Problem1.eigenvalue, Problem1.features_theorem2);
     end
     if check_all_residu
         residu = Problem1.opt_residu
@@ -158,21 +159,9 @@ for i = 1:n_problem
     end
     
     if compare_formulations
-        if i == 1
-            name = list_problem{i};
-            prob1 = Problem1;
-            prob2 = Problem2;
-            prob3 = Problem3;
-            l = length(Problem1.M);
-        else
-            if length(Problem1.M) > l
-                name = list_problem{i};
-                prob1 = Problem1;
-                prob2 = Problem2;
-                prob3 = Problem3;
-                l = length(Problem1.M);
-            end
-        end
+        result = save_comparison(Problem1, Problem2, Problem3);
+        results(i,:,:) = result;
+        
     end
     if check_cond & check_eigenvalue
         show_cond(Problem1.cond, Problem1.limit);
@@ -200,7 +189,9 @@ if check_residu
     show_residu(residu,evolution_mu);
 end
 if compare_formulations
-    print_comparison(prob1, prob2, prob3);
+    formulation = {formulation1 formulation2 formulation3};
+    method = solver;
+    show_comparison(results, formulation, method)
 end
 
 if check_theorem2 & not(check_all_theorem2)

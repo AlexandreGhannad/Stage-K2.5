@@ -800,11 +800,11 @@ classdef pdcoO < handle
                 Solve_Newton(o);
                 
                 % Add to save the evolution of the conditionning            
-                if o.check_cond & o.check_eigenvalue
+                if o.check_cond & not(isempty(o.eigenvalue))
                     lambda_min = min(abs(o.eigenvalue(:,end)));
                     lambda_max = max(abs(o.eigenvalue(:,end)));
                     o.cond = [o.cond lambda_max/lambda_min];
-                elseif o.check_cond & not(o.check_eigenvalue)
+                elseif o.check_cond & isempty(o.eigenvalue)
                     lambda_min = min(abs(eigs(o.M, 10, "smallestabs")));
                     lambda_max = max(abs(eigs(o.M, 10, "largestabs")));
                     o.cond = [o.cond lambda_max/lambda_min ];
