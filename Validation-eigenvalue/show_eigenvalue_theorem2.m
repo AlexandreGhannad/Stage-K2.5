@@ -20,7 +20,7 @@ if all_features
     
     figure()
     subplot(221)
-    %% bisemilogy copy in order to function inside the subplot
+    % bisemilogy copy in order to function inside the subplot
     pos = eigenvalue';
     pos(pos<=0) = NaN;
     pos = log10(pos);
