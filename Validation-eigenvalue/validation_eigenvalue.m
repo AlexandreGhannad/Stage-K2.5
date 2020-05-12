@@ -3,8 +3,19 @@ function [result, eigenvalue, limit, rapport, err, lambda_max, lambda_min, sigma
 %% Save different values
 A = o.A;
 hess_eigen = eigs(o.hess, size(o.hess, 1));
+% xmax = max(abs([o.x1;o.x2]));
+% xmin = min(abs([o.x1;o.x2]));
+
+% bl = o.bl;
+% bl(bl == -Inf) = 0;
+% bu = abs(o.bu);
+% bu(bu == Inf) = 0;
+% xmax = max([abs(o.x - bl); abs(o.x - bu)]);
+% xmin = min([abs(o.x - bl); abs(o.x - bu)]);
+
 xmax = max(abs(o.x));
 xmin = min(abs(o.x));
+
 zmax = max(o.z1-o.z2);
 zmin = min(o.z1-o.z2);
 

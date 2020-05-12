@@ -137,7 +137,7 @@ if all_features
     semilogy(abs(x'), "k.")
     xlabel("Iteration")
     ylabel("x and its optimum for inactive bounds")
-    legend({"xmax", "xmin", "x"}, 'Location', 'best')
+    legend({"xmax,I", "xmin,I", "x"}, 'Location', 'best')
     
 else
     rho_min_negative = features_theorem2(1,:);

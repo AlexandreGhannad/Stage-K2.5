@@ -39,7 +39,7 @@ formulation3 = 'K2';
 solver = 'LDL';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
-list_problem ={'qafiro.qps'};
+list_problem ={'qship08l.qps'};
 n_problem = length(list_problem);
 
 options_pdco.d1 = 1.0e-2;

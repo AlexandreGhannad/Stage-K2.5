@@ -58,12 +58,12 @@ fprintf(options_pdco.file_id, ...
 
 result = zeros(9,3,n_problem);
 %% Check eigenvalues and compare method
-n_problem = min(n_problem, 2000);
-check_eigenvalue = 0;
-show_one_graphic = 0; % = 1  need check_eigenvalue = 1
-show_all_graphic = 0; % = 1  need check_eigenvalue = 1
+n_problem = min(n_problem, 6);
+check_eigenvalue = 1;
+show_one_graphic = 1; % = 1  need check_eigenvalue = 1
+show_all_graphic = 1; % = 1  need check_eigenvalue = 1
 check_cond = 0;
-compare_formulations = 1;
+compare_formulations = 0;
 check_residu = 0;
 check_all_residu = 0; % = 1  need check_residu = 1
 check_limits = 0;
@@ -75,6 +75,7 @@ method_theorem2 = "MaxGap";
 results = zeros(n_problem, 4,3);
 %% Loop
 clc
+list_problem(1:11) = [];
 for i = 1:n_problem
     
     mps_name = list_problem{i};

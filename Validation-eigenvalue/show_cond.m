@@ -13,8 +13,8 @@ title("Evolution of the conditionning")
 
 if exist("limits")
     limit = limits;
-    limit(limit == 0) = NaN;
     tmp = max(abs(limit)) ./ min(abs(limit));
+    tmp(min(abs(limit)) == 0) = NaN;
     semilogy(tmp)
     if ismember(0,limits)
         tmp = 1;
@@ -27,7 +27,7 @@ end
 
 if exist("limits") & exist("cond2")
     if tmp == 1
-        legend({"Conditionning (Warning: 0 in bounds)", "Bound on the conditionning",formulation}, 'Location', 'best')
+        legend({"Conditionning", "Bound on the conditionning (Warning: 0 in bounds)",formulation}, 'Location', 'best')
     else
         legend({"Conditionning", "Bound on the conditionning",formulation}, 'Location', 'best')
     end 

@@ -59,19 +59,19 @@ n_problem = min(n_problem, 2000);
 check_eigenvalue = 1
 show_one_graphic = 1; % = 1  need check_eigenvalue = 1
 show_all_graphic = 0; % = 1  need check_eigenvalue = 1
-check_cond = 0;
-compare_formulations = 0;
-check_residu = 0;
+check_cond = 1;
+compare_formulations = 1;
+check_residu = 1;
 check_all_residu = 0; % = 1  need check_residu = 1
 check_limits = 1;
-check_eigenvalueK35 = 0;
-check_all_eigenvalueK35 = 0;
+check_eigenvalueK35 = 1;
+check_all_eigenvalueK35 = 1;
 check_theorem2 = 1;
 check_all_theorem2 = 0;
-method_theorem2 = "FirstBigGap";
+method_theorem2 = "MaxGap";
 
-options_pdco.d1 = 0;
-options_pdco.d2 = 0;
+options_pdco.d1 = 0.01;
+options_pdco.d2 = 0.01;
 %% Loop
 clc
 for i = 1:n_problem
@@ -204,7 +204,7 @@ if compare_formulations
 end
 
 if check_theorem2 & not(check_all_theorem2)
-    show_eigenvalue_theorem2(prob1.eigenvalue, prob1.features_theorem2, options_pdco.d1, options_pdco.d2);
+    show_eigenvalue_theorem2(prob1.eigenvalue, prob1.features_theorem2, options_pdco.d1, options_pdco.d2, 1);
 end
 
 if check_eigenvalueK35 & not(check_eigenvalueK35)

@@ -202,10 +202,10 @@ time = sort(time, 2);
 t1 = time(1,:);
 t2 = time(2,:);
 t3 = time(3,:);
-semilogy(t1, "+", "LineWidth", 2, "Color", [0.4660 0.6740 0.1880])
+semilogy(t1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
 hold on
-semilogy(t2, "+", "LineWidth", 2, "Color", [0 0.4470 0.7410])
-semilogy(t3, "+", "LineWidth", 2, "Color", [0.8500 0.3250 0.0980])
+semilogy(t2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
+semilogy(t3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
 title("Execution time of the different formulations")
 legend("K2.5", "K3.5", "K2")
 ylabel("Time (s)")
@@ -230,13 +230,13 @@ tmin3(imin~=3) = NaN;
 
 figure(2)
 clf(2)
-semilogy(tmax1, "+", "LineWidth", 2, "Color", [0.4660 0.6740 0.1880])
+semilogy(tmax1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
 hold on
-semilogy(tmin1, "+", "LineWidth", 2, "Color", [0.4660 0.6740 0.1880])
-semilogy(tmax2, "+", "LineWidth", 2, "Color", [0 0.4470 0.7410])
-semilogy(tmin2, "+", "LineWidth", 2, "Color", [0 0.4470 0.7410])
-semilogy(tmax3, "+", "LineWidth", 2, "Color", [0.8500 0.3250 0.0980])
-semilogy(tmin3, "+", "LineWidth", 2, "Color", [0.8500 0.3250 0.0980])
+semilogy(tmin1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
+semilogy(tmax2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
+semilogy(tmin2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
+semilogy(tmax3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
+semilogy(tmin3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
 title("Best and worst execution time")
 ylabel("Time (s)")
 
@@ -249,27 +249,27 @@ clf(3)
 
 % K2.5 vs K3.5
 subplot(221)
-semilogy(t1, "+", "LineWidth", 2, "Color", [0.4660 0.6740 0.1880])
+semilogy(t1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
 hold on
-semilogy(t2, "+", "LineWidth", 2, "Color", [0 0.4470 0.7410])
+semilogy(t2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
 title("K2.5 vs K3.5")
 legend("K2.5", "K3.5")
 ylabel("Time (s)")
 
 % K2.5 vs K2
 subplot(222)
-semilogy(t1, "+", "LineWidth", 2, "Color", [0.4660 0.6740 0.1880])
+semilogy(t1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
 hold on
-semilogy(t3, "+", "LineWidth", 2, "Color", [0.8500 0.3250 0.0980])
+semilogy(t3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
 title("K2.5 vs K2")
 legend("K2.5", "K2")
 ylabel("Time (s)")
 
 % K3.5 vs K2
 subplot(223)
-semilogy(t2, "+", "LineWidth", 2, "Color", [0 0.4470 0.7410])
+semilogy(t2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
 hold on
-semilogy(t3, "+", "LineWidth", 2, "Color", [0.8500 0.3250 0.0980])
+semilogy(t3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
 title("K3.5 vs K2")
 legend("K3.5", "K2")
 ylabel("Time (s)")

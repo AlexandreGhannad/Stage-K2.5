@@ -39,14 +39,17 @@ formulation3 = 'K2';
 solver = 'LDL';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
-
-n_problem = 1;
+path_problem = pwd + "/Problems/qp_prob";
+list_problem = dir(path_problem);
+list_problem = {list_problem.name};
+list_problem = list_problem(3:end);
+n_problem = length(list_problem);
 
 options_pdco.d1 = 1.0e-2;
 options_pdco.d2 = 1.0e-2;
-options_pdco.OptTol = 1.0e-16;
-options_solv.atol1 = 1.0e-12;
-options_solv.atol2 = 1.0e-12;
+options_pdco.OptTol = 1.0e-10;
+options_solv.atol1 = 1.0e-10;
+options_solv.atol2 = 1.0e-10;
 options_solv.itnlim = 100;
 options_pdco.Print = 1;
 
@@ -54,45 +57,25 @@ fprintf(options_pdco.file_id, ...
     '\n    Name    Objectif   Presid   Dresid   Cresid   PDitns   Inner     Time      D2 * r\n\n');
 
 result = zeros(9,3,n_problem);
-%% Check eigenvalues and compare method
-n_problem = min(n_problem, 2000);
-check_eigenvalue = 1
-show_one_graphic = 1; % = 1  need check_eigenvalue = 1
-show_all_graphic = 0; % = 1  need check_eigenvalue = 1
-check_cond = 0;
-compare_formulations = 0;
-check_residu = 0;
-check_all_residu = 0; % = 1  need check_residu = 1
-check_limits = 0;
-check_eigenvalueK35 = 0;
-check_theorem2 = 0;
-check_all_theorem2 = 0;
-method_theorem2 = "MaxGap";
-
-options_pdco.d1 = 0;
-options_pdco.d2 = 0;
 %% Loop
 clc
-list_problem ={pwd + "/Problems/qp_prob/"+'qship04s.qps'};
-% d1 = 10^-4;
-d1 = 10^-2;
-% d2 = [0 1];
-d2 = [10^-8 10^-6 10^-4 10^-2 1];
-% d2 = 0;
-% d2 = 10^-2
-options_pdco.d1 = d1;
-for j = 1:length(d2)
-    options_pdco.d2 = d2(j);
+size_A = zeros([n_problem,1]);
+full_rank = zeros([n_problem,1]);
+lrank = zeros([n_problem,1]);
+nrank = zeros([n_problem,1]);
+for i = 1:n_problem
     
-    mps_name = list_problem{1};
+    mps_name = list_problem{i};
+    fprintf('%s\n', mps_name);
     
     % Read .mps file
+    mps_name = pwd + "\Problems\qp_prob\" + mps_name;
     mps_stru = readmps(mps_name);
     lp = mpstolp(mps_stru);
     slack = slackmodel(lp);
     Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
     
-options_pdco.x0 = slack.x0;
+    options_pdco.x0 = slack.x0;
     options_pdco.x0(slack.jLow) = slack.bL(slack.jLow) + 1;
     options_pdco.x0(slack.jUpp) = slack.bU(slack.jUpp) - 1;
     options_pdco.x0(slack.jTwo) = (slack.bL(slack.jTwo) + slack.bU(slack.jTwo)) / 2;
@@ -102,24 +85,16 @@ options_pdco.x0 = slack.x0;
     options_pdco.y0 = zeros(slack.m, 1);
     options_pdco.mu0 = options_pdco.zsize;
     options_pdco.Maxiter = min(max(30, slack.n), 100);
-    options_pdco.check_eigenvalue = check_eigenvalue;
-    options_pdco.check_residu = check_residu;
-    options_pdco.check_cond = check_cond;
-    options_pdco.check_limits = check_limits;
-    options_pdco.check_theorem2 = check_theorem2;
-    options_pdco.check_eigenvalueK35 = check_eigenvalueK35;
-    options_pdco.method = method_theorem2;
     options_form = struct();
     
     Problem1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
-    Problem1.solve;
-%     Problem2 = eval([classname2, '(slack, options_pdco,options_form,options_solv)']);
-%     Problem2.solve;
-    
-    show_eigenvalue(Problem1.eigenvalue, Problem1.limit, d1, d2(j))
-%     show_eigenvalueK35(Problem2.eigenvalue, d1, d2(j))
-%     show_eigenvalue_theorem2(Problem1.eigenvalue, Problem1.features_theorem2, d1, d2(j))
-%     show_cond(Problem1.cond, Problem1.limit, d1, d2(j), Problem2.cond, "K3.5" )
+    A = Problem1.A;
+    size_A(i) = sum(size(A));
+    r = sprank(A);
+    n = min(size(A));
+    lrank(i) = r;
+    nrank(i) = n;
+    full_rank(i) = (n==r);
     
 end
 

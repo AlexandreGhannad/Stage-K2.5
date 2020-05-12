@@ -5,7 +5,7 @@ xmax = max(abs(o.x));
 ind = detect_active_inactive_constraint(o.x, o.method);
 A = o.A(:,ind);
 hess_eigen = eigs(o.hess(ind, ind), size(o.hess(ind, ind), 1));
-xmin = min(abs(o.x(ind)));
+xmin = min(abs([o.x1(ind) ;  o.x2(ind)] ));
 
 
 % Maximal and minimal eigenvalue of H
