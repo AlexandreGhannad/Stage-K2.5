@@ -58,10 +58,10 @@ fprintf(options_pdco.file_id, ...
 
 result = zeros(9,3,n_problem);
 %% Check eigenvalues and compare method
-n_problem = min(n_problem, 6);
-check_eigenvalue = 1;
-show_one_graphic = 1; % = 1  need check_eigenvalue = 1
-show_all_graphic = 1; % = 1  need check_eigenvalue = 1
+n_problem = min(n_problem, 50);
+check_eigenvalue = 0;
+show_one_graphic = 0; % = 1  need check_eigenvalue = 1
+show_all_graphic = 0; % = 1  need check_eigenvalue = 1
 check_cond = 0;
 compare_formulations = 0;
 check_residu = 0;
@@ -75,7 +75,7 @@ method_theorem2 = "MaxGap";
 results = zeros(n_problem, 4,3);
 %% Loop
 clc
-list_problem(1:11) = [];
+% list_problem(1:11) = [];
 for i = 1:n_problem
     
     mps_name = list_problem{i};
@@ -109,6 +109,8 @@ for i = 1:n_problem
     
     Problem1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
     Problem1.solve;
+    
+    
     Problem2 = eval([classname2, '(slack, options_pdco,options_form,options_solv)']);
     Problem2.solve;
     Problem3 = eval([classname3, '(slack, options_pdco,options_form,options_solv)']);

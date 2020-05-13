@@ -1,4 +1,4 @@
-function [result, eigenvalue, limit, rapport, err, lambda_max, lambda_min, sigma_max, sigma_min] = validation_eigenvalue_proposition_1(o)
+function [features_property, eigenvalue] = validation_eigenvalue_proposition_1(o)
 % the values of the different rho are based on the proposition 1
 % (Friedlader and Orban, 2012, Theorem 5.1)
 H = - o.M(1:o.n,1:o.n);
@@ -47,21 +47,9 @@ rho_min_positive = 0.5 * ( delta - lambda_max + ( (lambda_max+delta)^2 + 4*sigma
 rho_max_positive = 0.5 * ( delta - lambda_min + ( (lambda_min+delta)^2 + 4*sigma_max^2 )^0.5 );
 limit = [rho_min_negative;rho_max_negative;rho_min_positive;rho_max_positive];
 
-eigenvalue = eigs(o.M, size(o.M,1));
+if not(o.check_eigenvalue)
+    eigenvalue = eigs(o.M, size(o.M,1));
+end
 
-test_inf = eigenvalue > rho_min_negative & eigenvalue < rho_max_negative;
-test_sup = eigenvalue > rho_min_positive & eigenvalue < rho_max_positive;
-result = test_inf | test_sup;
-
-indice  =  find(result == 0);
-err = zeros(size(o.M,1),1);
-err(indice) = min([(eigenvalue(indice) - rho_min_negative).^2 ...
-        (eigenvalue(indice) - rho_max_negative).^2 ...
-        (eigenvalue(indice) - rho_min_positive).^2 ...
-        (eigenvalue(indice) - rho_max_positive).^2 ], [] , 2);
-err = sparse(err);
-
-indice = abs(err) < 10^-14;
-result(indice) = 1;
-rapport = sum(result) / length(result);
+features_property = [limit; lambda_max; lambda_min; sigma_max; sigma_min];
 end

@@ -200,6 +200,11 @@ classdef pdcoO < handle
         method % Specific to K2.5, to use the theorem 2
         features_theorem2;
         
+        check_property % Input specific for K2.5 :
+        % = 1 if you want to verify that eigenvalues belongs to theoritical
+        % intervals of theorem 2, =0 else
+        features_property;
+        
     end
     
     methods (Abstract) % Should be defined in subclasses
@@ -414,6 +419,12 @@ classdef pdcoO < handle
                 o.method = options.method;
             else
                 o.method = "Threshold";
+            end
+            
+            if isfield(options, 'check_property')
+                o.check_property = options.check_property;
+            else
+                o.check_property = 0;
             end
             
         end
@@ -799,7 +810,7 @@ classdef pdcoO < handle
                 % Compute step. This is performed in a subclass.
                 Solve_Newton(o);
                 
-                % Add to save the evolution of the conditionning            
+                % Add to save the evolution of the conditionning
                 if o.check_cond & not(isempty(o.eigenvalue))
                     lambda_min = min(abs(o.eigenvalue(:,end)));
                     lambda_max = max(abs(o.eigenvalue(:,end)));
@@ -809,7 +820,7 @@ classdef pdcoO < handle
                     lambda_max = max(abs(eigs(o.M, 10, "largestabs")));
                     o.cond = [o.cond lambda_max/lambda_min ];
                 end
-            
+                
                 
                 if o.inform == 4
                     break

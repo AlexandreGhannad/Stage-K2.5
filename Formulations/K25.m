@@ -136,15 +136,25 @@ classdef K25 < handle
                 o.limit = [o.limit limit];
                 o.result = [o.result result];
             end
-
+            
             if o.check_theorem2
                 [eigenvalue, features_theorem2] = validation_eigenvalue_theorem2(o);
                 if not(o.check_eigenvalue)
                     o.eigenvalue = [o.eigenvalue eigenvalue];
                 end
-                 o.features_theorem2 = [o.features_theorem2 features_theorem2];
+                o.features_theorem2 = [o.features_theorem2 features_theorem2];
             end
-        
+            
+            if o.check_property
+                if o.check_eigenvalue
+                    [features_property] = validation_eigenvalue_proposition_1(o);
+                    o.features_property = [o.features_property features_property];
+                else
+                    [features_property, eigenvalue] = validation_eigenvalue_proposition_1(o);
+                    o.features_property = [o.features_property features_property];
+                    o.eigenvalue = [o.eigenvalue eigenvalue];
+                end
+            end
         end
     end
 end
