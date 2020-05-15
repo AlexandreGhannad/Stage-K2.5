@@ -1,0 +1,38 @@
+problème testées:
+adlittle.mps
+afiro.mps
+bandm.mps
+beaconfd.mps
+blend.mps
+boeing2.mps
+bore3d.mps
+brandy.mps
+capri.mps
+e226.mps
+etamacro.mps
+
+test réalisé avec de l'optimisation avec des lignes brisées avec la norme L1.
+Cela donne de bon résultats sur quelques problèmes, notamment ceux avec une tendance globale parsemées de très nombreux pics de hautes valeurs (ex: capri.mps et e226.mps).
+algorithme de lignées brisées utilisées:
+
+y = 1:len;
+a = coef(1);
+b = coef(2);
+c = coef(3);
+d = (a-c) * n + b;
+y(1:n) = a*y(1:n) + b;
+y(n+1:end) = c*y(n+1:end) + d;
+
+algorithme d'optimisation:
+
+Y = log10(z);
+len = length(z);
+coef0 = [-1 1 1];
+f = @(coef) sum(abs((log10(z) - broken_lines(coef,n,len))));
+coef = fminsearch(f, coef0);
+
+Amélioration possible: rajoutée un pic (avec une fonction de probab de laplace par xemple) et accentué son importance.
+Actuellement, la régression a une importance similaire pour n'importe quellepoint, alors que trois zones sont relativement importances:
+-le pic
+-la zone intermédiaire entre le début et le pic (sans être trop proche de l'un ou de l'autre)
+-la zone intermédiaire entre le pic et la fin (sans être trop proche de l'un ou de l'autre)

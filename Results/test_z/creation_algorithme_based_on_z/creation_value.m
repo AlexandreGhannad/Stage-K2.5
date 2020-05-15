@@ -31,15 +31,14 @@ formulation1 = 'K25';
 solver = 'LDL';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
-
 % path_problem = pwd + "/Problems/lp_prob";
 % list_problem = dir(path_problem);
 % list_problem = {list_problem.name};
 % list_problem = list_problem(3:end);
 % n_problem = length(list_problem);
 
-
-list_problem = {};
+list_problem = {"adlittle.mps" "afiro.mps" "bandm.mps" "beaconfd.mps" "blend.mps" "boeing2.mps" "bore3d.mps" "brandy.mps" "capri.mps" "e226.mps" "etamacro.mps"} ;
+n_problem = length(list_problem);
 
 options_pdco.d1 = 1.0e-2;
 options_pdco.d2 = 1.0e-2;
@@ -114,23 +113,24 @@ for i = 1:n_problem
     xlist(i,1:length(Problem1.x)) = Problem1.x;
 
 end
-%%
+%% Formatting x and z
 xlist = abs(xlist);
 zlist = abs(zlist);
-
 for i = 1 : n_problem
     xlist(i,:) = xlist(i,:) / norm(xlist(i,:));
     zlist(i,:) = zlist(i,:) / norm(zlist(i,:));
     [xlist(i,:) , perm] = sort(xlist(i,:), "descend");
     zlist(i,:) = zlist(i,perm);
 end
-%%
 zlist(zlist == 0) = NaN;
 xlist(xlist ==0) = NaN;
+%% Print x and z
 for i = 1 : n_problem
     figure();
     semilogy(zlist(i,:))
     hold on
     semilogy(xlist(i,:))
 end
-
+%% Save x and z
+save("xlist", "xlist")
+save("zlist", "zlist")
