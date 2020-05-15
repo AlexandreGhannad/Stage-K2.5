@@ -1,13 +1,13 @@
 function show_eigenvalue(eigenvalue, limit, d1, d2, features_limits)
 
 if exist("features_limits")
-    nu_max = features_limits(1,:);
-    nu_min = features_limits(2,:);
+    lambda_max = features_limits(1,:);
+    lambda_min = features_limits(2,:);
     sigma_max = features_limits(3,:);
     sigma_min = features_limits(4,:);
     xmax = features_limits(5,:);
     xmin = features_limits(6,:);
-    zmax =features_limits(7,:);
+    zmax = features_limits(7,:);
     zmin = features_limits(8,:);
     
     % Plot negative eigenvalue
@@ -102,19 +102,19 @@ if exist("features_limits")
     end
     
     subplot(212)
-    plot(nu_max, "LineWidth", 2, "Color", [0 0 1])
+    semilogy(lambda_max, "LineWidth", 2, "Color", [0 0 1])
     hold on
-    plot(nu_min, "LineWidth", 2, "Color", [0.3010 0.7450 0.9330])
-    plot(sigma_max, "LineWidth", 2, "Color", [0.4660 0.6740 0.1880])
-    plot(sigma_min, "LineWidth", 2, "Color", [0 1 0])
-    plot(xmax, "LineWidth", 2, "Color", [0.6350 0.0780 0.1840])
-    plot(xmin, "LineWidth", 2, "Color", [1 0 0])
-    plot(zmax, "LineWidth", 2, "Color", [0.8500 0.3250 0.0980])
-    plot(zmin, "LineWidth", 2, "Color", [0.9290 0.6940 0.1250])
+    semilogy(lambda_min, "LineWidth", 2, "Color", [0.3010 0.7450 0.9330])
+    semilogy(sigma_max, "LineWidth", 2, "Color", [0.4660 0.6740 0.1880])
+    semilogy(sigma_min, "LineWidth", 2, "Color", [0 1 0])
+    semilogy(xmax, "LineWidth", 2, "Color", [0.6350 0.0780 0.1840])
+    semilogy(xmin, "LineWidth", 2, "Color", [1 0 0])
+    semilogy(zmax, "LineWidth", 2, "Color", [0.8500 0.3250 0.0980])
+    semilogy(zmin, "LineWidth", 2, "Color", [0.9290 0.6940 0.1250])
     
     xlabel("Iteration")
     ylabel("Intern values of the bounds")
-    legend({"nu max", "nu min", "sigma max", "sigma min", "xmax", "xmin", "zmax", "zmin"}, 'Location', 'best')
+    legend({"lambda max", "lambda min", "sigma max", "sigma min", "xmax", "xmin", "zmax", "zmin"}, 'Location', 'best')
     
 else
     % Plot Eigenvalue

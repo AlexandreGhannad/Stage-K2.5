@@ -51,5 +51,5 @@ if not(o.check_eigenvalue)
     eigenvalue = eigs(o.M, size(o.M,1));
 end
 
-features_property = [limit; lambda_max; lambda_min; sigma_max; sigma_min];
+features_property = [limit; lambda_max; lambda_min; sigma_max; sigma_min; delta];
 end

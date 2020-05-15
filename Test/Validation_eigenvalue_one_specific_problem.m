@@ -57,7 +57,7 @@ check_cond = 0;
 compare_formulations = 0;
 check_residu = 0;
 check_all_residu = 0; % = 1  need check_residu = 1
-check_limits = 0;
+check_limits = 1;
 check_eigenvalueK35 = 0;
 check_all_eigenvalueK35 = 0;
 check_theorem2 = 0;
@@ -116,9 +116,9 @@ t4 = max(tmp);
 
 eigen = [t1;t2;t3;t4];
 
-show_eigenvalue(eigen, prob1.limit);
+show_eigenvalue(eigen, prob1.limit, options_pdco.d1, options_pdco.d2, prob1.features_limits)
 limit = prob1.features_property(1:4,:);
-show_eigenvalue(eigen, limit);
+show_eigenvalue(eigen, limit, options_pdco.d1, options_pdco.d2,prob1.features_property(5:end,:));
     
 % if check_eigenvalue
 %     if check_limits

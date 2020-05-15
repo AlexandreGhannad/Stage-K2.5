@@ -205,6 +205,9 @@ classdef pdcoO < handle
         % intervals of theorem 2, =0 else
         features_property;
         
+        xmem
+        zmem
+        
     end
     
     methods (Abstract) % Should be defined in subclasses
