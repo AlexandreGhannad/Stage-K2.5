@@ -3,7 +3,7 @@ close all
 clear all
 clc
 %% Load one x and z
-ij=3;
+for ij=1:11;
 load("xlist")
 load("zlist")
 x = xlist(ij,:);
@@ -11,7 +11,6 @@ z = zlist(ij,:);
 x(isnan(x)) = [];
 z(isnan(z)) = [];
 %% Global test of the idea
-close all
 rapport = zeros([1, length(x)-1]);
 err = zeros([1, length(x)-1]);
 % xf = zeros([3, length(x)-1]);
@@ -22,7 +21,7 @@ xf1 = zeros([3, length(x)-1]);
 xf1(:,1) = NaN;
 err1 = zeros([1, length(x)-1]);
 err1(:,1) = NaN;
-method = "normal_power_lines"
+method = "power_lines"
 
 
 for n = 10 : length(x)-10
@@ -41,6 +40,8 @@ for n = 10 : length(x)-10
             y = power_lines(coef,n,length(z));
         case "power_lines_with_hole"
             y = power_lines(coef,n,length(z));
+        case "power_lines_L2"
+            y = power_lines(coef,n,length(z));
         case "normal_power_lines"
             y = normal_power_lines(coef,n,length(z));
     end
@@ -50,6 +51,7 @@ for n = 10 : length(x)-10
     xf(:,n) = coef;
     xf1(:,n) = coef1;
 end
+
 
 %% Show
 err(err==0) = NaN;
@@ -69,7 +71,7 @@ title("Error on the broken lines")
 
 [e,n] = min(err,[],'omitnan')
 coef = xf(:,n);
-y = normal_power_lines(coef,n,length(z));
+y = power_lines(coef,n,length(z));
 [e1,n1] = min(err1)
 coef1 = xf1(:,n1);
 y1 = broken_lines(coef1,n1,length(z));
@@ -84,29 +86,4 @@ plot(y, "Color", [0.6350 0.0780 0.1840  0.7], "Linewidth", 2)
 legend("z","z", "x","x", "Broken lines", "Power lines")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+end

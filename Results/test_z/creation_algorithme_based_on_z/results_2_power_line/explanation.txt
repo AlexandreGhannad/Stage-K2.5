@@ -1,0 +1,30 @@
+adlittle.mps
+afiro.mps
+bandm.mps
+beaconfd.mps
+blend.mps
+boeing2.mps
+bore3d.mps
+brandy.mps
+capri.mps
+e226.mps
+etamacro.mps
+
+test réalisé avec de l'optimisation avec des fonctions puissances de la forme a*x^b + c avec la norme L1. Pour pouvoir tester les difféfrentes points à garder ou non, x est remplacé par x-n ou n-x afin de valoir d en d.
+Nous mettons la comparaison avec le modèle en ligne brisée.
+
+
+
+
+
+function y = power_lines(coef,n,len)
+y = 1:len;
+a = coef(1);
+b = coef(2);
+c = coef(3);
+d = coef(4);
+e = coef(5);
+
+y(1:n) = a * (n-y(1:n)).^b + c;
+y(n+1:len) = d * (y(n+1:len)-n).^e + c;
+end

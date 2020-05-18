@@ -267,9 +267,9 @@ ylabel("Time (s)")
 
 % K3.5 vs K2
 subplot(223)
-semilogy(t2, "d", "MarkerSize", 1, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
+semilogy(t2, "d", "MarkerSize", 2, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
 hold on
-semilogy(t3, "o", "MarkerSize", 1, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
+semilogy(t3, "o", "MarkerSize", 2, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
 title("K3.5 vs K2")
 legend("K3.5", "K2")
 ylabel("Time (s)")
