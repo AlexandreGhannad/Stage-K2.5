@@ -196,7 +196,7 @@ classdef pdcoO < handle
         
         check_theorem2 % Input specific for K2.5 :
         % = 1 if you want to verify that eigenvalues belongs to theoritical
-        % intervals of theorem 2, =0 else
+        % intervals of theorem 2, = 0 else
         method % Specific to K2.5, to use the theorem 2
         features_theorem2;
         
