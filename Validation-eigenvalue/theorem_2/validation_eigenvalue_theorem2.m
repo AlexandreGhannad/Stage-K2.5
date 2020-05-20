@@ -11,10 +11,10 @@ z = zeros(o.n, 1); % Exclude z(fix) also.
 z(o.low) = o.z1(o.low);
 z(o.upp) = z(o.upp) - o.z2(o.upp);
 if o.method == "broken_lines" | o.method == "power_lines"
-    if isempty(o.n)
+    if isempty(o.n_theorem2)
         ind = detect_active_inactive_constraint(x, o.method, z);
     else
-        ind = detect_active_inactive_constraint(x, o.method, z, o.n);
+        ind = detect_active_inactive_constraint(x, o.method, z, o.n_theorem2);
     end
 else
     ind = detect_active_inactive_constraint(x, o.method);

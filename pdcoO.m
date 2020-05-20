@@ -208,6 +208,8 @@ classdef pdcoO < handle
         xmem
         zmem
         
+        n_theorem2
+        
     end
     
     methods (Abstract) % Should be defined in subclasses
@@ -428,6 +430,12 @@ classdef pdcoO < handle
                 o.check_property = options.check_property;
             else
                 o.check_property = 0;
+            end
+            
+            if isfield(options, 'n_theorem2')
+                o.n_theorem2 = options.n_theorem2;
+            else
+                o.n_theorem2 = [];
             end
             
         end

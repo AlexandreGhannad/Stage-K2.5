@@ -33,37 +33,46 @@ switch method
         ind = sort(perm(l+1:end));
         
     case "broken_lines"
-        [t, perm] = sort(abs(x), "descend");
-        ztmp = abs(z(perm));
-        if not(exist("n"))
-            n = [round(length(z)/4) round(length(z)/2) round(3*length(z)/4)];
-        end
-        Cf = [];
-        err = Inf;
-        for k = 1 : length(n)
-            [tmp_Cf, tmp_err] = g_broken_lines(ztmp,n);
-            if tmp_err < err
-                err = tmp_err;
-                Cf= tmp_Cf;
+        if ismember(0,z)
+            ind = 1:length(x);
+        else
+            [t, perm] = sort(abs(x), "descend");
+            ztmp = abs(z(perm));
+            if not(exist("n"))
+                n = [round(length(z)/4) round(length(z)/2) round(3*length(z)/4)];
             end
+            Cf = [];
+            err = Inf;
+            for k = 1 : length(n)
+                [tmp_Cf, tmp_err] = g_broken_lines(ztmp,n(k));
+                if tmp_err < err
+                    err = tmp_err;
+                    Cf= tmp_Cf;
+                end
+            end
+            ind = sort(perm(round(1:Cf(end))));
         end
-        ind = sort(perm(round(Cf(end)):end));
-
+        
         
     case "power_lines"
-        [t, perm] = sort(abs(x), "descend");
-        ztmp = abs(z(perm));
-        if not(exist("n"))
-            n = [round(length(z)/4) round(length(z)/2) round(3*length(z)/4)];
-        end
-        Cf = [];
-        err = Inf;
-        for k = 1 : length(n)
-            [tmp_Cf, tmp_err] = g_power_lines(ztmp,n);
-            if tmp_err < err
-                err = tmp_err;
-                Cf = tmp_Cf;
+        if ismember(0,z)
+            ind = 1:length(x);
+        else
+            [t, perm] = sort(abs(x), "descend");
+            ztmp = abs(z(perm));
+            if not(exist("n"))
+                n = [round(length(z)/4) round(length(z)/2) round(3*length(z)/4)];
             end
+            Cf = [];
+            err = Inf;
+            for k = 1 : length(n)
+                [tmp_Cf, tmp_err] = g_power_lines(ztmp,n(k));
+                if tmp_err < err
+                    err = tmp_err;
+                    Cf = tmp_Cf;
+                end
+            end
+            ind = sort(perm(round(1:Cf(end))));
+            
         end
-        ind = sort(perm(round(Cf(end)):end));
 end

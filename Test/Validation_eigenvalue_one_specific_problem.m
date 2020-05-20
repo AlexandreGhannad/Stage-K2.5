@@ -26,7 +26,7 @@ addpath(fullfile(pdcoo_home, 'Test'));
 import model.lpmodel;
 import model.slackmodel;
 % {'farm.mps'}    {'finnis.mps'}    {'gams10a.mps'}    {'gams30a.mps'}    {'grow7.mps'}    {'iiasa.mps'}
-mps_name = 'grow7.mps';
+mps_name = 'e226.mps';
 mps_name = pwd + "\Problems\lp_prob\" + mps_name;
 
 options_pdco.file_id = 1;
@@ -63,7 +63,7 @@ check_eigenvalueK35 = 0;
 check_all_eigenvalueK35 = 0;
 check_theorem2 = 1;
 check_all_theorem2 = 0;
-method_theorem2 = "MaxGap";
+method_theorem2 = "power_lines";
 check_licq = 0;
 check_property = 1;
 %% Loop
