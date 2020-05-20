@@ -60,7 +60,7 @@ check_all_residu = 0; % = 1  need check_residu = 1
 check_limits = 1;
 check_eigenvalueK35 = 0;
 check_all_eigenvalueK35 = 0;
-check_theorem2 = 0;
+check_theorem2 = 1;
 check_all_theorem2 = 0;
 method_theorem2 = "MaxGap";
 check_licq = 0;
@@ -93,8 +93,8 @@ options_pdco.method = method_theorem2;
 options_pdco.check_property = check_property;
 options_form = struct();
 
-prob1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
-prob1.solve;
+o = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
+o.solve;
 % prob2 = eval([classname2, '(slack, options_pdco,options_form,options_solv)']);
 % prob2.solve;
 % prob3 = eval([classname3, '(slack, options_pdco,options_form,options_solv)']);
@@ -104,7 +104,7 @@ fclose('all');
 %% Print result
 % clc
 % print_result(result, list_problem)
-t = prob1.eigenvalue;
+t = o.eigenvalue;
 tmp = t;
 tmp(t<0) = 10^10;
 t1 = max(t);
@@ -116,10 +116,10 @@ t4 = max(tmp);
 
 eigen = [t1;t2;t3;t4];
 
-show_eigenvalue(eigen, prob1.limit, options_pdco.d1, options_pdco.d2, prob1.features_limits)
-limit = prob1.features_property(1:4,:);
-show_eigenvalue(eigen, limit, options_pdco.d1, options_pdco.d2,prob1.features_property(5:end,:));
-    
+show_eigenvalue(eigen, o.limit, options_pdco.d1, options_pdco.d2, o.features_limits)
+
+show_eigenvalue_theorem2(o.eigenvalue, o.features_theorem2, options_pdco.d1, options_pdco.d2, 1)
+
 % if check_eigenvalue
 %     if check_limits
 %         show_eigenvalue(prob1.eigenvalue, prob1.limit, options_pdco.d1, options_pdco.d2, prob1.features_limits)

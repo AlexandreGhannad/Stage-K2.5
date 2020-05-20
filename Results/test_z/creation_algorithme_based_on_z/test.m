@@ -3,7 +3,7 @@ close all
 clear all
 clc
 %% Load one x and z
-ij=3;
+ij=1;
 load("xlist")
 load("zlist")
 x = xlist(ij,:);
@@ -15,7 +15,7 @@ close all
 rapport = zeros([1, length(x)-1]);
 err = zeros([1, length(x)-1]);
 % xf = zeros([3, length(x)-1]);
-xf = zeros([5, length(x)-1])
+xf = zeros([5, length(x)-1]);
 err(:,1) = NaN;
 xf(:,1) = NaN;
 xf1 = zeros([3, length(x)-1]);
@@ -24,10 +24,14 @@ err1 = zeros([1, length(x)-1]);
 err1(:,1) = NaN;
 method = "normal_power_lines"
 
-
+tic;
+coef0 = [1 1 1 1 1];
+coef00 = [-1 1 1];
 for n = 10 : length(x)-10
-    coef1 = find_abc(z, n, "broken_lines");
-    coef = find_abc(z, n, method);
+    coef1 = find_abc(z, n, "broken_lines", coef00);
+    coef = find_abc(z, n, method, coef0);
+    coef0 = coef;
+    coef00 = coef1;
     switch method
         case "broken_lines"
             y = broken_lines(coef,n,length(z));
@@ -50,12 +54,13 @@ for n = 10 : length(x)-10
     xf(:,n) = coef;
     xf1(:,n) = coef1;
 end
-
+t1 = toc;
 %% Show
 err(err==0) = NaN;
 err1(err1==0) = NaN;
 
-figure()
+figure(1)
+clf(1)
 subplot(211)
 semilogy(err,"." , "MarkerSize", 12, "Color", [0 0.4470 0.7410])
 hold on
@@ -73,7 +78,8 @@ y = normal_power_lines(coef,n,length(z));
 [e1,n1] = min(err1)
 coef1 = xf1(:,n1);
 y1 = broken_lines(coef1,n1,length(z));
-figure()
+figure(2)
+clf(2)
 plot(log10(z),"." , "MarkerSize", 12, "Color", [0 0.4470 0.7410])
 hold on
 plot(log10(z), "LineWidth", 0.5, "Color", [0 0.4470 0.7410])
@@ -83,6 +89,22 @@ plot(y1, "Color", [0.4660 0.6740 0.1880 0.7], "Linewidth", 3)
 plot(y, "Color", [0.6350 0.0780 0.1840  0.7], "Linewidth", 2)
 legend("z","z", "x","x", "Broken lines", "Power lines")
 
+n = round(3*length(x)/4);
+tic;
+Cf = g_broken_lines(z,n)
+t2 = toc;
+y1 = broken_lines(Cf(1:3),round(Cf(4)),length(z));
+tic
+Cf = g_power_lines(z,n)
+t3 = toc;
+y = normal_power_lines(Cf(1:5),round(Cf(6)),length(z));
+plot(y1, "Color", [1 1 1], "Linewidth", 2)
+plot(y, "Color", [0.5 0.5 0.5], "Linewidth", 4)
+
+Cf(6)
+% t1
+% t2
+% t3
 
 
 
