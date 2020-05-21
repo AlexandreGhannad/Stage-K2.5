@@ -1,5 +1,5 @@
-function show_eigenvalueK35(eigenvalue, d1, d2)
-figure()
+function fig = show_eigenvalueK35(eigenvalue, d1, d2)
+fig = figure();
 bisemilogy(eigenvalue)
 xlabel("Iteration")
 ylabel("Eigenvalues")

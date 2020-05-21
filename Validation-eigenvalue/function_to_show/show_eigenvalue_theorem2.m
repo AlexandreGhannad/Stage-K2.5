@@ -1,4 +1,4 @@
-function show_eigenvalue_theorem2(eigenvalue, features_theorem2, d1, d2, all_features)
+function fig = show_eigenvalue_theorem2(eigenvalue, features_theorem2, d1, d2, all_features)
 if not(exist("all_features"))
     all_features = 0;
 end
@@ -18,7 +18,7 @@ if all_features
     z = features_theorem2(11+n:end,:);
     limit = features_theorem2(1:4,:);
     
-    figure()
+    fig = figure();
     subplot(221)
     % bisemilogy copy in order to function inside the subplot
     pos = eigenvalue';
@@ -155,7 +155,7 @@ else
     z = features_theorem2(11+n:end,:);
     limit = features_theorem2(1:4,:);
     
-    figure()
+    fig = figure();
     %% bisemilogy copy in order to function inside the subplot
     pos = eigenvalue';
     pos(pos<=0) = NaN;

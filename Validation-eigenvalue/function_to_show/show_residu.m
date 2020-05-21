@@ -1,5 +1,5 @@
-function show_residu(residu, evolution_mu, d1, d2)
-figure()
+function fig = show_residu(residu, evolution_mu, d1, d2)
+fig = figure();
 semilogy(residu, "k.")
 hold on
 semilogy(evolution_mu, "b")

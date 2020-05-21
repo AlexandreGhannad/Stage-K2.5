@@ -35,7 +35,7 @@ formulation2 = 'K35';
 solver = 'LDL';
 classname2 = build_variant(pdcoo_home, formulation2, solver);
 
-formulation3 = 'K2';
+formulation3 = 'K3';
 solver = 'LDL';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
@@ -176,20 +176,20 @@ end
 
 fclose('all');
 %% save
-cpt = length(dir("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL\")) - 3 + 1;
-save("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL\results"+num2str(cpt)+".mat", "results")
+cpt = length(dir("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\")) - 3 + 1;
+save("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results"+num2str(cpt)+".mat", "results")
 %% Show results with graphics
 close all
 clear all
 clc
-load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL\results"+num2str(1)+".mat")
+load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL\results"+num2str(16)+".mat")
 res = zeros(size(results));
-cpt = length(dir("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL\")) - 3;
-for i = 1 : cpt
+cpt = length(dir("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\")) - 3;
+for i = 16 : 15+cpt
     load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL\results"+num2str(i)+".mat")
     res = res + results;
 end
-results = res/10;
+results = res/cpt;
 
 iter = double(squeeze(results(:,1,:)))';
 reason = double(squeeze(results(:,2,:)))';
@@ -207,7 +207,7 @@ hold on
 semilogy(t2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
 semilogy(t3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
 title("Execution time of the different formulations")
-legend("K2.5", "K3.5", "K2")
+legend("K2.5", "K3.5", "K3")
 ylabel("Time (s)")
 
 
@@ -249,29 +249,29 @@ clf(3)
 
 % K2.5 vs K3.5
 subplot(221)
-semilogy(t1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
+semilogy(t1, "x", "MarkerSize", 1.5, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
 hold on
-semilogy(t2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
+semilogy(t2, "d", "MarkerSize", 1, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
 title("K2.5 vs K3.5")
 legend("K2.5", "K3.5")
 ylabel("Time (s)")
 
-% K2.5 vs K2
+% K2.5 vs K3
 subplot(222)
-semilogy(t1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
+semilogy(t1, "x", "MarkerSize", 1.5, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
 hold on
-semilogy(t3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
-title("K2.5 vs K2")
-legend("K2.5", "K2")
+semilogy(t3, "o", "MarkerSize", 1, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
+title("K2.5 vs K3")
+legend("K2.5", "K3")
 ylabel("Time (s)")
 
-% K3.5 vs K2
+% K3.5 vs K3
 subplot(223)
-semilogy(t2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
+semilogy(t2, "d", "MarkerSize", 1, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
 hold on
-semilogy(t3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
-title("K3.5 vs K2")
-legend("K3.5", "K2")
+semilogy(t3, "o", "MarkerSize", 1, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
+title("K3.5 vs K3")
+legend("K3.5", "K3")
 ylabel("Time (s)")
 
 n1 = sum(imin == 1);
@@ -279,4 +279,9 @@ n2 = sum(imin == 2);
 n3 = sum(imin == 3);
 fprintf("\nNombre de fois que K2.5 est meilleur : %g\n", n1)
 fprintf("Nombre de fois que K3.5 est meilleur : %g\n", n2)
-fprintf("Nombre de fois que K2 est meilleur : %g\n\n", n3)
+fprintf("Nombre de fois que K3 est meilleur : %g\n\n", n3)
+
+%% End sound
+t = "C:\Users\alexa\Music\17.Victory.mp3";
+[mus, Fs] = audioread(t);
+sound(mus, Fs);

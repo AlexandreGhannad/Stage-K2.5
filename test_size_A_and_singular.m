@@ -39,7 +39,7 @@ formulation3 = 'K2';
 solver = 'LDL';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
-path_problem = pwd + "/Problems/qp_prob";
+path_problem = pwd + "/Problems/lp_prob";
 list_problem = dir(path_problem);
 list_problem = {list_problem.name};
 list_problem = list_problem(3:end);
@@ -69,7 +69,7 @@ for i = 1:n_problem
     fprintf('%s\n', mps_name);
     
     % Read .mps file
-    mps_name = pwd + "\Problems\qp_prob\" + mps_name;
+    mps_name = pwd + "\Problems\lp_prob\" + mps_name;
     mps_stru = readmps(mps_name);
     lp = mpstolp(mps_stru);
     slack = slackmodel(lp);

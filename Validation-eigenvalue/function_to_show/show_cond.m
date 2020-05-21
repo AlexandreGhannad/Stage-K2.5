@@ -1,10 +1,10 @@
-function show_cond(cond, limits, d1, d2, cond2, formulation)
+function fig = show_cond(cond, limits, d1, d2, cond2, formulation)
 % cond is the conditionning of K2.5
 % limits are the bounds on the eigenvalue of K2.5
 % cond2 is the conditionning of another formulation (ex: K3.5)
 % formulation is the name of the other formulation in string (ex: "K3.5")
 
-figure()
+fig = figure();
 semilogy(cond, "k.")
 hold on
 xlabel("Iteration")

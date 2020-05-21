@@ -1,4 +1,4 @@
-function show_eigenvalue(eigenvalue, limit, d1, d2, features_limits)
+function fig = show_eigenvalue(eigenvalue, limit, d1, d2, features_limits)
 
 if exist("features_limits")
     lambda_max = features_limits(1,:);
@@ -11,7 +11,7 @@ if exist("features_limits")
     zmin = features_limits(8,:);
     
     % Plot negative eigenvalue
-    figure()
+    fig = figure();
     ax = subplot(211)
     % same script as bisemilogy but with one change to adapt tothe
     % situation (ax = subplot(211) instead of ax = axes)
@@ -118,7 +118,7 @@ if exist("features_limits")
     
 else
     % Plot Eigenvalue
-    figure()
+    fig = figure();
     bisemilogy(eigenvalue, limit)
     
     xlabel("Iteration")
