@@ -199,6 +199,8 @@ classdef pdcoO < handle
         % intervals of theorem 2, = 0 else
         method % Specific to K2.5, to use the theorem 2
         features_theorem2;
+        n_theorem2 % Options for the method broken_lines and power_lines 
+        % of the function detect_active_inactive_constraints. 
         
         check_property % Input specific for K2.5 :
         % = 1 if you want to verify that eigenvalues belongs to theoritical
@@ -208,7 +210,10 @@ classdef pdcoO < handle
         xmem
         zmem
         
-        n_theorem2
+        
+        digit_number % allow to use more digits to calculate eigenvalues
+        % useful for non-LICQ/ill conditionned problem with low
+        % regularization
         
     end
     
@@ -436,6 +441,12 @@ classdef pdcoO < handle
                 o.n_theorem2 = options.n_theorem2;
             else
                 o.n_theorem2 = [];
+            end
+            
+            if isfield(options, 'digit_number')
+                o.digit_number = options.digit_number;
+            else
+                o.digit_number = [];
             end
             
         end

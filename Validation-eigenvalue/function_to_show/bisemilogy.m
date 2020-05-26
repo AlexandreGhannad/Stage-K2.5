@@ -46,8 +46,8 @@ if exist("limit")
     hold on
     plot(rmp, "LineWidth", 3, "Color", [0.9290 0.6940 0.1250])
     plot(rMp, "LineWidth", 3, "Color", [0 0.4470 0.7410])
-    plot(pos, "k.", "MarkerSize", 15)
-    plot(neg, "k.", "MarkerSize", 15)
+    plot(pos, "k.", "MarkerSize", 5)
+    plot(neg, "k.", "MarkerSize", 5)
     % rmm and rMm are plot after eigenvalues in order to have the legend associated with the right data
     plot(rmm, "LineWidth", 3, "Color", [0 0.4470 0.7410])
     plot(rMm, "LineWidth", 3, "Color", [0.9290 0.6940 0.1250])
@@ -95,8 +95,8 @@ else
     ax = axes;
     
     hold on
-    plot(pos, "k.", "MarkerSize", 15)
-    plot(neg, "k.", "MarkerSize", 15)
+    plot(pos, "k.", "MarkerSize", 5)
+    plot(neg, "k.", "MarkerSize", 5)
     ax.XAxisLocation = 'origin';
     ylim([-L L]);
     ax.YTick=-L:2:L;

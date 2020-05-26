@@ -10,12 +10,13 @@ addpath(fullfile(pdcoo_home, 'Formulations'));
 addpath(fullfile(pdcoo_home, 'Solvers'));
 addpath(fullfile(pdcoo_home, 'readmps'));
 addpath(fullfile(pdcoo_home, 'Tools'));
-addpath(fullfile(pdcoo_home, 'Problems\MPS'));
-p = genpath(fullfile(pdcoo_home, 'Validation-eigenvalue'));
-addpath(p);
 p = genpath(fullfile(pdcoo_home, 'addons'));
 addpath(p);
 p = genpath(fullfile(pdcoo_home, 'Results'));
+addpath(p);
+p = genpath(fullfile(pdcoo_home, 'Problems'));
+addpath(p);
+p = genpath(fullfile(pdcoo_home, 'eigenvalue'));
 addpath(p);
 if exist('Variants', 'dir') ~= 7
     mkdir('Variants');

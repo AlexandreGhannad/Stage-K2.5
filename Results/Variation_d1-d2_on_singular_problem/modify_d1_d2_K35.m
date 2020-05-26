@@ -10,11 +10,13 @@ addpath(fullfile(pdcoo_home, 'Formulations'));
 addpath(fullfile(pdcoo_home, 'Solvers'));
 addpath(fullfile(pdcoo_home, 'readmps'));
 addpath(fullfile(pdcoo_home, 'Tools'));
-addpath(fullfile(pdcoo_home, 'Problems\MPS'));
-addpath(fullfile(pdcoo_home, 'Validation-eigenvalue'));
 p = genpath(fullfile(pdcoo_home, 'addons'));
 addpath(p);
 p = genpath(fullfile(pdcoo_home, 'Results'));
+addpath(p);
+p = genpath(fullfile(pdcoo_home, 'Problems'));
+addpath(p);
+p = genpath(fullfile(pdcoo_home, 'eigenvalue'));
 addpath(p);
 if exist('Variants', 'dir') ~= 7
     mkdir('Variants');
@@ -31,13 +33,13 @@ formulation1 = 'K25';
 solver = 'LDL';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
-formulation2 = 'K35';
-solver = 'LDL';
-classname2 = build_variant(pdcoo_home, formulation2, solver);
+% formulation2 = 'K35';
+% solver = 'LDL';
+% classname2 = build_variant(pdcoo_home, formulation2, solver);
 
-formulation3 = 'K2';
-solver = 'LDL';
-classname3 = build_variant(pdcoo_home, formulation3, solver);
+% formulation3 = 'K2';
+% solver = 'LDL';
+% classname3 = build_variant(pdcoo_home, formulation3, solver);
 
 
 n_problem = 1;
@@ -68,18 +70,19 @@ check_eigenvalueK35 = 0;
 check_theorem2 = 0;
 check_all_theorem2 = 0;
 method_theorem2 = "MaxGap";
-
+check_property = 0;
+digit_number = 64;
 options_pdco.d1 = 0;
 options_pdco.d2 = 0;
 %% Loop
 clc
-list_problem ={pwd + "/Problems/qp_prob/"+'qship04s.qps'};
+list_problem ={pwd + "/Problems/qp_prob/"+'qbrandy.qps'};
 % d1 = 10^-4;
 d1 = 10^-2;
 % d2 = [0 1];
-d2 = [10^-8 10^-6 10^-4 10^-2 1];
+% d2 = [10^-8 10^-6 10^-4 10^-2 1];
 % d2 = 0;
-% d2 = 10^-2
+d2 = 10^-8
 options_pdco.d1 = d1;
 for j = 1:length(d2)
     options_pdco.d2 = d2(j);
@@ -101,7 +104,8 @@ options_pdco.x0 = slack.x0;
     options_pdco.z0 = options_pdco.zsize * ones(slack.n, 1);
     options_pdco.y0 = zeros(slack.m, 1);
     options_pdco.mu0 = options_pdco.zsize;
-    options_pdco.Maxiter = min(max(30, slack.n), 100);
+%     options_pdco.Maxiter = min(max(30, slack.n), 100);
+    options_pdco.Maxiter = 108;
     options_pdco.check_eigenvalue = check_eigenvalue;
     options_pdco.check_residu = check_residu;
     options_pdco.check_cond = check_cond;
@@ -109,6 +113,8 @@ options_pdco.x0 = slack.x0;
     options_pdco.check_theorem2 = check_theorem2;
     options_pdco.check_eigenvalueK35 = check_eigenvalueK35;
     options_pdco.method = method_theorem2;
+    options_pdco.check_property = check_property;
+    options_pdco.digit_number = digit_number;
     options_form = struct();
     
     Problem1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
@@ -117,6 +123,8 @@ options_pdco.x0 = slack.x0;
 %     Problem2.solve;
     
     show_eigenvalue(Problem1.eigenvalue, Problem1.limit, d1, d2(j))
+%     limits = Problem1.features_property(1:4,:);
+%     show_eigenvalue_property(Problem1.eigenvalue, limits, d1, d2(j), Problem1.features_property(5:end,:))
 %     show_eigenvalueK35(Problem2.eigenvalue, d1, d2(j))
 %     show_eigenvalue_theorem2(Problem1.eigenvalue, Problem1.features_theorem2, d1, d2(j))
 %     show_cond(Problem1.cond, Problem1.limit, d1, d2(j), Problem2.cond, "K3.5" )

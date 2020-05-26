@@ -1,3 +1,5 @@
+
+for ijkl = 1: 18
 %% Clean
 clear all
 close all
@@ -10,11 +12,13 @@ addpath(fullfile(pdcoo_home, 'Formulations'));
 addpath(fullfile(pdcoo_home, 'Solvers'));
 addpath(fullfile(pdcoo_home, 'readmps'));
 addpath(fullfile(pdcoo_home, 'Tools'));
-addpath(fullfile(pdcoo_home, 'Problems\MPS'));
-addpath(fullfile(pdcoo_home, 'Validation-eigenvalue'));
 p = genpath(fullfile(pdcoo_home, 'addons'));
 addpath(p);
 p = genpath(fullfile(pdcoo_home, 'Results'));
+addpath(p);
+p = genpath(fullfile(pdcoo_home, 'Problems'));
+addpath(p);
+p = genpath(fullfile(pdcoo_home, 'eigenvalue'));
 addpath(p);
 if exist('Variants', 'dir') ~= 7
     mkdir('Variants');
@@ -36,7 +40,7 @@ solver = 'LDL';
 classname2 = build_variant(pdcoo_home, formulation2, solver);
 
 formulation3 = 'K3';
-solver = 'LDL';
+solver = 'QR';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
 path_problem = pwd + "/Problems/qp_prob";
@@ -178,6 +182,8 @@ fclose('all');
 %% save
 cpt = length(dir("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\")) - 3 + 1;
 save("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results"+num2str(cpt)+".mat", "results")
+
+end
 %% Show results with graphics
 close all
 clear all

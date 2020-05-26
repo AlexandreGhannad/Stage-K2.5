@@ -10,11 +10,13 @@ addpath(fullfile(pdcoo_home, 'Formulations'));
 addpath(fullfile(pdcoo_home, 'Solvers'));
 addpath(fullfile(pdcoo_home, 'readmps'));
 addpath(fullfile(pdcoo_home, 'Tools'));
-addpath(fullfile(pdcoo_home, 'Problems\MPS'));
-addpath(fullfile(pdcoo_home, 'Validation-eigenvalue'));
 p = genpath(fullfile(pdcoo_home, 'addons'));
 addpath(p);
 p = genpath(fullfile(pdcoo_home, 'Results'));
+addpath(p);
+p = genpath(fullfile(pdcoo_home, 'Problems'));
+addpath(p);
+p = genpath(fullfile(pdcoo_home, 'eigenvalue'));
 addpath(p);
 if exist('Variants', 'dir') ~= 7
     mkdir('Variants');
@@ -69,6 +71,8 @@ check_all_eigenvalueK35 = 1;
 check_theorem2 = 1;
 check_all_theorem2 = 0;
 method_theorem2 = "MaxGap";
+check_property = 1;
+
 
 options_pdco.d1 = 0.01;
 options_pdco.d2 = 0.01;
@@ -183,6 +187,7 @@ for i = 1:n_problem
     if check_all_eigenvalueK35
         show_eigenvalueK35(Problem2.eigenvalue, options_pdco.d1, options_pdco.d2)
     end
+    show_eigenvalue_property(eigenvalue, limit, d1, d2, features_property)
 end
 
 fclose('all');

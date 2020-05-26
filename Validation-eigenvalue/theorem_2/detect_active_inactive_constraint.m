@@ -33,12 +33,19 @@ switch method
         ind = sort(perm(l+1:end));
         
     case "broken_lines"
+        % Sort x and use the same permutation on z. After, try to fit the
+        % evolution of z with a broken line (only one point of break).
+        % Total discrete optimization: the break point is also optimize
+        % discretly, but rounded after. n correspond to the start points
+        % which are test. To improve the results, few star points are
+        % tried, and only the best is kept. you can choose the start point
+        % with the option n_theorem2 of pdcoo
         if ismember(0,z)
             ind = 1:length(x);
         else
             [t, perm] = sort(abs(x), "descend");
             ztmp = abs(z(perm));
-            if not(exist("n"))
+            if isempty(o.n_theorem2)
                 n = [round(length(z)/4) round(length(z)/2) round(3*length(z)/4)];
             end
             Cf = [];
@@ -55,12 +62,19 @@ switch method
         
         
     case "power_lines"
+        % Sort x and use the same permutation on z. After, try to fit the
+        % evolution of z with two power functions with one point of break.
+        % Total discrete optimization: the break point is also optimize
+        % discretly, but rounded after. n correspond to the start points
+        % which are test. To improve the results, few star points are
+        % tried, and only the best is kept. you can choose the start point
+        % with the option n_theorem2 of pdcoo
         if ismember(0,z)
             ind = 1:length(x);
         else
             [t, perm] = sort(abs(x), "descend");
             ztmp = abs(z(perm));
-            if not(exist("n"))
+            if isempty(o.n_theorem2)
                 n = [round(length(z)/4) round(length(z)/2) round(3*length(z)/4)];
             end
             Cf = [];
@@ -73,6 +87,6 @@ switch method
                 end
             end
             ind = sort(perm(round(1:Cf(end))));
-            
         end
+end
 end

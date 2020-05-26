@@ -87,7 +87,7 @@ if exist("features_property")
     ax.YTickLabel = lbl;
     xlabel("Iteration")
     ylabel("Eigenvalues and bounds")
-    legend({"Lower bounds", "Upper bounds", "Eigenvalues"}, 'Location', 'bestoutside')
+    legend({"Inner bounds", "Outer bounds", "Eigenvalues"}, 'Location', 'bestoutside')
     if exist("d1") & exist("d2")
         title("Eigenvalues, (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
     elseif exist("d1")
@@ -117,7 +117,7 @@ else
     
     xlabel("Iteration")
     ylabel("Eigenvalues and bounds")
-    legend({"Lower bounds", "Upper bounds", "Eigenvalues"}, 'Location', 'best')
+    legend({"Inner bounds", "Outer bounds", "Eigenvalues"}, 'Location', 'best')
     
     if exist("d1") & exist("d2")
         title("Eigenvalues, (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")

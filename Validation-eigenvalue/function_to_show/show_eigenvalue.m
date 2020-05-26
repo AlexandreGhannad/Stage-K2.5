@@ -59,8 +59,8 @@ if exist("features_limits")
     hold on
     plot(rmp, "LineWidth", 3, "Color", [0.9290 0.6940 0.1250])
     plot(rMp, "LineWidth", 3, "Color", [0 0.4470 0.7410])
-    plot(pos, "k.", "MarkerSize", 15)
-    plot(neg, "k.", "MarkerSize", 15)
+    plot(pos, "k.", "MarkerSize", 5)
+    plot(neg, "k.", "MarkerSize", 5)
     % rmm and rMm are plot after eigenvalues in order to have the legend associated with the right data
     plot(rmm, "LineWidth", 3, "Color", [0 0.4470 0.7410])
     plot(rMm, "LineWidth", 3, "Color", [0.9290 0.6940 0.1250])
@@ -90,7 +90,7 @@ if exist("features_limits")
     ax.YTickLabel = lbl;
     xlabel("Iteration")
     ylabel("Eigenvalues and bounds")
-    legend({"Lower bounds", "Upper bounds", "Eigenvalues"}, 'Location', 'bestoutside')
+    legend({"Inner bounds", "Outer bounds", "Eigenvalues"}, 'Location', 'bestoutside')
     if exist("d1") & exist("d2")
         title("Eigenvalues, (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
     elseif exist("d1")
@@ -123,7 +123,7 @@ else
     
     xlabel("Iteration")
     ylabel("Eigenvalues and bounds")
-    legend({"Lower bounds", "Upper bounds", "Eigenvalues"}, 'Location', 'best')
+    legend({"Inner bounds", "Outer bounds", "Eigenvalues"}, 'Location', 'best')
     
     if exist("d1") & exist("d2")
         title("Eigenvalues, (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
