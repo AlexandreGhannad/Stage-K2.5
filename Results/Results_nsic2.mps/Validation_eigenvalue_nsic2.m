@@ -254,13 +254,14 @@ options_pdco.d2 = 0;
 %% Loop
 clc
 % d1 = 10^-4;
-d1 = 10^-2;
 % d2 = [0 1];
-d2 = [10^-8 10^-6 10^-4 10^-2 1];
 % d2 = 0;
 % d2 = 10^-8
-options_pdco.d1 = d1;
-for j = 1:length(d2)
+d1 = [10^-4 10^-4 10^-2 10^-2 10^0 10^-2 1];
+d2 = [10^-4 10^-2 10^-4 10^-2 10^-2 10^0 1];
+
+for j = 1:length(d1)
+    options_pdco.d1 = d1(j);
     options_pdco.d2 = d2(j);
     
     mps_name = 'nsic2.mps';
@@ -273,7 +274,7 @@ for j = 1:length(d2)
     slack = slackmodel(lp);
     Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
     
-options_pdco.x0 = slack.x0;
+    options_pdco.x0 = slack.x0;
     options_pdco.x0(slack.jLow) = slack.bL(slack.jLow) + 1;
     options_pdco.x0(slack.jUpp) = slack.bU(slack.jUpp) - 1;
     options_pdco.x0(slack.jTwo) = (slack.bL(slack.jTwo) + slack.bU(slack.jTwo)) / 2;
@@ -292,42 +293,18 @@ options_pdco.x0 = slack.x0;
     options_pdco.check_eigenvalueK35 = check_eigenvalueK35;
     options_pdco.method = method_theorem2;
     options_pdco.check_property = check_property;
-%     options_pdco.digit_number = digit_number;
     options_form = struct();
     
     Problem1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
     Problem1.solve;
-
-    show_eigenvalue(Problem1.eigenvalue, Problem1.limit, d1, d2(j))
-
+    fig = show_eigenvalue(Problem1.eigenvalue, Problem1.limit, d1(j), d2(j))
+    
+    orient(fig, "landscape")
+    set(fig,'PaperSize',[45 25], 'Position', get(0, 'Screensize')); %set the paper size to what you want
+    cpt = length(dir("D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\"))-9;
+    filename = "D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\variation_d2_figure"+num2str(cpt)+".pdf";
+    print(fig, filename,'-dpdf', "-r1200")
     
 end
 
 fclose('all');
-%% Save graphics
-orient(fig1, "landscape")
-orient(fig2, "landscape")
-orient(fig3, "landscape")
-orient(fig4, "landscape")
-orient(fig5, "landscape")
-
-
-set(fig1,'PaperSize',[45 25]); %set the paper size to what you want
-filename = 'D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\variation_d2_figure1.pdf';
-print(fig1, filename,'-dpdf', "-r1200")
-
-set(fig2,'PaperSize',[45 25]); %set the paper size to what you want
-filename = 'D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\variation_d2_figure2.pdf';
-print(fig2, filename,'-dpdf', "-r1200")
-
-set(fig3,'PaperSize',[45 25]); %set the paper size to what you want
-filename = 'D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\variation_d2_figure3.pdf';
-print(fig3, filename,'-dpdf', "-r1200")
-
-set(fig4,'PaperSize',[45 25]); %set the paper size to what you want
-filename = 'D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\variation_d2_figure4.pdf';
-print(fig4, filename,'-dpdf', "-r1200")
-
-set(fig5,'PaperSize',[45 25]); %set the paper size to what you want
-filename = 'D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\variation_d2_figure5.pdf';
-print(fig5, filename,'-dpdf', "-r1200")
