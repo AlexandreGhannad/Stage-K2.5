@@ -37,9 +37,9 @@ classname1 = build_variant(pdcoo_home, formulation1, solver);
 formulation2 = 'K35';
 solver = 'LDL';
 classname2 = build_variant(pdcoo_home, formulation2, solver);
-% formulation3 = 'K3';
-% solver = 'LDL';
-% classname3 = build_variant(pdcoo_home, formulation3, solver);
+formulation3 = 'K3';
+solver = 'LU';
+classname3 = build_variant(pdcoo_home, formulation3, solver);
 
 options_pdco.d1 = 1.0e-2;
 options_pdco.d2 = 1.0e-2;

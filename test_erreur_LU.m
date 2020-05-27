@@ -1,4 +1,3 @@
-
 %% Clean
 clear all
 close all
@@ -42,11 +41,11 @@ formulation3 = 'K3';
 solver = 'LU';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
-path_problem = pwd + "/Problems/qp_prob";
-list_problem = dir(path_problem);
-list_problem = {list_problem.name};
-list_problem = list_problem(3:end);
-
+% path_problem = pwd + "/Problems/qp_prob";
+% list_problem = dir(path_problem);
+% list_problem = {list_problem.name};
+% list_problem = list_problem(3:end);
+list_problem = {'dualc1.qps'}
 
 n_problem = length(list_problem);
 
@@ -180,109 +179,3 @@ for i = 1:n_problem
 end
 
 fclose('all');
-%% save
-cpt = length(dir("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\")) - 1;
-save("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results"+num2str(cpt)+".mat", "results")
-
-%% Show results with graphics
-close all
-clear all
-clc
-load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results"+num2str(1)+".mat")
-res = zeros(size(results));
-cpt = length(dir("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\")) - 3;
-for i = 1 : cpt
-    load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results"+num2str(i)+".mat")
-    res = res + results;
-end
-results = res/cpt;
-
-iter = double(squeeze(results(:,1,:)))';
-reason = double(squeeze(results(:,2,:)))';
-complementarity_resid = double(squeeze(results(:,3,:)))';
-time = double(squeeze(results(:,4,:)))';
-
-figure(1)
-clf(1)
-time = sort(time, 2);
-t1 = time(1,:);
-t2 = time(2,:);
-t3 = time(3,:);
-semilogy(t1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
-hold on
-semilogy(t2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
-semilogy(t3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
-title("Execution time of the different formulations")
-legend("K2.5", "K3.5", "K3")
-ylabel("Time (s)")
-
-
-[tmax,imax] = max(time);
-[tmin,imin] = min(time);
-
-tmax1 = tmax;
-tmax1(imax~=1) = NaN;
-tmax2 = tmax;
-tmax2(imax~=2) = NaN;
-tmax3 = tmax;
-tmax3(imax~=3) = NaN;
-
-tmin1 = tmin;
-tmin1(imin~=1) = NaN;
-tmin2 = tmin;
-tmin2(imin~=2) = NaN;
-tmin3 = tmin;
-tmin3(imin~=3) = NaN;
-
-figure(2)
-clf(2)
-semilogy(tmax1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
-hold on
-semilogy(tmin1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
-semilogy(tmax2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
-semilogy(tmin2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
-semilogy(tmax3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
-semilogy(tmin3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
-title("Best and worst execution time")
-ylabel("Time (s)")
-
-
-
-
-% Compare efficiency in duel
-figure(3)
-clf(3)
-
-% K2.5 vs K3.5
-subplot(221)
-semilogy(t1, "x", "MarkerSize", 1.5, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
-hold on
-semilogy(t2, "d", "MarkerSize", 1, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
-title("K2.5 vs K3.5")
-legend("K2.5", "K3.5")
-ylabel("Time (s)")
-
-% K2.5 vs K3
-subplot(222)
-semilogy(t1, "x", "MarkerSize", 1.5, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
-hold on
-semilogy(t3, "o", "MarkerSize", 1, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
-title("K2.5 vs K3")
-legend("K2.5", "K3")
-ylabel("Time (s)")
-
-% K3.5 vs K3
-subplot(223)
-semilogy(t2, "d", "MarkerSize", 1, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
-hold on
-semilogy(t3, "o", "MarkerSize", 1, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
-title("K3.5 vs K3")
-legend("K3.5", "K3")
-ylabel("Time (s)")
-
-n1 = sum(imin == 1);
-n2 = sum(imin == 2);
-n3 = sum(imin == 3);
-fprintf("\nNombre de fois que K2.5 est meilleur : %g\n", n1)
-fprintf("Nombre de fois que K3.5 est meilleur : %g\n", n2)
-fprintf("Nombre de fois que K3 est meilleur : %g\n\n", n3)
