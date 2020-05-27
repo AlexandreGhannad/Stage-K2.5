@@ -103,7 +103,40 @@ prob2.solve;
 % prob3.solve;
 
 fclose('all');
-%% Print result
+%%% Save graphics
+fig1 = figure(1);
+fig2 = figure(2);
+fig3 = figure(3);
+fig4 = figure(4);
+fig5 = figure(5);
+
+orient(fig1, "landscape")
+orient(fig2, "landscape")
+orient(fig3, "landscape")
+orient(fig4, "landscape")
+orient(fig5, "landscape")
+
+
+set(fig1,'PaperSize',[45 25]); %set the paper size to what you want
+filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure1.pdf';
+print(fig1, filename,'-dpdf', "-r1200")
+
+set(fig2,'PaperSize',[45 25]); %set the paper size to what you want
+filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure2.pdf';
+print(fig2, filename,'-dpdf', "-r1200")
+
+set(fig3,'PaperSize',[45 25]); %set the paper size to what you want
+filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure3.pdf';
+print(fig3, filename,'-dpdf', "-r1200")
+
+set(fig4,'PaperSize',[45 25]); %set the paper size to what you want
+filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure4.pdf';
+print(fig4, filename,'-dpdf', "-r1200")
+
+set(fig5,'PaperSize',[45 25]); %set the paper size to what you want
+filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure5.pdf';
+print(fig5, filename,'-dpdf', "-r1200")
+% Print result
 % clc
 % print_result(result, list_problem)
 % t = o.eigenvalue;

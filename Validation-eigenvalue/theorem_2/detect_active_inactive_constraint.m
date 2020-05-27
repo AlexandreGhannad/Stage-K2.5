@@ -45,7 +45,7 @@ switch method
         else
             [t, perm] = sort(abs(x), "descend");
             ztmp = abs(z(perm));
-            if isempty(o.n_theorem2)
+            if not(exist("n"))
                 n = [round(length(z)/4) round(length(z)/2) round(3*length(z)/4)];
             end
             Cf = [];
@@ -74,7 +74,7 @@ switch method
         else
             [t, perm] = sort(abs(x), "descend");
             ztmp = abs(z(perm));
-            if isempty(o.n_theorem2)
+            if not(exist("n"))
                 n = [round(length(z)/4) round(length(z)/2) round(3*length(z)/4)];
             end
             Cf = [];
