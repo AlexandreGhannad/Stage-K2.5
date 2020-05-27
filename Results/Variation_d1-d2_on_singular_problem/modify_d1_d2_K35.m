@@ -16,7 +16,7 @@ p = genpath(fullfile(pdcoo_home, 'Results'));
 addpath(p);
 p = genpath(fullfile(pdcoo_home, 'Problems'));
 addpath(p);
-p = genpath(fullfile(pdcoo_home, 'eigenvalue'));
+p = genpath(fullfile(pdcoo_home, 'Validation-eigenvalue'));
 addpath(p);
 if exist('Variants', 'dir') ~= 7
     mkdir('Variants');
@@ -71,7 +71,8 @@ check_theorem2 = 0;
 check_all_theorem2 = 0;
 method_theorem2 = "MaxGap";
 check_property = 0;
-digit_number = 64;
+% digit_number = 64;
+
 options_pdco.d1 = 0;
 options_pdco.d2 = 0;
 %% Loop
@@ -80,9 +81,9 @@ list_problem ={pwd + "/Problems/qp_prob/"+'qbrandy.qps'};
 % d1 = 10^-4;
 d1 = 10^-2;
 % d2 = [0 1];
-% d2 = [10^-8 10^-6 10^-4 10^-2 1];
+d2 = [10^-8 10^-6 10^-4 10^-2 1];
 % d2 = 0;
-d2 = 10^-8
+% d2 = 10^-8
 options_pdco.d1 = d1;
 for j = 1:length(d2)
     options_pdco.d2 = d2(j);
@@ -114,7 +115,7 @@ options_pdco.x0 = slack.x0;
     options_pdco.check_eigenvalueK35 = check_eigenvalueK35;
     options_pdco.method = method_theorem2;
     options_pdco.check_property = check_property;
-    options_pdco.digit_number = digit_number;
+%     options_pdco.digit_number = digit_number;
     options_form = struct();
     
     Problem1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
@@ -132,3 +133,37 @@ options_pdco.x0 = slack.x0;
 end
 
 fclose('all');
+%% Save graphics
+fig1 = figure(1);
+fig2 = figure(2);
+fig3 = figure(3);
+fig4 = figure(4);
+fig5 = figure(5);
+
+orient(fig1, "landscape")
+orient(fig2, "landscape")
+orient(fig3, "landscape")
+orient(fig4, "landscape")
+orient(fig5, "landscape")
+
+
+set(fig1,'PaperSize',[45 25]); %set the paper size to what you want
+filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure1.pdf';
+print(fig1, filename,'-dpdf', "-r1200")
+
+set(fig2,'PaperSize',[45 25]); %set the paper size to what you want
+filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure2.pdf';
+print(fig2, filename,'-dpdf', "-r1200")
+
+set(fig3,'PaperSize',[45 25]); %set the paper size to what you want
+filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure3.pdf';
+print(fig3, filename,'-dpdf', "-r1200")
+
+set(fig4,'PaperSize',[45 25]); %set the paper size to what you want
+filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure4.pdf';
+print(fig4, filename,'-dpdf', "-r1200")
+
+set(fig5,'PaperSize',[45 25]); %set the paper size to what you want
+filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure5.pdf';
+print(fig5, filename,'-dpdf', "-r1200")
+

@@ -3,10 +3,18 @@ close all
 clear all
 clc
 %% Load results and agregate them
-load('D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results_lp_prob_15_tests.mat')
-res_lp = res;
-load('D:\git_repository\Stage-K2.5\Results\comparison_efficiency\results_qp_prob_15_tests.mat')
-res_qp = res;
+load('D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_lp\results1.mat')
+res_lp = results;
+load('D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results1.mat')
+res_qp = results;
+for i = 2:20
+    load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_lp\results"+num2str(i)+".mat")
+    res_lp = res_lp + results;
+    load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results"+num2str(i)+".mat")
+    res_qp = res_qp+results;
+end
+res_lp = res_lp/20;
+res_qp = res_qp/20;
 results =[res_lp ;res_qp];
 %% Show
 iter = double(squeeze(results(:,1,:)))';
@@ -25,7 +33,7 @@ hold on
 semilogy(t2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
 semilogy(t3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
 title("Execution time of the different formulations")
-legend("K2.5", "K3.5", "K3")
+legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K3 (QR solver)", "Location", "northwest")
 ylabel("Time (s)")
 
 
@@ -50,13 +58,15 @@ fig2 = figure(2)
 clf(2)
 semilogy(tmax1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
 hold on
-semilogy(tmin1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
 semilogy(tmax2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
-semilogy(tmin2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
 semilogy(tmax3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
+semilogy(tmin1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 2)
+semilogy(tmin2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
 semilogy(tmin3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
 title("Best and worst execution time")
 ylabel("Time (s)")
+legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K3 (QR solver)", "Location", "northwest")
+
 
 
 
@@ -71,7 +81,7 @@ semilogy(t1, "x", "MarkerSize", 1.5, "Color", [0.4660 0.6740 0.1880], 'LineWidth
 hold on
 semilogy(t2, "d", "MarkerSize", 1, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
 title("K2.5 vs K3.5")
-legend("K2.5", "K3.5")
+legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "Location", "northwest")
 ylabel("Time (s)")
 
 % K2.5 vs K3
@@ -80,7 +90,7 @@ semilogy(t1, "x", "MarkerSize", 1.5, "Color", [0.4660 0.6740 0.1880], 'LineWidth
 hold on
 semilogy(t3, "o", "MarkerSize", 1, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
 title("K2.5 vs K3")
-legend("K2.5", "K3")
+legend("K2.5 (LDL solver)", "K3 (QR solver)", "Location", "northwest")
 ylabel("Time (s)")
 
 % K3.5 vs K3
@@ -89,7 +99,7 @@ semilogy(t2, "d", "MarkerSize", 1, "Color", [0 0.4470 0.7410], 'LineWidth', 1.5)
 hold on
 semilogy(t3, "o", "MarkerSize", 1, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
 title("K3.5 vs K3")
-legend("K3.5", "K3")
+legend("K3.5 (LDL solver)", "K3 (QR solver)", "Location", "northwest")
 ylabel("Time (s)")
 
 n1 = sum(imin == 1);
@@ -105,12 +115,12 @@ orient(fig3, "landscape")
 
 set(fig1,'PaperSize',[45 25]); %set the paper size to what you want
 filename = 'D:\git_repository\Stage-K2.5\Results\comparison_efficiency\Execution_time.pdf';
-print(fig1, filename,'-dpdf')
+print(fig1, filename,'-dpdf', "-r1200")
 
 set(fig2,'PaperSize',[45 25]); %set the paper size to what you want
 filename = 'D:\git_repository\Stage-K2.5\Results\comparison_efficiency\Best_wost_execution_time.pdf';
-print(fig2, filename,'-dpdf') 
+print(fig2, filename,'-dpdf', "-r1200") 
 
 set(fig3,'PaperSize',[45 25]); %set the paper size to what you want
 filename = 'D:\git_repository\Stage-K2.5\Results\comparison_efficiency\Comparison_side_by_side.pdf';
-print(fig3, filename,'-dpdf') ;
+print(fig3, filename,'-dpdf', "-r1200")

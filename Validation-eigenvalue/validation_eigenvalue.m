@@ -65,7 +65,7 @@ limit = [rho_min_negative;rho_max_negative;rho_min_positive;rho_max_positive];
 if isempty(o.digit_number)
     eigenvalue = eigs(o.M, size(o.M,1));
 else
-    eigenvalue = vpa(eig(vpa(full(o.M), digit_number)), digit_number);
+    eigenvalue = vpa(eig(vpa(full(o.M), o.digit_number)), o.digit_number);
 end
 
 

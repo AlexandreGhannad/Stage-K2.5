@@ -1,4 +1,3 @@
-for ijk = 1 : 20
 %% Clean
 clear all
 close all
@@ -17,7 +16,7 @@ p = genpath(fullfile(pdcoo_home, 'Results'));
 addpath(p);
 p = genpath(fullfile(pdcoo_home, 'Problems'));
 addpath(p);
-p = genpath(fullfile(pdcoo_home, 'eigenvalue'));
+p = genpath(fullfile(pdcoo_home, 'Validation-eigenvalue'));
 addpath(p);
 if exist('Variants', 'dir') ~= 7
     mkdir('Variants');
@@ -182,7 +181,6 @@ fclose('all');
 cpt = length(dir("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\")) - 3 + 1;
 save("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_lp\results"+num2str(cpt)+".mat", "results")
 
-end
 %% Show results with graphics
 close all
 clear all
@@ -285,8 +283,3 @@ n3 = sum(imin == 3);
 fprintf("\nNombre de fois que K2.5 est meilleur : %g\n", n1)
 fprintf("Nombre de fois que K3.5 est meilleur : %g\n", n2)
 fprintf("Nombre de fois que K3 est meilleur : %g\n\n", n3)
-
-%% End sound
-t = "C:\Users\alexa\Music\17.Victory.mp3";
-[mus, Fs] = audioread(t);
-sound(mus, Fs);
