@@ -54,9 +54,11 @@ classdef K3 < handle
             if o.explicitA
                 
                 if o.nfix == 0
-                    Ilow = sparse(o.low, 1:nlow,1 ,o.n, nlow);
-                    Iupp = sparse(o.upp, 1:nupp,1 ,o.n, nupp);
-                    o.M = [ -o.H    o.A'          Ilow Iupp
+                    Ilow = sparse(1:o.n, 1:nlow, ,o.n, nlow);
+%                     Ilow() = ;
+                    Iupp = sparse(o.n, nupp);
+%                     Iupp() = 1;
+                    o.M = [ -o.H    o.A'          
                         o.A    D2reg              sparse(o.m,nlow)     sparse(o.m,nupp)
                         Z1s    sparse(nlow,o.m)   X1                   sparse(nlow,nupp)
                         -Z2s    sparse(nupp,o.m)   sparse(nupp,nlow)    X2                ];
@@ -65,18 +67,15 @@ classdef K3 < handle
                         o.Afree = o.A;
                         o.Afree(:, o.fix) = 0;
                     end
-                    Ilow = sparse(o.low, 1:nlow,1 ,o.n, nlow);
-                    Iupp = sparse(o.upp, 1:nupp,1 ,o.n, nupp);
-                    o.M = [ -o.H      o.Afree'      Ilow Iupp
+                    o.M = [ -o.H      o.Afree'      speye([o.n o.n])       -speye([o.n o.n])
                         o.Afree  D2reg              sparse(o.m,nlow)     sparse(o.m,nupp)
                         Z1s      sparse(nlow,o.m)   X1                   sparse(nlow,nupp)
                         -Z2s      sparse(nupp,o.m)   sparse(nupp,nlow)    X2                ];
                 end
                 
             else
-                Ilow = sparse(o.low, 1:nlow,1 ,o.n, nlow);
-                Iupp = sparse(o.upp, 1:nupp,1 ,o.n, nupp);
-                o.M = [ -o.H    o.A'      Ilow Iupp
+                
+                o.M = [ -o.H    o.A'      speye([o.n o.n])       -speye([o.n o.n])
                     o.A    D2reg               sparse(o.m,nlow)     sparse(o.m,nupp)
                     Z1s    sparse(nlow,o.m)    X1                   sparse(nlow,nupp)
                     -Z2s    sparse(nupp,o.m)    sparse(nupp,nlow)    X2                ];
