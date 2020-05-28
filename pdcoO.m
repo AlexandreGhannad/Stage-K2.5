@@ -445,6 +445,7 @@ classdef pdcoO < handle
             
             if isfield(options, 'digit_number')
                 o.digit_number = options.digit_number;
+                warning("To increase precision on the calculation of the eigenvalues, pdcoO uses symbolic computation. It increases greatly the time of calcul, use it only if you work on ill-conditionned problem with small régulation")
             else
                 o.digit_number = [];
             end

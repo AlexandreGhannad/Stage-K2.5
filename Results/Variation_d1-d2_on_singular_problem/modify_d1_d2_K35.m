@@ -30,7 +30,7 @@ import model.slackmodel;
 options_pdco.file_id = 1;
 
 formulation1 = 'K25';
-solver = 'LDL';
+solver = 'QR';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
 % formulation2 = 'K35';
@@ -81,11 +81,13 @@ list_problem ={pwd + "/Problems/qp_prob/"+'qbrandy.qps'};
 % d1 = 10^-4;
 d1 = 10^-2;
 % d2 = [0 1];
-d2 = [10^-8 10^-6 10^-4 10^-2 1];
+d1 = [10^-4 10^-4 10^-2 10^0 10^-2 1];
+d2 = [10^-4 10^-2 10^-2 10^-2 10^0 1];
 % d2 = 0;
 % d2 = 10^-8
-options_pdco.d1 = d1;
+
 for j = 1:length(d2)
+    options_pdco.d1 = d1(j);
     options_pdco.d2 = d2(j);
     
     mps_name = list_problem{1};
@@ -96,7 +98,7 @@ for j = 1:length(d2)
     slack = slackmodel(lp);
     Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
     
-options_pdco.x0 = slack.x0;
+    options_pdco.x0 = slack.x0;
     options_pdco.x0(slack.jLow) = slack.bL(slack.jLow) + 1;
     options_pdco.x0(slack.jUpp) = slack.bU(slack.jUpp) - 1;
     options_pdco.x0(slack.jTwo) = (slack.bL(slack.jTwo) + slack.bU(slack.jTwo)) / 2;
@@ -105,7 +107,7 @@ options_pdco.x0 = slack.x0;
     options_pdco.z0 = options_pdco.zsize * ones(slack.n, 1);
     options_pdco.y0 = zeros(slack.m, 1);
     options_pdco.mu0 = options_pdco.zsize;
-%     options_pdco.Maxiter = min(max(30, slack.n), 100);
+    %     options_pdco.Maxiter = min(max(30, slack.n), 100);
     options_pdco.Maxiter = 108;
     options_pdco.check_eigenvalue = check_eigenvalue;
     options_pdco.check_residu = check_residu;
@@ -115,20 +117,18 @@ options_pdco.x0 = slack.x0;
     options_pdco.check_eigenvalueK35 = check_eigenvalueK35;
     options_pdco.method = method_theorem2;
     options_pdco.check_property = check_property;
-%     options_pdco.digit_number = digit_number;
+    %     options_pdco.digit_number = digit_number;
     options_form = struct();
     
     Problem1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
     Problem1.solve;
-%     Problem2 = eval([classname2, '(slack, options_pdco,options_form,options_solv)']);
-%     Problem2.solve;
     
-    show_eigenvalue(Problem1.eigenvalue, Problem1.limit, d1, d2(j))
-%     limits = Problem1.features_property(1:4,:);
-%     show_eigenvalue_property(Problem1.eigenvalue, limits, d1, d2(j), Problem1.features_property(5:end,:))
-%     show_eigenvalueK35(Problem2.eigenvalue, d1, d2(j))
-%     show_eigenvalue_theorem2(Problem1.eigenvalue, Problem1.features_theorem2, d1, d2(j))
-%     show_cond(Problem1.cond, Problem1.limit, d1, d2(j), Problem2.cond, "K3.5" )
+    show_eigenvalue(Problem1.eigenvalue, Problem1.limit, d1(j), d2(j))
+    %     limits = Problem1.features_property(1:4,:);
+    %     show_eigenvalue_property(Problem1.eigenvalue, limits, d1, d2(j), Problem1.features_property(5:end,:))
+    %     show_eigenvalueK35(Problem2.eigenvalue, d1, d2(j))
+    %     show_eigenvalue_theorem2(Problem1.eigenvalue, Problem1.features_theorem2, d1, d2(j))
+    %     show_cond(Problem1.cond, Problem1.limit, d1, d2(j), Problem2.cond, "K3.5" )
     
 end
 
@@ -139,31 +139,12 @@ fig2 = figure(2);
 fig3 = figure(3);
 fig4 = figure(4);
 fig5 = figure(5);
+fig6 = figure(6);
 
-orient(fig1, "landscape")
-orient(fig2, "landscape")
-orient(fig3, "landscape")
-orient(fig4, "landscape")
-orient(fig5, "landscape")
+path = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\';
+
+save_figure(fig1, path)
 
 
-set(fig1,'PaperSize',[45 25]); %set the paper size to what you want
-filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure1.pdf';
-print(fig1, filename,'-dpdf', "-r1200")
 
-set(fig2,'PaperSize',[45 25]); %set the paper size to what you want
-filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure2.pdf';
-print(fig2, filename,'-dpdf', "-r1200")
-
-set(fig3,'PaperSize',[45 25]); %set the paper size to what you want
-filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure3.pdf';
-print(fig3, filename,'-dpdf', "-r1200")
-
-set(fig4,'PaperSize',[45 25]); %set the paper size to what you want
-filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure4.pdf';
-print(fig4, filename,'-dpdf', "-r1200")
-
-set(fig5,'PaperSize',[45 25]); %set the paper size to what you want
-filename = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\figure5.pdf';
-print(fig5, filename,'-dpdf', "-r1200")
 
