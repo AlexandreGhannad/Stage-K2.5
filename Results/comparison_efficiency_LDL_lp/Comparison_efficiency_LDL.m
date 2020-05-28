@@ -1,8 +1,8 @@
-%% Clean
+% Clean
 clear all
 close all
 clc
-%% Setup 1
+% Setup 1
 pdcoo_home = pwd;
 
 addpath(pdcoo_home);
@@ -23,7 +23,7 @@ if exist('Variants', 'dir') ~= 7
 end
 addpath(fullfile(pdcoo_home, 'Variants'));
 addpath(fullfile(pdcoo_home, 'Test'));
-%% Setup 2
+% Setup 2
 import model.lpmodel;
 import model.slackmodel;
 
@@ -59,7 +59,7 @@ fprintf(options_pdco.file_id, ...
     '\n    Name    Objectif   Presid   Dresid   Cresid   PDitns   Inner     Time      D2 * r\n\n');
 
 result = zeros(9,3,n_problem);
-%% Check eigenvalues and compare method
+% Check eigenvalues and compare method
 n_problem = min(n_problem, 2000);
 check_eigenvalue = 0;
 show_one_graphic = 0; % = 1  need check_eigenvalue = 1
@@ -75,14 +75,14 @@ check_theorem2 = 0;
 check_all_theorem2 = 0;
 method_theorem2 = "MaxGap";
 results = zeros(n_problem, 4,3);
-%% Loop
+% Loop
 clc
-for i = 1:n_problem
+for i = 17:17
     
     mps_name = list_problem{i};
     fprintf('%s\n', mps_name);
     
-    % Read .mps file
+    Read .mps file
     mps_name = pwd + "\Problems\lp_prob\" + mps_name;
     mps_stru = readmps(mps_name);
     lp = mpstolp(mps_stru);

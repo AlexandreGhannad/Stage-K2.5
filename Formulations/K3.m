@@ -55,7 +55,7 @@ classdef K3 < handle
                 
                 if o.nfix == 0
                     Ilow = sparse(o.low, 1:nlow,1 ,o.n, nlow);
-                    Iupp = sparse(o.upp, 1:nupp,1 ,o.n, nupp);
+                    Iupp = sparse(o.upp, 1:nupp,-1 ,o.n, nupp);
                     o.M = [ -o.H    o.A'          Ilow Iupp
                         o.A    D2reg              sparse(o.m,nlow)     sparse(o.m,nupp)
                         Z1s    sparse(nlow,o.m)   X1                   sparse(nlow,nupp)
@@ -66,7 +66,7 @@ classdef K3 < handle
                         o.Afree(:, o.fix) = 0;
                     end
                     Ilow = sparse(o.low, 1:nlow,1 ,o.n, nlow);
-                    Iupp = sparse(o.upp, 1:nupp,1 ,o.n, nupp);
+                    Iupp = sparse(o.upp, 1:nupp,-1 ,o.n, nupp);
                     o.M = [ -o.H      o.Afree'      Ilow Iupp
                         o.Afree  D2reg              sparse(o.m,nlow)     sparse(o.m,nupp)
                         Z1s      sparse(nlow,o.m)   X1                   sparse(nlow,nupp)
@@ -75,7 +75,7 @@ classdef K3 < handle
                 
             else
                 Ilow = sparse(o.low, 1:nlow,1 ,o.n, nlow);
-                Iupp = sparse(o.upp, 1:nupp,1 ,o.n, nupp);
+                Iupp = sparse(o.upp, 1:nupp,-1 ,o.n, nupp);
                 o.M = [ -o.H    o.A'      Ilow Iupp
                     o.A    D2reg               sparse(o.m,nlow)     sparse(o.m,nupp)
                     Z1s    sparse(nlow,o.m)    X1                   sparse(nlow,nupp)

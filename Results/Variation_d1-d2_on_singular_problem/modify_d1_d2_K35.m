@@ -30,7 +30,7 @@ import model.slackmodel;
 options_pdco.file_id = 1;
 
 formulation1 = 'K25';
-solver = 'QR';
+solver = 'LDL';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
 % formulation2 = 'K35';
@@ -82,12 +82,12 @@ list_problem ={pwd + "/Problems/qp_prob/"+'qbrandy.qps'};
 % d1 = 10^-2;
 % d2 = [0 1];
 d1 = 10^-2;
-d2 = 10^-6;
+d2 = [10^-8 10^-6 10^-4 10^-2 10^0];
 % d2 = 0;
 % d2 = 10^-8
 
 for j = 1:length(d2)
-    options_pdco.d1 = d1(j);
+    options_pdco.d1 = d1;
     options_pdco.d2 = d2(j);
     
     mps_name = list_problem{1};
@@ -123,7 +123,7 @@ for j = 1:length(d2)
     Problem1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
     Problem1.solve;
     
-    show_eigenvalue(Problem1.eigenvalue, Problem1.limit, d1(j), d2(j))
+    show_eigenvalue(Problem1.eigenvalue, Problem1.limit, d1, d2(j))
     %     limits = Problem1.features_property(1:4,:);
     %     show_eigenvalue_property(Problem1.eigenvalue, limits, d1, d2(j), Problem1.features_property(5:end,:))
     %     show_eigenvalueK35(Problem2.eigenvalue, d1, d2(j))
@@ -139,7 +139,7 @@ fig2 = figure(2);
 fig3 = figure(3);
 fig4 = figure(4);
 fig5 = figure(5);
-fig6 = figure(6);
+% fig6 = figure(6);
 
 path = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\';
 name1 = "figure1 qbrandy variation d1 d2";
@@ -154,15 +154,11 @@ filename2 = path+name2;
 filename3 = path+name3;
 filename4 = path+name4;
 filename5 = path+name5;
-filename6 = path+name6;
+% filename6 = path+name6;
 
 save_figure(fig1, filename1)
 save_figure(fig2, filename2)
 save_figure(fig3, filename3)
 save_figure(fig4, filename4)
 save_figure(fig5, filename5)
-save_figure(fig6, filename6)
-
-
-
-
+% save_figure(fig6, filename6)
