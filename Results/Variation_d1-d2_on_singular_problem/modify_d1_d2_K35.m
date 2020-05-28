@@ -79,10 +79,10 @@ options_pdco.d2 = 0;
 clc
 list_problem ={pwd + "/Problems/qp_prob/"+'qbrandy.qps'};
 % d1 = 10^-4;
-d1 = 10^-2;
+% d1 = 10^-2;
 % d2 = [0 1];
-d1 = [10^-4 10^-4 10^-2 10^0 10^-2 1];
-d2 = [10^-4 10^-2 10^-2 10^-2 10^0 1];
+d1 = 10^-2;
+d2 = 10^-6;
 % d2 = 0;
 % d2 = 10^-8
 
@@ -142,8 +142,26 @@ fig5 = figure(5);
 fig6 = figure(6);
 
 path = 'D:\git_repository\Stage-K2.5\Results\Variation_d1-d2_on_singular_problem\';
+name1 = "figure1 qbrandy variation d1 d2";
+name2 = "figure2 qbrandy variation d1 d2";
+name3 = "figure3 qbrandy variation d1 d2";
+name4 = "figure4 qbrandy variation d1 d2";
+name5 = "figure5 qbrandy variation d1 d2";
+name6 = "figure6 qbrandy variation d1 d2";
 
-save_figure(fig1, path)
+filename1 = path+name1;
+filename2 = path+name2;
+filename3 = path+name3;
+filename4 = path+name4;
+filename5 = path+name5;
+filename6 = path+name6;
+
+save_figure(fig1, filename1)
+save_figure(fig2, filename2)
+save_figure(fig3, filename3)
+save_figure(fig4, filename4)
+save_figure(fig5, filename5)
+save_figure(fig6, filename6)
 
 
 

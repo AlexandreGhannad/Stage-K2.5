@@ -55,18 +55,18 @@ fprintf(options_pdco.file_id, ...
 check_eigenvalue = 1
 show_one_graphic = 1; % = 1  need check_eigenvalue = 1
 show_all_graphic = 0; % = 1  need check_eigenvalue = 1
-check_cond = 1;
+check_cond = 0;
 compare_formulations = 0;
-check_residu = 1;
+check_residu = 0;
 check_all_residu = 0; % = 1  need check_residu = 1
-check_limits = 1;
-check_eigenvalueK35 = 1;
-check_all_eigenvalueK35 = 1;
-check_theorem2 = 1;
+check_limits = 0;
+check_eigenvalueK35 = 0;
+check_all_eigenvalueK35 = 0;
+check_theorem2 = 0;
 check_all_theorem2 = 0;
 method_theorem2 = "MaxGap";
 check_licq = 0;
-check_property = 1;
+check_property = 0;
 %% Loop
 clc
 

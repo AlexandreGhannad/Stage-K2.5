@@ -38,7 +38,7 @@ solver = 'LDL';
 classname2 = build_variant(pdcoo_home, formulation2, solver);
 
 formulation3 = 'K3';
-solver = 'QR';
+solver = 'LU';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
 path_problem = pwd + "/Problems/lp_prob";
@@ -65,7 +65,7 @@ check_eigenvalue = 0;
 show_one_graphic = 0; % = 1  need check_eigenvalue = 1
 show_all_graphic = 0; % = 1  need check_eigenvalue = 1
 check_cond = 0;
-compare_formulations = 1;
+compare_formulations = 0;
 check_residu = 0;
 check_all_residu = 0; % = 1  need check_residu = 1
 check_limits = 0;

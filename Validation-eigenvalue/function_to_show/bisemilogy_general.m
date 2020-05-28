@@ -1,6 +1,5 @@
-function bisemilogy_general(data, windows, )
+function fig = bisemilogy_general(data, specs, ind)
 
-ax = windows;
 pos = data;
 pos(pos<=0) = NaN;
 pos = log10(pos);
@@ -17,8 +16,16 @@ pos = pos + abs(l2)+2;
 neg = neg - abs(l2)-2;
 
 hold on
-plot(pos, "k.", "MarkerSize", 15)
-plot(neg, "k.", "MarkerSize", 15)
+n = length(ind)
+
+for i=1:n-1
+    plot(pos(ind(i):ind(i+1)-1,:), specs{ind(i):ind(i+1)-1,:});
+    plot(neg(ind(i):ind(i+1)-1,:), specs{ind(i):ind(i+1)-1,:});
+end
+
+plot(pos(ind(end):end,:), specs{ind(end):end,:});
+plot(neg(ind(end):end,:), specs{ind(end):end,:});
+
 ax.XAxisLocation = 'origin';
 ylim([-L L]);
 ax.YTick=-L:2:L;
