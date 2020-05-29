@@ -18,16 +18,16 @@ classdef K3 < handle
         
         function Solve_Newton(o)
             %-----------------------------------------------------------------
-            %  Solve (*) for [dx ; dy ; dz1* ; dz2*].
+            %  Solve (*) for [dx ; dy ; dz1 ; dz2].
             %-----------------------------------------------------------------
             %  Define a damped Newton iteration for solving f = 0,
             %  keeping  x1, x2 > 0.  We eliminate dx1, dx2
             %  to obtain the system
             %
-            %  [-H1     A'    Z1^1/2   -Z2^1/2] [dx]   =                     [r2]     (*),   H1 = H + D1^2
-            %  [ A     D2^2     0          0  ] [dy]   =                     [r1]          dz1* = Z1^-1/2 * dz1
-            %  [Z1^1/2   0      X1         0  ] [dz1*] = [Z1^-1/2*cl + Z1^1/2*rl]          dz2* = Z2^-1/2 * dz2
-            %  [-Z2^1/2  0      0          X2 ] [dz2*] = [Z2^-1/2*cu + Z2^1/2*ru]
+            %  [-H1     A'      I         -I  ] [dx]   =   [r2]        H1 = H + D1^2
+            %  [ A     D2^2     0          0  ] [dy]   =   [r1]          
+            %  [Z1       0      X1         0  ] [dz1]  = [cl + rl]         
+            %  [-Z2      0      0          X2 ] [dz2]  = [cu + ru]
             %----------------------------------------------------------------
             
             nlow = length(o.low) ; nupp = length(o.upp);
@@ -50,12 +50,12 @@ classdef K3 < handle
             X2 = sparse(1:nupp, 1:nupp, o.x2(o.upp), nupp, nupp);
             
             D2reg = sparse(1:o.m, 1:o.m, o.d2.^2, o.m,o.m);
+            Ilow = sparse(o.low, 1:nlow,1 ,o.n, nlow);
+            Iupp = sparse(o.upp, 1:nupp,-1 ,o.n, nupp);
             
             if o.explicitA
                 
                 if o.nfix == 0
-                    Ilow = sparse(o.low, 1:nlow,1 ,o.n, nlow);
-                    Iupp = sparse(o.upp, 1:nupp,-1 ,o.n, nupp);
                     o.M = [ -o.H    o.A'          Ilow Iupp
                         o.A    D2reg              sparse(o.m,nlow)     sparse(o.m,nupp)
                         Z1s    sparse(nlow,o.m)   X1                   sparse(nlow,nupp)
@@ -65,8 +65,6 @@ classdef K3 < handle
                         o.Afree = o.A;
                         o.Afree(:, o.fix) = 0;
                     end
-                    Ilow = sparse(o.low, 1:nlow,1 ,o.n, nlow);
-                    Iupp = sparse(o.upp, 1:nupp,-1 ,o.n, nupp);
                     o.M = [ -o.H      o.Afree'      Ilow Iupp
                         o.Afree  D2reg              sparse(o.m,nlow)     sparse(o.m,nupp)
                         Z1s      sparse(nlow,o.m)   X1                   sparse(nlow,nupp)
@@ -74,8 +72,6 @@ classdef K3 < handle
                 end
                 
             else
-                Ilow = sparse(o.low, 1:nlow,1 ,o.n, nlow);
-                Iupp = sparse(o.upp, 1:nupp,-1 ,o.n, nupp);
                 o.M = [ -o.H    o.A'      Ilow Iupp
                     o.A    D2reg               sparse(o.m,nlow)     sparse(o.m,nupp)
                     Z1s    sparse(nlow,o.m)    X1                   sparse(nlow,nupp)

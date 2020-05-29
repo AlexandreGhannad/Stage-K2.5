@@ -1,11 +1,31 @@
+% Calculate eigenvalues and bounds of the theorem 1.
+% More variables to evaluate the resultats can be asked.
+% The input is the all pdcoO object (o)
+% Depending on the different options of pdcoO, some results are calulated
+% or not
+% Output:
+% result: list of booleans, says if the corresponding eigenvalues is inside
+%         the bounds or not
+% eigenvalue: eigenvalues of o.M
+% limit: theoritical bounds on the eigenvalues from the theorem 1
+% rapport: rapport of the number of eigenvalue inside the bounds on the 
+%          total number of eigenvalues (rapport should be equal to one)
+% err: vector of the error one the bounds. The value is 0 if the eigenvalue
+%      is inside the bounds, and eigenvalue - the nearer bounds in the
+%      other case
+% lambda_max, lambda_min, sigma_max, sigma_min, xmax, xmin, zmax, zmin: 
+%     components of the calculation of the bounds
+% 
+% Note: there is a scaling of x, z, the hessien and some other variables.
+% So, some inside values (like d1 and d2), are different from the inputs.
+
 function [result, eigenvalue, limit, rapport, err, lambda_max, lambda_min, sigma_max, sigma_min, xmax, xmin, zmax, zmin] = validation_eigenvalue(o)
-% Calculate the bounds with the theorem 1
-%% Save different values
+%% Save different values to calculate the bounds
 d1 = o.d1;
 d2 = o.d2;
 
 A = o.A;
-hess_eigen = eigs(o.hess, size(o.hess, 1));
+hess = eigs(o.hess, size(o.hess, 1));
 
 x1s = o.x1;
 x2s = o.x2;
@@ -28,14 +48,15 @@ xmax = max(x);
 zmin = min(z);
 zmax = max(z);
 
-% Maximal and minimal eigenvalue of H
-lambda_max = max(hess_eigen);
-lambda_min = min(hess_eigen);
-% Maximal and minimal singular value of H
+% Maximal and minimal eigenvalues of H
+lambda_max = max(hess);
+lambda_min = min(hess);
+% Maximal and minimal singular values of A
 sigma_max = max(svds(A,10, "largest"));
 sigma_min = min(svds(A,10, "smallest"));
-
 %% Insure that variables aren't NaN
+% Use the method smallest and largest with svd could lead to NaN value.
+% Use loop to insure non NaN values on sigma_max and sigma_min.
 cpt = 1;
 while(isnan(sigma_min))
     sigma_min = min(svds(A, cpt * 20, "smallest"), [], "all");
@@ -48,7 +69,7 @@ while(isnan(sigma_max))
     cpt = cpt+1;
 end
 %% Calcul of the bounds
-
+% Follow theorem 1
 eta_max = (lambda_max + d1^2) * xmax + zmax;
 eta_min = (lambda_min + d1^2) * xmin + zmin;
 
@@ -60,15 +81,17 @@ else
     rho_min_positive = 0.5 * ( d2^2 - eta_max + ( (eta_max+d2^2)^2 + 4*xmin * sigma_min^2 )^0.5 );
 end
 rho_max_positive = 0.5 * ( d2^2 - eta_min + ( (eta_min+d2^2)^2 + 4*xmax * sigma_max^2 )^0.5 );
+% Register bounds inside the variable lmits in croissant order.
 limit = [rho_min_negative;rho_max_negative;rho_min_positive;rho_max_positive];
 
+% Possibility to increase the precision on the calculation of the
+% eigenvalue of o.M. High cost in term of execution time
 if isempty(o.digit_number)
     eigenvalue = eigs(o.M, size(o.M,1));
 else
     eigenvalue = vpa(eig(vpa(full(o.M), o.digit_number)), o.digit_number);
 end
-
-
+%% Creation fo some results to evaluate the theorem
 test_inf = eigenvalue > rho_min_negative & eigenvalue < rho_max_negative;
 test_sup = eigenvalue > rho_min_positive & eigenvalue < rho_max_positive;
 result = test_inf | test_sup;
@@ -85,10 +108,8 @@ indice = abs(err) < 10^-14;
 result(indice) = 1;
 rapport = sum(result) / length(result);
 
-
 if o.check_limits
     o.xmem = [o.xmem o.x];
     o.zmem = [o.zmem z];
 end
-
 end

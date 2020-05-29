@@ -107,8 +107,7 @@ for j = 1:length(d2)
     options_pdco.z0 = options_pdco.zsize * ones(slack.n, 1);
     options_pdco.y0 = zeros(slack.m, 1);
     options_pdco.mu0 = options_pdco.zsize;
-    %     options_pdco.Maxiter = min(max(30, slack.n), 100);
-    options_pdco.Maxiter = 108;
+    options_pdco.Maxiter = min(max(30, slack.n), 100);
     options_pdco.check_eigenvalue = check_eigenvalue;
     options_pdco.check_residu = check_residu;
     options_pdco.check_cond = check_cond;
@@ -123,11 +122,10 @@ for j = 1:length(d2)
     Problem1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
     Problem1.solve;
     
-    show_eigenvalue(Problem1.eigenvalue, Problem1.limit, d1, d2(j))
-    %     limits = Problem1.features_property(1:4,:);
-    %     show_eigenvalue_property(Problem1.eigenvalue, limits, d1, d2(j), Problem1.features_property(5:end,:))
+    show_eigenvalue(Problem1, "qbrandy", d1, d2(j))
+    %     show_eigenvalue_property(Problem1, "qbrandy", d1, d2(j))
+    %     show_eigenvalue_theorem2(Problem1, "qbrandy", d1, d2(j))
     %     show_eigenvalueK35(Problem2.eigenvalue, d1, d2(j))
-    %     show_eigenvalue_theorem2(Problem1.eigenvalue, Problem1.features_theorem2, d1, d2(j))
     %     show_cond(Problem1.cond, Problem1.limit, d1, d2(j), Problem2.cond, "K3.5" )
     
 end

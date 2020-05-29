@@ -1,3 +1,11 @@
+% Given a method, the function decides which constraints are active or not
+% Without indication in the option, the standard method is Threshold
+% There is two types of currently created method: based on x or based on x
+% and z
+% Based on x: Threshold, MaxGap and FirstBigGap
+% Based on z: broken_lines and power_lines
+
+
 function ind = detect_active_inactive_constraint(x, method, z, n)
 switch method
     case "Threshold"

@@ -1,5 +1,24 @@
-function fig = bisemilogy_general(data, specs, ind)
+% Given a windows, some data and their specification for their forms,
+% display a graphics in logarythmic scale in ordinate, linear in abscissa,
+% with a centrale zero axe which separate positive from negative values.
+% Inputs:
+% data: matrix of all the data to display. Warning: display the line one by
+% one
+% Example: [inferior bounds (vector 1*50)
+%           superior bounds (vector 1*50)
+%           value between those bounds (matrix 30*50)]
+% Specs: cell array with specification on the display for each different
+% data. Empty specs is possible.
+% Example: cell size 3*5
+%     {["LineWidth"]}    {[           3]}    {["Color"]}    {[0.9290 0.6940 0.1250]}
+%     {["LineWidth"]}    {[           3]}    {["Color"]}    {[0 0.4470 0.7410]}
+%     {["k."       ]}    {["MarkerSize"]}    {[      5]}    {0×0 double}
+% Advise to create specs: create an empty cell array. The width should be
+% the maximum 
+ 
 
+function bisemilogy_general(data, specs, ind, windows)
+ax = windows;
 pos = data;
 pos(pos<=0) = NaN;
 pos = log10(pos);
@@ -16,15 +35,22 @@ pos = pos + abs(l2)+2;
 neg = neg - abs(l2)-2;
 
 hold on
-n = length(ind)
+n = length(ind);
 
 for i=1:n-1
-    plot(pos(ind(i):ind(i+1)-1,:), specs{ind(i):ind(i+1)-1,:});
-    plot(neg(ind(i):ind(i+1)-1,:), specs{ind(i):ind(i+1)-1,:});
+    spec = specs(i,:);
+    spec = spec(~cellfun('isempty',spec));
+    for k = ind(i):ind(i+1)-1
+        plot(pos(k,:), spec{:});
+        plot(neg(k,:), spec{:});
+    end
 end
-
-plot(pos(ind(end):end,:), specs{ind(end):end,:});
-plot(neg(ind(end):end,:), specs{ind(end):end,:});
+spec = specs(end,:);
+spec = spec(~cellfun('isempty',spec));
+for k = ind(end):length(data)
+    plot(pos(k,:), spec{:});
+    plot(neg(k,:), spec{:});
+end
 
 ax.XAxisLocation = 'origin';
 ylim([-L L]);

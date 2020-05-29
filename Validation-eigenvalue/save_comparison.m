@@ -1,3 +1,4 @@
+% Allow to 
 function result = save_comparison(Problem1, Problem2, Problem3, show)
 % show is a boolean. If show is true, the function will display the result
 % like print_comparison.

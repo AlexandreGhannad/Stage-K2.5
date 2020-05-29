@@ -1,8 +1,13 @@
-function fig = show_eigenvalue_theorem2(eigenvalue, features_theorem2, d1, d2, all_features)
-if not(exist("all_features"))
-    all_features = 0;
-end
-if all_features
+function fig = show_eigenvalue_theorem2(o, name_problem, d1, d2)
+fig = figure();
+set(fig, "WindowState", "maximized")
+% Allocation
+eigenvalue = o.eigenvalue;
+features_theorem2 = o.features_theorem2;
+limit = features_theorem2(1:4,:);
+
+if o.check_limits
+    % Allocation
     rho_min_negative = features_theorem2(1,:);
     rho_max_negative = features_theorem2(2,:);
     rho_min_positive = features_theorem2(3,:);
@@ -16,98 +21,34 @@ if all_features
     n = (size(features_theorem2,1) - 10) /2;
     x = features_theorem2(11:11+n-1,:);
     z = features_theorem2(11+n:end,:);
-    limit = features_theorem2(1:4,:);
     
-    fig = figure();
-    subplot(221)
-    % bisemilogy copy in order to function inside the subplot
-    pos = eigenvalue';
-    pos(pos<=0) = NaN;
-    pos = log10(pos);
-    neg = eigenvalue';
-    neg(neg>=0) = NaN;
-    neg = -log10(-neg);
-    rmm = -log10(abs(limit(1,:)));
-    rMm = -log10(abs(limit(2,:)));
-    rmp = log10(abs(limit(3,:)));
-    rMp = log10(abs(limit(4,:)));
+    windows = subplot(211);
+    data = [limit; eigenvalue];
+    transparency = 0.7;
+    specs_rm = {"LineWidth", 3, "Color", [0.9290 0.6940 0.1250 transparency]};
+    specs_rM = {"LineWidth", 3, "Color", [0 0.4470 0.7410 transparency]};
+    specs_eig = {"k.", "MarkerSize", 5};
+    specs = cell(5,4);
+    specs(1,:) = specs_rm;
+    specs(2,:) = specs_rM;
+    specs(3,:) = specs_rm;
+    specs(4,:) = specs_rM;
+    specs(5,1:3) = specs_eig;
+    ind = [1 2 3 4 5];
+    bisemilogy_general(data, specs, ind, windows);
     
-    l1 = max(max(log10(abs(eigenvalue(eigenvalue~=0))), [], "all"), max(log10(abs(limit(limit~=0))), [], "all"));
-    l2 = min(min(log10(abs(eigenvalue(eigenvalue~=0))), [], "all"), min(log10(abs(limit(limit~=0))), [], "all"));
-    l1 = 2*ceil(l1/2);
-    l2 = 2*floor(l2/2);
-    L = l1 + abs(l2)+2;
-    pos = pos + abs(l2)+2;
-    neg = neg - abs(l2)-2;
-    rmp = rmp + abs(l2)+2;
-    rMp = rMp + abs(l2)+2;
-    rmm = rmm - abs(l2)-2;
-    rMm = rMm - abs(l2)-2;
-    
-    if ismember(0, limit)
-        for i=1:length(rmm)
-            if rmm(i) == Inf
-                rmm(i) = 0;
-            end
-            if rMm(i) == Inf
-                rMm(i) = 0;
-            end
-            if rmp(i) == -Inf
-                rmp(i) = 0;
-            end
-            if rMp(i) == -Inf
-                rMp(i) = 0;
-            end
-        end
-    end
-    
-    ax = subplot(221);
-    
-    hold on
-    plot(rmp, "LineWidth", 3, "Color", [0.9290 0.6940 0.1250])
-    plot(rMp, "LineWidth", 3, "Color", [0 0.4470 0.7410])
-    plot(pos, "k.", "MarkerSize", 15)
-    plot(neg, "k.", "MarkerSize", 15)
-    % rmm and rMm are plot after eigenvalues in order to have the legend associated with the right data
-    plot(rmm, "LineWidth", 3, "Color", [0 0.4470 0.7410])
-    plot(rMm, "LineWidth", 3, "Color", [0.9290 0.6940 0.1250])
-    ax.XAxisLocation = 'origin';
-    ylim([-L L]);
-    ax.YTick=-L:2:L;
-    
-    t = l2:2:l1;
-    
-    lbl = cell(size(t));
-    tmp = -1;
-    cpt = 0;
-    for i = -length(t):length(t)
-        if i < 0
-            lbl{i+length(t)+1} = ['-10^{',num2str(t(length(t)-cpt)),'}'];
-            cpt = cpt+1;
-        elseif i == 0
-            lbl{i+length(t)+1} = ['0'];
-            cpt = 1;
-        elseif i > 0
-            lbl{i+length(t)+1} = ['10^{',num2str(t(i)),'}'];
-            cpt = cpt+1;
-        end
-        
-    end
-    
-    ax.YTickLabel = lbl;
-    %%
     xlabel("Iteration")
     ylabel("Eigenvalues and bounds")
-    legend({"Inner bounds", "Outer bounds", "Eigenvalues"}, 'Location', 'best')
     
+    n = length(eigenvalue);    
     if exist("d1") & exist("d2")
-        title("Eigenvalues and bounds (theorem2), (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
+        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
     elseif exist("d1")
-        title("Eigenvalues and bounds (theorem2), (d1 = " + sprintf("%7.1e", d1) + ")")
+        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")")
     elseif exist("d2")
-        title("Eigenvalues and bounds (theorem2), (d2 = " + sprintf("%7.1e", d2) + ")")
+        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")")
     else
-        title("Eigenvalues and bounds (theorem2)")
+        title("Theorem 2:"+name_problem+", size="+num2str(n))
     end
     
     subplot(222)
@@ -140,110 +81,35 @@ if all_features
     legend({"xmax,I", "xmin,I", "x"}, 'Location', 'best')
     
 else
-    rho_min_negative = features_theorem2(1,:);
-    rho_max_negative = features_theorem2(2,:);
-    rho_min_positive = features_theorem2(3,:);
-    rho_max_positive = features_theorem2(4,:);
-    lambda_max = features_theorem2(5,:);
-    lambda_min = features_theorem2(6,:);
-    sigma_max = features_theorem2(7,:);
-    sigma_min = features_theorem2(8,:);
-    xmax = features_theorem2(9,:);
-    xmin = features_theorem2(10,:);
-    n = (size(features_theorem2,1) - 10) /2;
-    x = features_theorem2(11:11+n-1,:);
-    z = features_theorem2(11+n:end,:);
-    limit = features_theorem2(1:4,:);
-    
-    fig = figure();
-    %% bisemilogy copy in order to function inside the subplot
-    pos = eigenvalue';
-    pos(pos<=0) = NaN;
-    pos = log10(pos);
-    neg = eigenvalue';
-    neg(neg>=0) = NaN;
-    neg = -log10(-neg);
-    rmm = -log10(abs(limit(1,:)));
-    rMm = -log10(abs(limit(2,:)));
-    rmp = log10(abs(limit(3,:)));
-    rMp = log10(abs(limit(4,:)));
-    
-    l1 = max(max(log10(abs(eigenvalue(eigenvalue~=0))), [], "all"), max(log10(abs(limit(limit~=0))), [], "all"));
-    l2 = min(min(log10(abs(eigenvalue(eigenvalue~=0))), [], "all"), min(log10(abs(limit(limit~=0))), [], "all"));
-    l1 = 2*ceil(l1/2);
-    l2 = 2*floor(l2/2);
-    L = l1 + abs(l2)+2;
-    pos = pos + abs(l2)+2;
-    neg = neg - abs(l2)-2;
-    rmp = rmp + abs(l2)+2;
-    rMp = rMp + abs(l2)+2;
-    rmm = rmm - abs(l2)-2;
-    rMm = rMm - abs(l2)-2;
-    
-    if ismember(0, limit)
-        for i=1:length(rmm)
-            if rmm(i) == Inf
-                rmm(i) = 0;
-            end
-            if rMm(i) == Inf
-                rMm(i) = 0;
-            end
-            if rmp(i) == -Inf
-                rmp(i) = 0;
-            end
-            if rMp(i) == -Inf
-                rMp(i) = 0;
-            end
-        end
-    end
-    
-    ax = axes;
-    
-    hold on
-    plot(rmp, "LineWidth", 3, "Color", [0.9290 0.6940 0.1250])
-    plot(rMp, "LineWidth", 3, "Color", [0 0.4470 0.7410])
-    plot(pos, "k.", "MarkerSize", 15)
-    plot(neg, "k.", "MarkerSize", 15)
-    % rmm and rMm are plot after eigenvalues in order to have the legend associated with the right data
-    plot(rmm, "LineWidth", 3, "Color", [0 0.4470 0.7410])
-    plot(rMm, "LineWidth", 3, "Color", [0.9290 0.6940 0.1250])
-    ax.XAxisLocation = 'origin';
-    ylim([-L L]);
-    ax.YTick=-L:2:L;
-    
-    t = l2:2:l1;
-    
-    lbl = cell(size(t));
-    tmp = -1;
-    cpt = 0;
-    for i = -length(t):length(t)
-        if i < 0
-            lbl{i+length(t)+1} = ['-10^{',num2str(t(length(t)-cpt)),'}'];
-            cpt = cpt+1;
-        elseif i == 0
-            lbl{i+length(t)+1} = ['0'];
-            cpt = 1;
-        elseif i > 0
-            lbl{i+length(t)+1} = ['10^{',num2str(t(i)),'}'];
-            cpt = cpt+1;
-        end
+
+    windows = fig;
+    data = [limit; eigenvalue];
+    transparency = 0.7;
+    specs_rm = {"LineWidth", 3, "Color", [0.9290 0.6940 0.1250 transparency]};
+    specs_rM = {"LineWidth", 3, "Color", [0 0.4470 0.7410 transparency]};
+    specs_eig = {"k.", "MarkerSize", 5};
+    specs = cell(5,4);
+    specs(1,:) = specs_rm;
+    specs(2,:) = specs_rM;
+    specs(3,:) = specs_rm;
+    specs(4,:) = specs_rM;
+    specs(5,1:3) = specs_eig;
+    ind = [1 2 3 4 5];
+    bisemilogy_general(data, specs, ind, windows);
         
-    end
-    
-    ax.YTickLabel = lbl;
-    %%
     xlabel("Iteration")
     ylabel("Eigenvalues and bounds")
     legend({"Inner bounds", "Outer bounds", "Eigenvalues"}, 'Location', 'best')
     
+    n = length(eigenvalue);    
     if exist("d1") & exist("d2")
-        title("Eigenvalues and bounds (theorem2), (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
+        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
     elseif exist("d1")
-        title("Eigenvalues and bounds (theorem2), (d1 = " + sprintf("%7.1e", d1) + ")")
+        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")")
     elseif exist("d2")
-        title("Eigenvalues and bounds (theorem2), (d2 = " + sprintf("%7.1e", d2) + ")")
+        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")")
     else
-        title("Eigenvalues and bounds (theorem2)")
+        title("Theorem 2:"+name_problem+", size="+num2str(n))
     end
 end
 end

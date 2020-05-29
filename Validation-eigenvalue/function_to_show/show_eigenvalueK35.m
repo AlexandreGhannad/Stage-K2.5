@@ -1,5 +1,6 @@
 function fig = show_eigenvalueK35(eigenvalue, d1, d2)
 fig = figure();
+set(fig, "WindowState", "maximized")
 bisemilogy(eigenvalue)
 xlabel("Iteration")
 ylabel("Eigenvalues")

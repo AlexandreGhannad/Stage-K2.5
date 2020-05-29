@@ -61,17 +61,17 @@ n_problem = min(n_problem, 2000);
 check_eigenvalue = 1
 show_one_graphic = 1; % = 1  need check_eigenvalue = 1
 show_all_graphic = 0; % = 1  need check_eigenvalue = 1
-check_cond = 1;
-compare_formulations = 1;
-check_residu = 1;
+check_cond = 0;
+compare_formulations = 0;
+check_residu = 0;
 check_all_residu = 0; % = 1  need check_residu = 1
 check_limits = 1;
-check_eigenvalueK35 = 1;
-check_all_eigenvalueK35 = 1;
-check_theorem2 = 1;
+check_eigenvalueK35 = 0;
+check_all_eigenvalueK35 = 0;
+check_theorem2 = 0;
 check_all_theorem2 = 0;
 method_theorem2 = "MaxGap";
-check_property = 1;
+check_property = 0;
 
 
 options_pdco.d1 = 0.01;
@@ -147,9 +147,9 @@ for i = 1:n_problem
     end
     if show_all_graphic
         if check_limits
-            show_eigenvalue(Problem1.eigenvalue, Problem1.limit, options_pdco.d1, options_pdco.d2, Problem1.features_limits)
+            show_eigenvalue(Problem1.eigenvalue, Problem1.limit, "afiro", options_pdco.d1, options_pdco.d2, Problem1.features_limits)
         else
-            show_eigenvalue(Problem1.eigenvalue, Problem1.limit);
+            show_eigenvalue(Problem1.eigenvalue, Problem1.limit, "afiro");
         end
     end
     if check_all_theorem2
@@ -187,7 +187,7 @@ for i = 1:n_problem
     if check_all_eigenvalueK35
         show_eigenvalueK35(Problem2.eigenvalue, options_pdco.d1, options_pdco.d2)
     end
-    show_eigenvalue_property(eigenvalue, limit, d1, d2, features_property)
+%     show_eigenvalue_property(eigenvalue, limit, d1, d2, features_property)
 end
 
 fclose('all');
@@ -196,9 +196,9 @@ fclose('all');
 % print_result(result, list_problem)
 if show_one_graphic
     if check_limits
-        show_eigenvalue(prob1.eigenvalue, prob1.limit, options_pdco.d1, options_pdco.d2, prob1.features_limits)
+        show_eigenvalue(prob1, "afiro.mps", options_pdco.d1, options_pdco.d2)
     else
-        show_eigenvalue(prob1.eigenvalue, prob1.limit);
+        show_eigenvalue(prob1.eigenvalue, prob1.limit, "afiro");
     end
 end
 if check_residu
