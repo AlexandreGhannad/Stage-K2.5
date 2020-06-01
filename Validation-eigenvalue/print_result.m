@@ -1,3 +1,8 @@
+% First fucntion to evaluate the results of a problem.
+% Display the absolute and relative error on x, z and obj of a problem.
+%
+% Not use for a long time
+
 function print_result(result, list_problem)
 n = size(result, 3);
 for i = 1:n

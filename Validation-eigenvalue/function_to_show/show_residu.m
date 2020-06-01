@@ -1,3 +1,8 @@
+% Display the residu and the evolution of mu, a variabe linked to the limit
+% of the residu inside the formulation.
+% d1 and d2 are optionnal and given in the title of the graphic if they are
+% given.
+
 function fig = show_residu(residu, evolution_mu, d1, d2)
 fig = figure();
 semilogy(residu, "k.")
@@ -15,5 +20,4 @@ elseif exist("d2")
 else
     title("Evolution of the complementary residu)")
 end
-% text(length(residu)-10, 10, num2str(residu(end)))
 end

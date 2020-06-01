@@ -1,3 +1,18 @@
+% Show the eigenvalues (positive and negative) of a problem with
+% the associated bounds of the property 1 on a bisemilogy graphic. If
+% the options check_limits of pdcoO is true (or 1), two graphics will be 
+% display, one with the eigenvalues and bounds and one with the different 
+% components of the bounds.
+% Inputs:
+% o: problem to display
+% name_problem: name of the problem in string form
+% d1 and d2: value of d1 ad d2 given by otions_pdco. Those inputs are
+% optionnal.
+%
+% Same functionning as show_eigenvalue but with the bound of property one
+% rather than theorem 1
+
+
 function fig = show_eigenvalue_property(o, name_problem, d1, d2)
 fig = figure();
 set(fig, "WindowState", "maximized")
@@ -31,6 +46,7 @@ if o.check_limits
     
     xlabel("Iteration")
     ylabel("Eigenvalues and bounds")
+    n = length(eigenvalue);
     if exist("d1") & exist("d2")
         title("Property 1:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
     elseif exist("d1")

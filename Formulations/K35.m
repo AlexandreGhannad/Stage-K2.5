@@ -100,10 +100,6 @@ classdef K35 < handle
             
             o.dx1(o.low)  = -o.rL(o.low) + o.dx(o.low);
             o.dx2(o.upp)  = -o.rU(o.upp) - o.dx(o.upp);
-            
-            if o.check_eigenvalueK35
-                o.eigenvalue = [o.eigenvalue eigs(o.M, size(o.M,1))];
-            end
         end
     end
 end

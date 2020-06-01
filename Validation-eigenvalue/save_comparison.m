@@ -1,4 +1,11 @@
-% Allow to 
+% Allow to compare the three formulations K2.5, K3.5 and K2 on four
+% features: number of iterations, reason of arrest, value of the
+% completmentary residu and execution time.
+% 
+% It would be good to generalize this algorithm to any number fo
+% formulation and to any formulation (given their name).
+
+
 function result = save_comparison(Problem1, Problem2, Problem3, show)
 % show is a boolean. If show is true, the function will display the result
 % like print_comparison.

@@ -180,7 +180,7 @@ classdef pdcoO < handle
         check_limits % Input specific for K2.5
         % = 1 if you want to save the values of xmin, xmax, sigma min,
         % sigma max
-        check_eigenvalueK35 % Input specific for K3.5 :
+        check_eigenvalue_other_formulation % Input specific for K3.5 :
         % = 1 if you want to verify that eigenvalues belongs to theoritical
         % intervals, =0 else
         result
@@ -192,7 +192,6 @@ classdef pdcoO < handle
         cond
         evolution_mu
         features_limits
-        
         
         check_theorem2 % Input specific for K2.5 :
         % = 1 if you want to verify that eigenvalues belongs to theoritical
@@ -209,7 +208,6 @@ classdef pdcoO < handle
         
         xmem
         zmem
-        
         
         digit_number % allow to use more digits to calculate eigenvalues
         % useful for non-LICQ/ill conditionned problem with low
@@ -395,10 +393,10 @@ classdef pdcoO < handle
                 o.check_eigenvalue = false;
             end
             
-            if isfield(options, 'check_eigenvalueK35')
-                o.check_eigenvalueK35 = options.check_eigenvalueK35;
+            if isfield(options, 'check_eigenvalue_other_formulation')
+                o.check_eigenvalue_other_formulation = options.check_eigenvalue_other_formulation;
             else
-                o.check_eigenvalueK35 = false;
+                o.check_eigenvalue_other_formulation = false;
             end
             
             if isfield(options, 'check_residu')
@@ -831,7 +829,13 @@ classdef pdcoO < handle
                     o.evolution_mu =  [o.evolution_mu o.mu];
                 end
                 % Compute step. This is performed in a subclass.
+                tmp1 = size(o.eigenvalue);
                 Solve_Newton(o);
+                tmp2 = size(o.eigenvalue);
+                if o.check_eigenvalue_other_formulation && isequal(tmp1,tmp2)
+                    o.eigenvalue = [o.eigenvalue eigs(o.M, size(o.M,1))];
+                end
+                
                 
                 % Add to save the evolution of the conditionning
                 if o.check_cond & not(isempty(o.eigenvalue))

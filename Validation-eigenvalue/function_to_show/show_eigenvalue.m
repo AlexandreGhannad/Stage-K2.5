@@ -1,4 +1,4 @@
-% Allow to show the eigenvalues (positive and negative) of a problem with
+% Show the eigenvalues (positive and negative) of a problem with
 % the associated bounds on a bisemilogy graphic. If the options
 % check_limits of pdcoO is true (or 1), two graphics will be display, one
 % with the eigenvalues and bounds and one with the different components of

@@ -1,3 +1,17 @@
+% Show the eigenvalues (positive and negative) of a problem with
+% the associated bounds of the theorem 2 on a bisemilogy graphic. If
+% the options check_limits of pdcoO is true (or 1), two graphics will be 
+% display, one with the eigenvalues and bounds and one with the different 
+% components of the bounds.
+% Inputs:
+% o: problem to display
+% name_problem: name of the problem in string form
+% d1 and d2: value of d1 ad d2 given by otions_pdco. Those inputs are
+% optionnal.
+%
+% Same functionning as show_eigenvalue but with the bound of theorem 2 one
+% rather than theorem 1
+
 function fig = show_eigenvalue_theorem2(o, name_problem, d1, d2)
 fig = figure();
 set(fig, "WindowState", "maximized")
