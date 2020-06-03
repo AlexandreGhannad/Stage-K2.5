@@ -36,7 +36,7 @@ if o.check_limits
     x = features_theorem2(11:11+n-1,:);
     z = features_theorem2(11+n:end,:);
     
-    windows = subplot(211);
+    windows = subplot(221);
     data = [limit; eigenvalue];
     transparency = 0.7;
     specs_rm = {"LineWidth", 3, "Color", [0.9290 0.6940 0.1250 transparency]};

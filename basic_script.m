@@ -52,8 +52,6 @@ options_pdco.Print = 1;
 
 fprintf(options_pdco.file_id, ...
     '\n    Name    Objectif   Presid   Dresid   Cresid   PDitns   Inner     Time      D2 * r\n\n');
-
-result = zeros(9,3,n_problem);
 %% Setup 2
 import model.lpmodel;
 import model.slackmodel;
@@ -122,13 +120,13 @@ options_pdco.Print = 1;
 
 check_eigenvalue = 1;
 check_limits = 1;
-check_eigenvalue_other_formulation = 1;
+check_eigenvalue_other_formulation = 0;
 check_theorem2 = 1;
 method_theorem2 = "MaxGap";
-check_property = 1;
+check_property = 0;
 
-check_cond = 1;
-check_residu = 1;
+check_cond = 0;
+check_residu = 0;
 
 % digit_number = 64; % Increase precision to calculate eigenvalue, but
 % increase highly the execution time
@@ -136,13 +134,18 @@ check_residu = 1;
 % n_theorem2 % Only helpful with brokenl_lines and power_lines method.
 % Moreover, require knowledge on the method and on the problem.
 
-save_all_graphics = 1;
+save_all_graphics = 0;
+path_to_save = "D:\git_repository\Stage-K2.5\Results\test_save\";
+
+check_results = 1;
+save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\Results\test_save\";
 
 options_pdco.d1 = 0.01;
 options_pdco.d2 = 0.01;
 %% Loop
 clc
+results = zeros(n_problem, length(d1), length(d2), 4, 22);
 for i = 1:n_problem
     for j = 1 : length(d1)
         for k = 1 : length(d2)
@@ -241,7 +244,16 @@ for i = 1:n_problem
                     save_figure(fig6, path_to_save+"fig6"+num2str(i))
                 end
             end
+            
+            if check_results
+                res = squeeze(results(i,j,k,:,:));
+                results(i,j,k,:,:) = save_features(res, o1,o2,o3,o4);
+            end
         end
     end
 end
 fclose('all');
+if save_results
+    results = squeeze(results);
+    save(path_to_save+"results.mat", "results")
+end

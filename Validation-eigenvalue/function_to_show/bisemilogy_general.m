@@ -44,7 +44,11 @@
 function bisemilogy_general(data, specs, ind, windows)
 % Distinction of the positive and negative values ad us of logarythmic
 % scaling.
-ax = windows;
+if isequal(class(windows),'matlab.ui.Figure')
+    ax = axes
+elseif isequal(class(windows),'matlab.graphics.axis.Axes')
+    ax = windows;
+end
 pos = data;
 pos(pos<=0) = NaN;
 pos = log10(pos);
