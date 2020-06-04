@@ -119,9 +119,9 @@ fclose('all');
 % eigen = [t1;t2;t3;t4];
 d1 = options_pdco.d1;
 d2 = options_pdco.d2;
-fig1 = show_eigenvalue(o.eigenvalue, o.limit, d1, d2);
-fig2 = show_eigenvalue_theorem2(o.eigenvalue, o.features_theorem2, d1, d2, 0);
-fig3 = show_eigenvalueK35(prob2.eigenvalue, d1, d2);
+fig1 = show_eigenvalue(o, 'nsic2.mps', d1, d2);
+fig2 = show_eigenvalue_theorem2(o, 'nsic2.mps', d1, d2, 0);
+fig3 = show_eigenvalueK35(prob2, d1, d2);
 fig4 = show_cond(o.cond, o.limit, d1, d2, prob2.cond, "K3.5");
 fig5 = show_residu(o.opt_residu,o.evolution_mu);
 
@@ -165,15 +165,15 @@ orient(fig5, "landscape")
 
 set(fig1,'PaperSize',[45 25]); %set the paper size to what you want
 filename = 'D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\figure1.pdf';
-print(fig1, filename,'-dpdf', "-r1200")
+print(fig1, filename,'-dpdf', "-r800")
 
 set(fig2,'PaperSize',[45 25]); %set the paper size to what you want
 filename = 'D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\figure2.pdf';
-print(fig2, filename,'-dpdf', "-r1200")
+print(fig2, filename,'-dpdf', "-r800")
 
 set(fig3,'PaperSize',[45 25]); %set the paper size to what you want
 filename = 'D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\figure3.pdf';
-print(fig3, filename,'-dpdf', "-r1200")
+print(fig3, filename,'-dpdf', "-r800")
 
 set(fig4,'PaperSize',[45 25]); %set the paper size to what you want
 filename = 'D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\figure4.pdf';
@@ -181,7 +181,7 @@ print(fig4, filename,'-dpdf', "-r1200")
 
 set(fig5,'PaperSize',[45 25]); %set the paper size to what you want
 filename = 'D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\figure5.pdf';
-print(fig5, filename,'-dpdf', "-r1200")
+print(fig5, filename,'-dpdf', "-r800")
 
 %% Clean
 clear all
@@ -297,13 +297,13 @@ for j = 1:length(d1)
     
     Problem1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
     Problem1.solve;
-    fig = show_eigenvalue(Problem1.eigenvalue, Problem1.limit, d1(j), d2(j))
+    fig = show_eigenvalue(Problem1, 'nsic2.mps', d1(j), d2(j))
     
     orient(fig, "landscape")
     set(fig,'PaperSize',[45 25], 'Position', get(0, 'Screensize')); %set the paper size to what you want
     cpt = length(dir("D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\"))-9;
     filename = "D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\variation_d2_figure"+num2str(cpt)+".pdf";
-    print(fig, filename,'-dpdf', "-r1200")
+    print(fig, filename,'-dpdf', "-r800")
     
 end
 
