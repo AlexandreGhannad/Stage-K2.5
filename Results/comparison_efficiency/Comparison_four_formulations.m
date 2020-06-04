@@ -327,8 +327,7 @@ save_figure(fig3, path + "fig3.pdf");
 save_figure(fig4, path + "fig4.pdf");
 save_figure(fig5, path + "fig5.pdf");
 save_figure(fig6, path + "fig6.pdf");
-save_figure(fig7, path + "fig7.pdf");
-save_figure(fig8, path + "fig8.pdf");
+
 
 
 
