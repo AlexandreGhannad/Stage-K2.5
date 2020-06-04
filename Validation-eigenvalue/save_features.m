@@ -17,15 +17,6 @@ end
 if exist("o4")
     res(4,2) = o4.inform;
 end
-%% Residu
-res(1,3) = o1.Cinf0;
-res(2,3) = o2.Cinf0;
-if exist("o3")
-    res(3,3) = o3.Cinf0;
-end
-if exist("o4")
-    res(4,3) = o4.Cinf0;
-end
 %% Execution time
 res(1,3) = o1.time;
 res(2,3) = o2.time;
@@ -129,4 +120,14 @@ if exist("o4")
     res(4,21) = norm(obj4-obj3)/abs(obj4);
     res(4,22) = norm(obj4-obj1)/abs(obj4);
 end
+%% Residu
+res(1,23) = o1.Cinf0;
+res(2,23) = o2.Cinf0;
+if exist("o3")
+    res(3,23) = o3.Cinf0;
+end
+if exist("o4")
+    res(4,23) = o4.Cinf0;
+end
+
 end
