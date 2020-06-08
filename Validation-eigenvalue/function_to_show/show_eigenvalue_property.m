@@ -76,6 +76,7 @@ else
     xlabel("Iteration")
     ylabel("Eigenvalues and bounds")
     
+    n = length(eigenvalue);
     if exist("d1") & exist("d2")
         title("Property 1:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
     elseif exist("d1")

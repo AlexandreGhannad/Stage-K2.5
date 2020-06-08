@@ -26,32 +26,6 @@ import model.lpmodel;
 import model.slackmodel;
 
 options_pdco.file_id = 1;
-
-formulation1 = 'K25';
-solver = 'LDL';
-classname1 = build_variant(pdcoo_home, formulation1, solver);
-
-formulation2 = 'K35';
-solver = 'LDL';
-classname2 = build_variant(pdcoo_home, formulation2, solver);
-
-formulation3 = 'K2';
-solver = 'LDL';
-classname3 = build_variant(pdcoo_home, formulation3, solver);
-
-list_problem ={'afiro.mps'};
-n_problem = length(list_problem);
-
-options_pdco.d1 = 1.0e-2;
-options_pdco.d2 = 1.0e-2;
-options_pdco.OptTol = 1.0e-10;
-options_solv.atol1 = 1.0e-10;
-options_solv.atol2 = 1.0e-10;
-options_solv.itnlim = 100;
-options_pdco.Print = 1;
-
-fprintf(options_pdco.file_id, ...
-    '\n    Name    Objectif   Presid   Dresid   Cresid   PDitns   Inner     Time      D2 * r\n\n');
 %% Setup 2
 import model.lpmodel;
 import model.slackmodel;
@@ -103,7 +77,6 @@ elseif choice_list_problem == 5
 end
 
 n_problem = length(list_problem);
-result = zeros(9,3,n_problem);
 %% Choose option for the test
 n_problem = min(n_problem, 2000); % Change the number if you want to test only a few problems
 

@@ -12,10 +12,11 @@
 % title (example: formulation = "K3.5").
 
 
-function fig = show_cond(cond, limit, d1, d2, cond2, formulation)
+function fig = show_cond(cond, limit, d1, d2, cond2, formulation2, cond3, formulation3, cond4, formulation4)
 
 % Display the conditionning of K2.5
 fig = figure();
+set(fig, "WindowState", "maximized")
 semilogy(cond, "k.")
 hold on
 xlabel("Iteration")
@@ -47,9 +48,9 @@ end
 if exist("limits") & exist("cond2")
     if tmp == 1
         % If bounds have a zero, add a warning to the legend
-        legend({"Conditionning", "Bound on the conditionning (Warning: 0 in bounds)",formulation}, 'Location', 'best')
+        legend({"Conditionning", "Bound on the conditionning (Warning: 0 in bounds)",formulation2}, 'Location', 'best')
     else
-        legend({"Conditionning", "Bound on the conditionning",formulation}, 'Location', 'best')
+        legend({"Conditionning", "Bound on the conditionning",formulation2}, 'Location', 'best')
     end 
 elseif exist("limits") & not(exist("cond2"))
     if tmp == 1
@@ -59,7 +60,7 @@ elseif exist("limits") & not(exist("cond2"))
         legend({"Conditionning", "Bound on the conditionning"}, 'Location', 'best')
     end
 elseif not(exist("limits")) & exist("cond2")
-    legend({"Conditionning", formulation}, 'Location', 'best')
+    legend({"Conditionning", formulation2}, 'Location', 'best')
 else
     legend({"Conditionning"}, 'Location', 'best')
 end

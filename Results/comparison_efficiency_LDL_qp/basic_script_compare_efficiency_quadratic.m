@@ -3,7 +3,7 @@ clear all
 close all
 clc
 
-for ijkl = 21:30
+for ijkl = 1:20
 %% Setup 1
 pdcoo_home = pwd;
 addpath(pdcoo_home);
@@ -69,7 +69,7 @@ solver = 'LDL';
 classname2 = build_variant(pdcoo_home, formulation2, solver);
 
 formulation3 = 'K2';
-solver = 'LU';
+solver = 'LDL';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
 formulation4 = 'K3';

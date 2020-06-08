@@ -5,6 +5,7 @@
 
 function fig = show_residu(residu, evolution_mu, d1, d2)
 fig = figure();
+set(fig, "WindowState", "maximized")
 semilogy(residu, "k.")
 hold on
 semilogy(evolution_mu, "b")

@@ -5,20 +5,18 @@ clc
 %% Load results and agregate them
 load('D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_lp\results1.mat')
 res_lp = results(:,:,3);
-% load('D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results1.mat')
-% res_qp = results(:,:,3);
-n = 30;
+load('D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results1.mat')
+res_qp = results(:,:,3);
+n = 20;
 for i = 2:n
     load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_lp\results"+num2str(i)+".mat")
     res_lp = res_lp + results(:,:,3);
-%     load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results"+num2str(i)+".mat")
-%     res_qp = res_qp+results(:,:,3);
+    load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results"+num2str(i)+".mat")
+    res_qp = res_qp+results(:,:,3);
 end
 res_lp = res_lp/n;
-% res_qp = res_qp/20;
-% results =[res_lp ;res_qp];
-results = res_lp;
-results = results(:,[1 2 4]);
+res_qp = res_qp/20;
+results =[res_lp ;res_qp];
 %% Display, sort according to K2.5
 time1 = results(:,1);
 time2 = results(:,2);

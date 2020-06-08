@@ -5,19 +5,18 @@ clc
 %% Load results and agregate them
 load('D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_lp\results1.mat')
 res_lp = results(:,:,3);
-% load('D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results1.mat')
-% res_qp = results(:,:,3);
-n = 30;
+load('D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results1.mat')
+res_qp = results(:,:,3);
+n = 20;
 for i = 2:n
     load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_lp\results"+num2str(i)+".mat")
     res_lp = res_lp + results(:,:,3);
-%     load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results"+num2str(i)+".mat")
-%     res_qp = res_qp+results(:,:,3);
+    load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results"+num2str(i)+".mat")
+    res_qp = res_qp+results(:,:,3);
 end
 res_lp = res_lp/n;
-% res_qp = res_qp/20;
-% results =[res_lp ;res_qp];
-results = res_lp;
+res_qp = res_qp/20;
+results =[res_lp ;res_qp];
 %% Display, sort according to K2.5
 time1 = results(:,1);
 time2 = results(:,2);
@@ -327,6 +326,8 @@ save_figure(fig3, path + "fig3.pdf");
 save_figure(fig4, path + "fig4.pdf");
 save_figure(fig5, path + "fig5.pdf");
 save_figure(fig6, path + "fig6.pdf");
+save_figure(fig7, path + "fig7.pdf");
+save_figure(fig8, path + "fig8.pdf");
 
 
 
