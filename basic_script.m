@@ -59,7 +59,7 @@ elseif choice_list_problem == 2
     list_problem ={'afiro.qps'};
 elseif choice_list_problem == 3
     % All the linear problem available
-    path_problem = pwd + "/Problems/lp_prob";
+    path_problem = pwd + "/Problems/lp_prob/";
     list_problem = dir(path_problem);
     list_problem = {list_problem.name};
     list_problem = list_problem(3:end);

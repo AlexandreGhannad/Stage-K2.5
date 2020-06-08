@@ -107,7 +107,7 @@ check_residu = 1;
 % n_theorem2 % Only helpful with brokenl_lines and power_lines method.
 % Moreover, require knowledge on the method and on the problem.
 
-save_all_graphics = 0;
+save_all_graphics = 1;
 path_to_save = "D:\git_repository\Stage-K2.5\Results\Results_nsic2.mps\";
 
 check_results = 0;

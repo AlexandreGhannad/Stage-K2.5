@@ -1,9 +1,0 @@
-qbore3d.qps
-qbrandy.qps
-qship04l.qps
-qship04s.qps
-qship08l.qps
-qship08s.qps
-qship12l.qps
-qship12s.qps
-stcqp1.qps
