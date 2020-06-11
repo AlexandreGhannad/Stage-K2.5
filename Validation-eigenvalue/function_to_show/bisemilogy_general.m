@@ -49,6 +49,7 @@ if isequal(class(windows),'matlab.ui.Figure')
 elseif isequal(class(windows),'matlab.graphics.axis.Axes')
     ax = windows;
 end
+len = size(data, 1);
 pos = data;
 pos(pos<=0) = NaN;
 pos = log10(pos);
@@ -96,7 +97,7 @@ for i=1:n-1
 end
 spec = specs(end,:);
 spec = spec(~cellfun('isempty',spec));
-for k = ind(end):length(data)
+for k = ind(end):len
     plot(pos(k,:), spec{:});
     plot(neg(k,:), spec{:});
 end

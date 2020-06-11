@@ -36,19 +36,19 @@ formulation1 = 'K25';
 solver = 'LDL';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
-formulation2 = 'K35';
-solver = 'LDL';
-classname2 = build_variant(pdcoo_home, formulation2, solver);
+% formulation2 = 'K35';
+% solver = 'LDL';
+% classname2 = build_variant(pdcoo_home, formulation2, solver);
+% 
+% formulation3 = 'K2';
+% solver = 'LU';
+% classname3 = build_variant(pdcoo_home, formulation3, solver);
+% 
+% formulation4 = 'K3';
+% solver = 'LU';
+% classname4 = build_variant(pdcoo_home, formulation4, solver);
 
-formulation3 = 'K2';
-solver = 'LU';
-classname3 = build_variant(pdcoo_home, formulation3, solver);
-
-formulation4 = 'K3';
-solver = 'LU';
-classname4 = build_variant(pdcoo_home, formulation4, solver);
-
-choice_list_problem = 1;
+choice_list_problem = 5;
 if choice_list_problem == 1
     % Only linear afiro
     path_problem = pwd + "/Problems/lp_prob/";
@@ -72,7 +72,7 @@ elseif choice_list_problem == 4
 elseif choice_list_problem == 5
     % Personal list to change
     path_problem = pwd + "/Problems/lp_prob/";
-    list_problem ={'afiro.mps'};
+    list_problem ={'small009.mps'};
     warning("Precise your path of the problem if you use your personal list")
 end
 
@@ -80,10 +80,10 @@ n_problem = length(list_problem);
 %% Choose option for the test
 n_problem = min(n_problem, 2000); % Change the number if you want to test only a few problems
 
-d1 = 10^-2;
-d2 = 10^-2;
-% d1 = [10^-8 10^-4 10^-2 10^-0];
-% d2 = [10^-8 10^-4 10^-2 10^-0];
+% d1 = 10^-2;
+% d2 = 10^-2;
+d1 = [10^-4 10^-2 10^-0];
+d2 = [10^-4 10^-2 10^-0];
 
 options_pdco.OptTol = 1.0e-10;
 options_solv.atol1 = 1.0e-10;
@@ -107,12 +107,12 @@ check_residu = 0;
 % n_theorem2 % Only helpful with brokenl_lines and power_lines method.
 % Moreover, require knowledge on the method and on the problem.
 
-save_all_graphics = 0;
-path_to_save = "D:\git_repository\Stage-K2.5\Results\test_save\";
+save_all_graphics = 1;
+path_to_save = "D:\git_repository\Stage-K2.5\Results\results_small009\";
 
 check_results = 0;
 save_results = 0;
-path_to_save = "D:\git_repository\Stage-K2.5\Results\test_save\";
+path_to_save = "D:\git_repository\Stage-K2.5\Results\results_small009\";
 %% Loop
 clc
 results = zeros(n_problem, length(d1), length(d2), 4, 23);
@@ -158,17 +158,17 @@ for i = 1:n_problem
             
             o1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
             o1.solve;
-            o2 = eval([classname2, '(slack, options_pdco,options_form,options_solv)']);
-            o2.solve;
-            o3 = eval([classname3, '(slack, options_pdco,options_form,options_solv)']);
-            o3.solve;
-            o4 = eval([classname4, '(slack, options_pdco,options_form,options_solv)']);
-            o4.solve;
+%             o2 = eval([classname2, '(slack, options_pdco,options_form,options_solv)']);
+%             o2.solve;
+%             o3 = eval([classname3, '(slack, options_pdco,options_form,options_solv)']);
+%             o3.solve;
+%             o4 = eval([classname4, '(slack, options_pdco,options_form,options_solv)']);
+%             o4.solve;
             
             if check_eigenvalue
                 fig1 = show_eigenvalue(o1, name_problem, d1(j), d2(k));
                 if save_all_graphics
-                    save_figure(fig1, path_to_save+"fig1"+num2str(i))
+                    save_figure(fig1, path_to_save+"fig"+num2str(j)+num2str(k))
                 end
             end
             
@@ -219,6 +219,7 @@ for i = 1:n_problem
                 res = squeeze(results(i,j,k,:,:));
                 results(i,j,k,:,:) = save_features(res, o1,o2,o3,o4);
             end
+            close all
         end
     end
 end

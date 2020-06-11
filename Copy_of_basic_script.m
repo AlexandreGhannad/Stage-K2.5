@@ -36,19 +36,19 @@ formulation1 = 'K25';
 solver = 'LDL';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
-formulation2 = 'K35';
-solver = 'LDL';
-classname2 = build_variant(pdcoo_home, formulation2, solver);
+% formulation2 = 'K35';
+% solver = 'LDL';
+% classname2 = build_variant(pdcoo_home, formulation2, solver);
+% 
+% formulation3 = 'K2';
+% solver = 'LU';
+% classname3 = build_variant(pdcoo_home, formulation3, solver);
+% 
+% formulation4 = 'K3';
+% solver = 'LU';
+% classname4 = build_variant(pdcoo_home, formulation4, solver);
 
-formulation3 = 'K2';
-solver = 'LU';
-classname3 = build_variant(pdcoo_home, formulation3, solver);
-
-formulation4 = 'K3';
-solver = 'LU';
-classname4 = build_variant(pdcoo_home, formulation4, solver);
-
-choice_list_problem = 1;
+choice_list_problem = 3;
 if choice_list_problem == 1
     % Only linear afiro
     path_problem = pwd + "/Problems/lp_prob/";
@@ -91,10 +91,10 @@ options_solv.atol2 = 1.0e-10;
 options_solv.itnlim = 100;
 options_pdco.Print = 1;
 
-check_eigenvalue = 1;
+check_eigenvalue = 0;
 check_limits = 0;
 check_eigenvalue_other_formulation = 0;
-check_theorem2 = 0;
+check_theorem2 = 1;
 method_theorem2 = "MaxGap";
 check_property = 0;
 
@@ -116,7 +116,7 @@ path_to_save = "D:\git_repository\Stage-K2.5\Results\test_save\";
 %% Loop
 clc
 results = zeros(n_problem, length(d1), length(d2), 4, 23);
-for i = 1:n_problem
+for i = 64:n_problem
     for j = 1 : length(d1)
         for k = 1 : length(d2)
             
@@ -141,84 +141,24 @@ for i = 1:n_problem
             options_pdco.y0 = zeros(slack.m, 1);
             options_pdco.mu0 = options_pdco.zsize;
             options_pdco.Maxiter = min(max(30, slack.n), 100);
-            
+                        
             options_pdco.check_eigenvalue = check_eigenvalue;
             options_pdco.check_limits = check_limits;
             options_pdco.check_eigenvalue_other_formulation = check_eigenvalue_other_formulation;
             options_pdco.check_theorem2 = check_theorem2;
-            options_pdco.method = method_theorem2;
             options_pdco.check_property = check_property;
             options_pdco.check_cond = check_cond;
             options_pdco.check_residu = check_residu;
             
-            %             options_pdco.digit_number = digit_number;
-            %             options_pdco.n_theorem2 = n_theorem2;
-            
+            method_theorem2 = "all";
+            options_pdco.method = method_theorem2;
             options_form = struct();
+            o = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
+            o.solve;
             
-            o1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
-            o1.solve;
-            o2 = eval([classname2, '(slack, options_pdco,options_form,options_solv)']);
-            o2.solve;
-            o3 = eval([classname3, '(slack, options_pdco,options_form,options_solv)']);
-            o3.solve;
-            o4 = eval([classname4, '(slack, options_pdco,options_form,options_solv)']);
-            o4.solve;
-            
-            if check_eigenvalue
-                fig1 = show_eigenvalue(o1, name_problem, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig1, path_to_save+"fig1"+num2str(i))
-                end
-            end
-            
-            if check_eigenvalue_other_formulation
-                fig21 = show_eigenvalue_other_formulation(o2.eigenvalue, name_problem, "K3.5", d1(j), d2(k));
-                fig22 = show_eigenvalue_other_formulation(o3.eigenvalue, name_problem, "K2", d1(j), d2(k));
-                fig23 = show_eigenvalue_other_formulation(o4.eigenvalue, name_problem, "K3", d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig21, path_to_save+"fig21"+num2str(i))
-                    save_figure(fig22, path_to_save+"fig22"+num2str(i))
-                    save_figure(fig23, path_to_save+"fig23"+num2str(i))
-                end
-            end
-            
-            if check_property
-                fig3 = show_eigenvalue_property(o1, name_problem, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig3, path_to_save+"fig3"+num2str(i))
-                end
-            end
-            
-            if check_theorem2
-                fig4 = show_eigenvalue_theorem2(o1, name_problem, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig4, path_to_save+"fig4"+num2str(i))
-                end
-            end
-            
-            if check_cond
-                fig51 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o2.cond, "K3.5");
-                fig52 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o3.cond, "K2");
-                fig53 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o4.cond, "K3");
-                if save_all_graphics
-                    save_figure(fig51, path_to_save+"fig51"+num2str(i))
-                    save_figure(fig52, path_to_save+"fig52"+num2str(i))
-                    save_figure(fig53, path_to_save+"fig53"+num2str(i))
-                end
-            end
-            
-            if check_residu
-                fig6 = show_residu(o1.opt_residu, o1.evolution_mu, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig6, path_to_save+"fig6"+num2str(i))
-                end
-            end
-            
-            if check_results
-                res = squeeze(results(i,j,k,:,:));
-                results(i,j,k,:,:) = save_features(res, o1,o2,o3,o4);
-            end
+            fig = compare_method_theorem_2(o, name_problem);
+            save_figure(fig, "D:\git_repository\Stage-K2.5\Results\patapof\fig"+num2str(i)+".pdf")
+            close all
         end
     end
 end
