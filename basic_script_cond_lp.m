@@ -48,7 +48,7 @@ formulation4 = 'K3';
 solver = 'LU';
 classname4 = build_variant(pdcoo_home, formulation4, solver);
 
-choice_list_problem = 1;
+choice_list_problem = 3;
 if choice_list_problem == 1
     % Only linear afiro
     path_problem = pwd + "/Problems/lp_prob/";
@@ -89,9 +89,9 @@ options_pdco.OptTol = 1.0e-10;
 options_solv.atol1 = 1.0e-10;
 options_solv.atol2 = 1.0e-10;
 options_solv.itnlim = 100;
-options_pdco.Print = 1;
+options_pdco.Print = 0;
 
-check_eigenvalue = 1;
+check_eigenvalue = 0;
 check_limits = 0;
 check_eigenvalue_other_formulation = 0;
 check_theorem2 = 0;
@@ -116,6 +116,8 @@ path_to_save = "D:\git_repository\Stage-K2.5\Results\test_save\";
 %% Loop
 clc
 results = zeros(n_problem, length(d1), length(d2), 4, 23);
+% cond = zeros(4,n_problem, 1000);
+cond = zeros(4,n_problem);
 for i = 1:n_problem
     for j = 1 : length(d1)
         for k = 1 : length(d2)
@@ -165,65 +167,38 @@ for i = 1:n_problem
             o4 = eval([classname4, '(slack, options_pdco,options_form,options_solv)']);
             o4.solve;
             
-            if check_eigenvalue
-                fig1 = show_eigenvalue(o1, name_problem, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig1, path_to_save+"fig1"+num2str(i))
-                end
-            end
+%             cond(1,i, 1:length(o1.cond)) = o1.cond;
+%             cond(2,i, 1:length(o1.cond)) = o2.cond;
+%             cond(3,i, 1:length(o1.cond)) = o3.cond;
+%             cond(4,i, 1:length(o1.cond)) = o4.cond;
+
+            n1 = min(30, min(size(o1.M)));
+            n2 = min(30, min(size(o2.M)));
+            n3 = min(30, min(size(o3.M)));
+            n4 = min(30, min(size(o4.M)));
             
-            if check_eigenvalue_other_formulation
-                fig21 = show_eigenvalue_other_formulation(o2.eigenvalue, name_problem, "K3.5", d1(j), d2(k));
-                fig22 = show_eigenvalue_other_formulation(o3.eigenvalue, name_problem, "K2", d1(j), d2(k));
-                fig23 = show_eigenvalue_other_formulation(o4.eigenvalue, name_problem, "K3", d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig21, path_to_save+"fig21"+num2str(i))
-                    save_figure(fig22, path_to_save+"fig22"+num2str(i))
-                    save_figure(fig23, path_to_save+"fig23"+num2str(i))
-                end
-            end
-            
-            if check_property
-                fig3 = show_eigenvalue_property(o1, name_problem, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig3, path_to_save+"fig3"+num2str(i))
-                end
-            end
-            
-            if check_theorem2
-                fig4 = show_eigenvalue_theorem2(o1, name_problem, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig4, path_to_save+"fig4"+num2str(i))
-                end
-            end
-            
-            if check_cond
-                fig51 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o2.cond, "K3.5");
-                fig52 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o3.cond, "K2");
-                fig53 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o4.cond, "K3");
-                if save_all_graphics
-                    save_figure(fig51, path_to_save+"fig51"+num2str(i))
-                    save_figure(fig52, path_to_save+"fig52"+num2str(i))
-                    save_figure(fig53, path_to_save+"fig53"+num2str(i))
-                end
-            end
-            
-            if check_residu
-                fig6 = show_residu(o1.opt_residu, o1.evolution_mu, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig6, path_to_save+"fig6"+num2str(i))
-                end
-            end
-            
-            if check_results
-                res = squeeze(results(i,j,k,:,:));
-                results(i,j,k,:,:) = save_features(res, o1,o2,o3,o4);
-            end
+            cond1 = max(abs(eigs(o1.M, n1, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o1.M, n1, 'smallestabs','MaxIterations',3000)));
+            cond2 = max(abs(eigs(o2.M, n2, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o2.M, n2, 'smallestabs','MaxIterations',3000)));
+            cond3 = max(abs(eigs(o3.M, n3, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o3.M, n3, 'smallestabs','MaxIterations',3000)));
+            cond4 = max(abs(eigs(o4.M, n4, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o4.M, n4, 'smallestabs','MaxIterations',3000)));
+            cond(1,i) = cond1;
+            cond(2,i) = cond2;
+            cond(3,i) = cond3;
+            cond(4,i) = cond4;
         end
     end
 end
 fclose('all');
-if save_results
-    results = squeeze(results);
-    save(path_to_save+"results.mat", "results")
-end
+
+%% 
+% i = 50
+% cond(cond ==0) = NaN;
+% fig = figure();
+% set(fig, "WindowState", "maximized")
+% semilogy(squeeze(cond(1,i,:)), ".", "MarkerSize", 10, "LineWidth", 1, "Color", [0 0.4470 0.7410]);
+% hold on
+% semilogy(squeeze(cond(2,i,:)), "+", "MarkerSize", 7, "LineWidth", 1, "Color", [0.8500 0.3250 0.0980]);
+% semilogy(squeeze(cond(3,i,:)), "*", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4660 0.6740 0.1880]);
+% semilogy(squeeze(cond(4,i,:)), "s", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4940 0.1840 0.5560]);
+% legend("K2.5", "K3.5", "K2", "K3", "Bounds on K2.5", "location", "best")
+% title("Evolution of the conditioning")

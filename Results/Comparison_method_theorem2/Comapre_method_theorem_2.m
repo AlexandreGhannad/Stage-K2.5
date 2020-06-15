@@ -41,7 +41,7 @@ classname1 = build_variant(pdcoo_home, formulation1, solver);
 % classname2 = build_variant(pdcoo_home, formulation2, solver);
 % 
 % formulation3 = 'K2';
-% solver = 'LU';
+% solver = 'LDL';
 % classname3 = build_variant(pdcoo_home, formulation3, solver);
 % 
 % formulation4 = 'K3';

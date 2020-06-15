@@ -25,9 +25,9 @@ fig = figure(1)
 set(fig, "WindowState", "maximized")
 orient(fig, "landscape")
 legend("K2.5", "K3.5", "K2", "K3", "location", "best")
-title("Performance graphic")
+title("Performance profile")
 
-save_figure(fig, "performance_graphic")
+save_figure(fig, "Performance profile - time")
 
 
 

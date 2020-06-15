@@ -843,8 +843,8 @@ classdef pdcoO < handle
                     lambda_max = max(abs(o.eigenvalue(:,end)));
                     o.cond = [o.cond lambda_max/lambda_min];
                 elseif o.check_cond & isempty(o.eigenvalue)
-                    lambda_min = min(abs(eigs(o.M, 10, "smallestabs")));
-                    lambda_max = max(abs(eigs(o.M, 10, "largestabs")));
+                    lambda_min = min(abs(eigs(o.M, min(min(size(o.M)),100), "smallestabs")));
+                    lambda_max = max(abs(eigs(o.M, min(min(size(o.M)),100), "largestabs")));
                     o.cond = [o.cond lambda_max/lambda_min ];
                 end
                 

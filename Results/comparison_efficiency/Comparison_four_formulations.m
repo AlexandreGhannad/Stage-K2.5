@@ -39,8 +39,9 @@ semilogy(time2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1
 semilogy(time3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
 semilogy(time4, "+", "MarkerSize", 6, "Color", [0.4940 0.1840 0.5560], 'LineWidth', 1.5)
 title("Execution time of the different formulations")
-legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K3 (LU solver)", "K2 (LU solver)", "Location", "northwest")
+legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K2 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 %% Second graph
 fig2 = figure(2);
 set(fig2, "WindowState", "maximized")
@@ -55,8 +56,9 @@ semilogy(time2, "Color", [0 0.4470 0.7410], 'LineWidth', 0.5)
 semilogy(time3, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 0.5)
 semilogy(time4, "Color", [0.4940 0.1840 0.5560], 'LineWidth', 0.5)
 title("Execution time of the different formulations")
-legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K3 (LU solver)", "K2 (LU solver)", "Location", "northwest")
+legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K2 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 %% Third graph
 [tmax,imax] = max(time);
 [tmin,imin] = min(time);
@@ -94,7 +96,8 @@ semilogy(tmin4, "+", "MarkerSize", 6, "Color", [0.4940 0.1840 0.5560], 'LineWidt
 
 title("Best and worst execution time")
 ylabel("Time (s)")
-legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K3 (LU solver)", "K2 (LU solver)", "Location", "northwest")
+legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K2 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
+xlim([0, 220])
 %% Fourth graph
 % Compare efficiency in duel
 fig4 = figure(4);
@@ -109,53 +112,59 @@ semilogy(time2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1
 title("K2.5 vs K3.5")
 legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 
-% K2.5 vs K3
+% K2.5 vs K2
 subplot(322)
 semilogy(time1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 1)
 hold on
 semilogy(time3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1)
-title("K2.5 vs K3")
-legend("K2.5 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
+title("K2.5 vs K2")
+legend("K2.5 (LDL solver)", "K2 (LDL solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 
-% K2.5 vs K2
+% K2.5 vs K3
 subplot(323)
 semilogy(time1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 1)
 hold on
 semilogy(time4, "+", "MarkerSize", 6, "Color", [0.4940 0.1840 0.5560], 'LineWidth', 1)
 title("K2.5 vs K2")
-legend("K2.5 (LDL solver)", "K2 (LU solver)", "Location", "northwest")
+legend("K2.5 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 
-% K3.5 vs K3
+% K3.5 vs K2
 subplot(324)
 [t2, perm] = sort(time2, "ascend");
 semilogy(t2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1)
 hold on
 semilogy(time3(perm), "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1)
-title("K3.5 vs K3")
-legend("K3.5 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
+title("K3.5 vs K2")
+legend("K3.5 (LDL solver)", "K2 (LDL solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 
-% K3.5 vs K2
+% K3.5 vs K3
 subplot(325)
 semilogy(t2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1)
 hold on
 semilogy(time4(perm), "+", "MarkerSize", 6, "Color", [0.4940 0.1840 0.5560], 'LineWidth', 1)
 title("K3.5 vs K2")
-legend("K3.5 (LDL solver)", "K2 (LU solver)", "Location", "northwest")
+legend("K3.5 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 
-% K3 vs K2
+% K2 vs K3
 subplot(326)
 [t3, perm] = sort(time3, "ascend");
 semilogy(t3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1)
 hold on
 semilogy(time4(perm), "+", "MarkerSize", 6, "Color", [0.4940 0.1840 0.5560], 'LineWidth', 1)
-title("K3 vs K2")
-legend("K3 (LU solver)", "K2 (LU solver)", "Location", "northwest")
+title("K2 vs K3")
+legend("K2 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 
 
 n1 = sum(imin == 1);
@@ -173,7 +182,9 @@ time1 = results(:,1);
 time2 = results(:,2);
 time3 = results(:,3);
 time4 = results(:,4);
-load('sizeA.mat')
+load('sizeA_lp.mat')
+load('sizeA_qp.mat')
+sizeA = [sizeA;size_A];
 [x, perm] = sort(sizeA);
 time1 = time1(perm);
 time2 = time2(perm);
@@ -191,8 +202,9 @@ semilogy(time2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1
 semilogy(time3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1.5)
 semilogy(time4, "+", "MarkerSize", 6, "Color", [0.4940 0.1840 0.5560], 'LineWidth', 1.5)
 title("Execution time of the different formulations")
-legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K3 (LU solver)", "K2 (LU solver)", "Location", "northwest")
+legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K2 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 %% Second graph
 fig6 = figure(6);
 set(fig6, "WindowState", "maximized")
@@ -207,8 +219,9 @@ semilogy(time2, "Color", [0 0.4470 0.7410], 'LineWidth', 0.5)
 semilogy(time3, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 0.5)
 semilogy(time4, "Color", [0.4940 0.1840 0.5560], 'LineWidth', 0.5)
 title("Execution time of the different formulations")
-legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K3 (LU solver)", "K2 (LU solver)", "Location", "northwest")
+legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K2 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 %% Third graph
 [tmax,imax] = max(time);
 [tmin,imin] = min(time);
@@ -246,7 +259,8 @@ semilogy(tmin4, "+", "MarkerSize", 6, "Color", [0.4940 0.1840 0.5560], 'LineWidt
 
 title("Best and worst execution time")
 ylabel("Time (s)")
-legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K3 (LU solver)", "K2 (LU solver)", "Location", "northwest")
+legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "K2 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
+xlim([0, 220])
 %% Fourth graph
 % Compare efficiency in duel
 fig8 = figure(8);
@@ -261,51 +275,57 @@ semilogy(time2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1
 title("K2.5 vs K3.5")
 legend("K2.5 (LDL solver)", "K3.5 (LDL solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 
-% K2.5 vs K3
+% K2.5 vs K2
 subplot(322)
 semilogy(time1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 1)
 hold on
 semilogy(time3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1)
-title("K2.5 vs K3")
-legend("K2.5 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
+title("K2.5 vs K2")
+legend("K2.5 (LDL solver)", "K2 (LDL solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 
-% K2.5 vs K2
+% K2.5 vs K3
 subplot(323)
 semilogy(time1, "x", "MarkerSize", 9, "Color", [0.4660 0.6740 0.1880], 'LineWidth', 1)
 hold on
 semilogy(time4, "+", "MarkerSize", 6, "Color", [0.4940 0.1840 0.5560], 'LineWidth', 1)
-title("K2.5 vs K2")
-legend("K2.5 (LDL solver)", "K2 (LU solver)", "Location", "northwest")
+title("K2.5 vs K3")
+legend("K2.5 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 
-% K3.5 vs K3
+% K3.5 vs K2
 subplot(324)
 semilogy(time2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1)
 hold on
 semilogy(time3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1)
-title("K3.5 vs K3")
-legend("K3.5 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
+title("K3.5 vs K2")
+legend("K3.5 (LDL solver)", "K2 (LDL solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 
-% K3.5 vs K2
+% K3.5 vs K3
 subplot(325)
 semilogy(time2, "d", "MarkerSize", 6, "Color", [0 0.4470 0.7410], 'LineWidth', 1)
 hold on
 semilogy(time4, "+", "MarkerSize", 6, "Color", [0.4940 0.1840 0.5560], 'LineWidth', 1)
-title("K3.5 vs K2")
-legend("K3.5 (LDL solver)", "K2 (LU solver)", "Location", "northwest")
+title("K3.5 vs K3")
+legend("K3.5 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 
-% K3 vs K2
+% K2 vs K3
 subplot(326)
 semilogy(time3, "o", "MarkerSize", 6, "Color", [0.8500 0.3250 0.0980], 'LineWidth', 1)
 hold on
 semilogy(time4, "+", "MarkerSize", 6, "Color", [0.4940 0.1840 0.5560], 'LineWidth', 1)
 title("K3 vs K2")
-legend("K3 (LU solver)", "K2 (LU solver)", "Location", "northwest")
+legend("K2 (LDL solver)", "K3 (LU solver)", "Location", "northwest")
 ylabel("Time (s)")
+xlim([0, 220])
 
 
 n1 = sum(imin == 1);
@@ -315,8 +335,8 @@ n4 = sum(imin == 4);
 
 fprintf("\nNombre de fois que K2.5 est meilleur : %g\n", n1)
 fprintf("Nombre de fois que K3.5 est meilleur : %g\n", n2)
-fprintf("Nombre de fois que K3 est meilleur : %g\n", n3)
-fprintf("Nombre de fois que K2 est meilleur : %g\n\n", n4)
+fprintf("Nombre de fois que K2 est meilleur : %g\n", n3)
+fprintf("Nombre de fois que K3 est meilleur : %g\n\n", n4)
 %% Save graphics
 path = 'D:\git_repository\Stage-K2.5\Results\comparison_efficiency\';
 

@@ -48,7 +48,7 @@ formulation4 = 'K3';
 solver = 'LU';
 classname4 = build_variant(pdcoo_home, formulation4, solver);
 
-choice_list_problem = 1;
+choice_list_problem = 5;
 if choice_list_problem == 1
     % Only linear afiro
     path_problem = pwd + "/Problems/lp_prob/";
@@ -71,8 +71,8 @@ elseif choice_list_problem == 4
     list_problem = list_problem(3:end);
 elseif choice_list_problem == 5
     % Personal list to change
-    path_problem = pwd + "/Problems/lp_prob/";
-    list_problem ={'afiro.mps'};
+    path_problem = pwd + "/Problems/qp_prob/";
+    list_problem ={'qbrandy.qps'};
     warning("Precise your path of the problem if you use your personal list")
 end
 
@@ -93,13 +93,13 @@ options_pdco.Print = 1;
 
 check_eigenvalue = 1;
 check_limits = 0;
-check_eigenvalue_other_formulation = 0;
-check_theorem2 = 0;
-method_theorem2 = "MaxGap";
-check_property = 0;
+check_eigenvalue_other_formulation = 1;
+check_theorem2 = 1;
+method_theorem2 = "all";
+check_property = 1;
 
-check_cond = 0;
-check_residu = 0;
+check_cond = 1;
+check_residu = 1;
 
 % digit_number = 64; % Increase precision to calculate eigenvalue, but
 % increase highly the execution time
@@ -175,7 +175,7 @@ for i = 1:n_problem
             if check_eigenvalue_other_formulation
                 fig21 = show_eigenvalue_other_formulation(o2.eigenvalue, name_problem, "K3.5", d1(j), d2(k));
                 fig22 = show_eigenvalue_other_formulation(o3.eigenvalue, name_problem, "K2", d1(j), d2(k));
-                fig23 = show_eigenvalue_other_formulation(o4.eigenvalue, name_problem, "K3", d1(j), d2(k));
+                fig23 = show_eigenvalue_other_formulation(real(o4.eigenvalue), name_problem, "K3", d1(j), d2(k));
                 if save_all_graphics
                     save_figure(fig21, path_to_save+"fig21"+num2str(i))
                     save_figure(fig22, path_to_save+"fig22"+num2str(i))
@@ -191,20 +191,31 @@ for i = 1:n_problem
             end
             
             if check_theorem2
-                fig4 = show_eigenvalue_theorem2(o1, name_problem, d1(j), d2(k));
+                if method_theorem2 ~= "all"
+                    fig4 = show_eigenvalue_theorem2(o1, name_problem, d1(j), d2(k));
+                else
+                    fig4 = compare_method_theorem_2(o1, name_problem);
+                end
                 if save_all_graphics
                     save_figure(fig4, path_to_save+"fig4"+num2str(i))
                 end
             end
             
             if check_cond
-                fig51 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o2.cond, "K3.5");
-                fig52 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o3.cond, "K2");
-                fig53 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o4.cond, "K3");
+                fig5 = figure();
+                set(fig5, "WindowState", "maximized")
+                lim = o1.limit;
+                lim = max(abs(lim))./min(abs(lim));
+                semilogy(o1.cond, ".", "MarkerSize", 10, "LineWidth", 1, "Color", [0 0.4470 0.7410]);
+                hold on
+                semilogy(o2.cond, "+", "MarkerSize", 7, "LineWidth", 1, "Color", [0.8500 0.3250 0.0980]);
+                semilogy(o3.cond, "*", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4660 0.6740 0.1880]);
+                semilogy(o4.cond, "s", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4940 0.1840 0.5560]);
+                semilogy(lim, "LineWidth", 2, "Color", [0.3010 0.7450 0.9330])
+                legend("K2.5", "K3.5", "K2", "K3", "Bounds on K2.5", "location", "best")
+                title("Evolution of the conditioning")
                 if save_all_graphics
-                    save_figure(fig51, path_to_save+"fig51"+num2str(i))
-                    save_figure(fig52, path_to_save+"fig52"+num2str(i))
-                    save_figure(fig53, path_to_save+"fig53"+num2str(i))
+                    save_figure(fig5, path_to_save+"fig5"+num2str(i))
                 end
             end
             
