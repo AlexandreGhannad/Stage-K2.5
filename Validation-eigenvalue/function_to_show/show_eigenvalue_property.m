@@ -14,6 +14,7 @@
 
 
 function fig = show_eigenvalue_property(o, name_problem, d1, d2)
+fontsize = 30;
 fig = figure();
 set(fig, "WindowState", "maximized")
 
@@ -44,17 +45,17 @@ if o.check_limits
     ind = [1 2 3 4 5];
     bisemilogy_general(data, specs, ind, windows);
     
-    xlabel("Iteration")
-    ylabel("Eigenvalues and bounds")
+    xlabel("Iteration", 'FontSize', fontsize)
+    ylabel("Eigenvalues and bounds", 'FontSize', fontsize)
     n = length(eigenvalue);
     if exist("d1") & exist("d2")
-        title("Property 1:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
+        title("Property 1:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
     elseif exist("d1")
-        title("Property 1:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")")
+        title("Property 1:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")", 'FontSize', fontsize)
     elseif exist("d2")
-        title("Property 1:"+name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")")
+        title("Property 1:"+name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
     else
-        title("Property 1:"+name_problem+", size="+num2str(n))
+        title("Property 1:"+name_problem+", size="+num2str(n), 'FontSize', fontsize)
     end
     
     subplot(212)
@@ -65,26 +66,26 @@ if o.check_limits
     semilogy(sigma_min, "LineWidth", 2, "Color", [0 1 0])
     semilogy(delta, "LineWidth", 2, "Color", [0.9290 0.6940 0.1250])
     
-    xlabel("Iteration")
-    ylabel("Intern values of the bounds")
+    xlabel("Iteration", 'FontSize', fontsize)
+    ylabel("Intern values of the bounds", 'FontSize', fontsize)
     legend({"lambda max", "lambda min", "sigma max", "sigma min", "delta"}, 'Location', 'best')
     
 else
     % Plot Eigenvalue
     bisemilogy(eigenvalue, limit)
     
-    xlabel("Iteration")
-    ylabel("Eigenvalues and bounds")
+    xlabel("Iteration", 'FontSize', fontsize)
+    ylabel("Eigenvalues and bounds", 'FontSize', fontsize)
     
     n = length(eigenvalue);
     if exist("d1") & exist("d2")
-        title("Property 1:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
+        title("Property 1:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
     elseif exist("d1")
-        title("Property 1:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")")
+        title("Property 1:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")", 'FontSize', fontsize)
     elseif exist("d2")
-        title("Property 1:"+name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")")
+        title("Property 1:"+name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
     else
-        title("Property 1:"+name_problem+", size="+num2str(n))
+        title("Property 1:"+name_problem+", size="+num2str(n), 'FontSize', fontsize)
     end
 end
 end

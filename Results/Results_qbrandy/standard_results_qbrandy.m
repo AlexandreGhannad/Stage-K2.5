@@ -41,7 +41,7 @@ solver = 'LDL';
 classname2 = build_variant(pdcoo_home, formulation2, solver);
 
 formulation3 = 'K2';
-solver = 'LDL';
+solver = 'LU';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
 formulation4 = 'K3';
@@ -107,12 +107,12 @@ check_residu = 1;
 % n_theorem2 % Only helpful with brokenl_lines and power_lines method.
 % Moreover, require knowledge on the method and on the problem.
 
-save_all_graphics = 0;
-path_to_save = "D:\git_repository\Stage-K2.5\Results\test_save\";
+save_all_graphics = 1;
+path_to_save = "D:\git_repository\Stage-K2.5\Results\Results_qbrandy\";
 
 check_results = 0;
 save_results = 0;
-path_to_save = "D:\git_repository\Stage-K2.5\Results\test_save\";
+path_to_save = "D:\git_repository\Stage-K2.5\Results\Results_qbrandy\";
 %% Loop
 clc
 results = zeros(n_problem, length(d1), length(d2), 4, 23);
@@ -173,9 +173,9 @@ for i = 1:n_problem
             end
             
             if check_eigenvalue_other_formulation
-                fig21 = show_eigenvalue_other_formulation(o2.eigenvalue, name_problem, "K3.5", d1(j), d2(k));
-                fig22 = show_eigenvalue_other_formulation(o3.eigenvalue, name_problem, "K2", d1(j), d2(k));
-                fig23 = show_eigenvalue_other_formulation(real(o4.eigenvalue), name_problem, "K3", d1(j), d2(k));
+%                 fig21 = show_eigenvalue_other_formulation(o2.eigenvalue, name_problem, "K3.5", d1(j), d2(k));
+%                 fig22 = show_eigenvalue_other_formulation(o3.eigenvalue, name_problem, "K2", d1(j), d2(k));
+%                 fig23 = show_eigenvalue_other_formulation(real(o4.eigenvalue), name_problem, "K3", d1(j), d2(k));
                 if save_all_graphics
                     save_figure(fig21, path_to_save+"fig21"+num2str(i))
                     save_figure(fig22, path_to_save+"fig22"+num2str(i))
@@ -191,10 +191,10 @@ for i = 1:n_problem
             end
             
             if check_theorem2
-                if method_theorem2 ~= "all"
-                    fig4 = show_eigenvalue_theorem2(o1, name_problem, d1(j), d2(k));
-                else
+                if method_theorem2 == "all"
                     fig4 = compare_method_theorem_2(o1, name_problem);
+                else
+                    fig4 = show_eigenvalue_theorem2(o1, name_problem, d1(j), d2(k));
                 end
                 if save_all_graphics
                     save_figure(fig4, path_to_save+"fig4"+num2str(i))
@@ -212,7 +212,7 @@ for i = 1:n_problem
                 semilogy(o3.cond, "*", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4660 0.6740 0.1880]);
                 semilogy(o4.cond, "s", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4940 0.1840 0.5560]);
                 semilogy(lim, "LineWidth", 2, "Color", [0.3010 0.7450 0.9330])
-                legend("K2.5", "K3.5", "K2", "K3", "Bounds on K2.5", "location", "best")
+                legend("K2.5", "K3.5", "K2", "K3", "Bound on K2.5", "location", "best")
                 title("Evolution of the conditioning")
                 if save_all_graphics
                     save_figure(fig5, path_to_save+"fig5"+num2str(i))

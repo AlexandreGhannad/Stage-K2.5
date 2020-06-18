@@ -266,16 +266,25 @@ fprintf("Nombre de fois que K3.5 est meilleur : %g\n", n2)
 fprintf("Nombre de fois que K2 est meilleur : %g\n", n3)
 fprintf("Nombre de fois que K3 est meilleur : %g\n\n", n4)
 %% Save graphics
-path = 'D:\git_repository\Stage-K2.5\Results\comparison_efficiency\';
+path = 'D:\git_repository\Stage-K2.5\Results\Comparison_k25_k35_k3\';
 
-save_figure(fig1, path + "fig1.pdf");
-save_figure(fig2, path + "fig2.pdf");
-save_figure(fig3, path + "fig3.pdf");
-save_figure(fig4, path + "fig4.pdf");
-save_figure(fig5, path + "fig5.pdf");
-save_figure(fig6, path + "fig6.pdf");
-save_figure(fig7, path + "fig7.pdf");
-save_figure(fig8, path + "fig8.pdf");
+save_figure(fig1, path + "fig1");
+save_figure(fig2, path + "fig2");
+save_figure(fig3, path + "fig3");
+save_figure(fig4, path + "fig4");
+save_figure(fig5, path + "fig5");
+save_figure(fig6, path + "fig6");
+save_figure(fig7, path + "fig7");
+save_figure(fig8, path + "fig8");
+
+% save_figure(fig1, path + "fig1.pdf");
+% save_figure(fig2, path + "fig2.pdf");
+% save_figure(fig3, path + "fig3.pdf");
+% save_figure(fig4, path + "fig4.pdf");
+% save_figure(fig5, path + "fig5.pdf");
+% save_figure(fig6, path + "fig6.pdf");
+% save_figure(fig7, path + "fig7.pdf");
+% save_figure(fig8, path + "fig8.pdf");
 
 
 

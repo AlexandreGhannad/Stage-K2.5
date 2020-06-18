@@ -13,6 +13,7 @@
 % rather than theorem 1
 
 function fig = show_eigenvalue_theorem2(o, name_problem, d1, d2)
+fontsize=30;
 fig = figure();
 set(fig, "WindowState", "maximized")
 % Allocation
@@ -51,38 +52,38 @@ if o.check_limits
     ind = [1 2 3 4 5];
     bisemilogy_general(data, specs, ind, windows);
     
-    xlabel("Iteration")
-    ylabel("Eigenvalues and bounds")
+    xlabel("Iteration", 'FontSize', fontsize)
+    ylabel("Eigenvalues and bounds", 'FontSize', fontsize)
     
     n = length(eigenvalue);    
     if exist("d1") & exist("d2")
-        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
+        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
     elseif exist("d1")
-        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")")
+        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")", 'FontSize', fontsize)
     elseif exist("d2")
-        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")")
+        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
     else
-        title("Theorem 2:"+name_problem+", size="+num2str(n))
+        title("Theorem 2:"+name_problem+", size="+num2str(n), 'FontSize', fontsize)
     end
     
     subplot(222)
     semilogy(abs(lambda_max), "LineWidth", 2, "Color", [0 0 1])
     hold on
     semilogy(abs(lambda_min), "LineWidth", 2, "Color", [0.3010 0.7450 0.9330])
-    xlabel("Iteration")
-    ylabel("Eigenvalue of the hessien matrix")
+    xlabel("Iteration", 'FontSize', fontsize)
+    ylabel("Eigenvalue of the hessien matrix", 'FontSize', fontsize)
     legend({"lambda max", "lambda min"}, 'Location', 'best')
     
     if lambda_max == 0 & lambda_min == 0
-        title("Eigenvalues are 0")
+        title("Eigenvalues are 0", 'FontSize', fontsize)
     end
     
     subplot(223)
     semilogy(abs(sigma_max), "LineWidth", 2, "Color", [0.4660 0.6740 0.1880])
     hold on
     semilogy(abs(sigma_min), "LineWidth", 2, "Color", [0 1 0])
-    xlabel("Iteration")
-    ylabel("Singular value of A")
+    xlabel("Iteration", 'FontSize', fontsize)
+    ylabel("Singular value of A", 'FontSize', fontsize)
     legend({"sigma max", "sigma min"}, 'Location', 'best')
     
     subplot(224)
@@ -90,8 +91,8 @@ if o.check_limits
     hold on
     semilogy(abs(xmin), "LineWidth", 2, "Color", [1 0 0])
     semilogy(abs(x'), "k.")
-    xlabel("Iteration")
-    ylabel("x and its optimum for inactive bounds")
+    xlabel("Iteration", 'FontSize', fontsize)
+    ylabel("x and its optimum for inactive bounds", 'FontSize', fontsize)
     legend({"xmax,I", "xmin,I", "x"}, 'Location', 'best')
     
 else
@@ -111,19 +112,19 @@ else
     ind = [1 2 3 4 5];
     bisemilogy_general(data, specs, ind, windows);
         
-    xlabel("Iteration")
-    ylabel("Eigenvalues and bounds")
+    xlabel("Iteration", 'FontSize', fontsize)
+    ylabel("Eigenvalues and bounds", 'FontSize', fontsize)
     legend({"Inner bounds", "Outer bounds", "Eigenvalues"}, 'Location', 'best')
     
     n = length(eigenvalue);    
     if exist("d1") & exist("d2")
-        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
+        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
     elseif exist("d1")
-        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")")
+        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")", 'FontSize', fontsize)
     elseif exist("d2")
-        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")")
+        title("Theorem 2:"+name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
     else
-        title("Theorem 2:"+name_problem+", size="+num2str(n))
+        title("Theorem 2:"+name_problem+", size="+num2str(n), 'FontSize', fontsize)
     end
 end
 end

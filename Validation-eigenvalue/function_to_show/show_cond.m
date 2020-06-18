@@ -13,15 +13,15 @@
 
 
 function fig = show_cond(cond, limit, d1, d2, cond2, formulation2, cond3, formulation3, cond4, formulation4)
-
+fontsize = 18;
 % Display the conditionning of K2.5
 fig = figure();
 set(fig, "WindowState", "maximized")
 semilogy(cond, "k.")
 hold on
-xlabel("Iteration")
-ylabel("conditionning")
-title("Evolution of the conditionning")
+xlabel("Iteration", 'FontSize', fontsize)
+ylabel("conditionning", 'FontSize', fontsize)
+title("Evolution of the conditionning", 'FontSize', fontsize)
 
 % Display the theoritical limit if it is given
 if exist("limits") & not(isempty(limits))
@@ -67,12 +67,12 @@ end
 
 % Display the title
 if exist("d1") & exist("d2")
-    title("Evolution of the conditionning, (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
+    title("Evolution of the conditionning, (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
 elseif exist("d1")
-    title("Evolution of the conditionning, (d1 = " + sprintf("%7.1e", d1) + ")")
+    title("Evolution of the conditionning, (d1 = " + sprintf("%7.1e", d1) + ")", 'FontSize', fontsize)
 elseif exist("d2")
-    title("Evolution of the conditionning, (d2 = " + sprintf("%7.1e", d2) + ")")
+    title("Evolution of the conditionning, (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
 else
-    title("Evolution of the conditionning)")
+    title("Evolution of the conditionning)", 'FontSize', fontsize)
 end
 end

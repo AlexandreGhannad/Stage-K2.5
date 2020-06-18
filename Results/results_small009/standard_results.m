@@ -36,13 +36,13 @@ formulation1 = 'K25';
 solver = 'LDL';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
-% formulation2 = 'K35';
-% solver = 'LDL';
-% classname2 = build_variant(pdcoo_home, formulation2, solver);
-% 
-% formulation3 = 'K2';
-% solver = 'LU';
-% classname3 = build_variant(pdcoo_home, formulation3, solver);
+formulation2 = 'K35';
+solver = 'LDL';
+classname2 = build_variant(pdcoo_home, formulation2, solver);
+
+formulation3 = 'K2';
+solver = 'LU';
+classname3 = build_variant(pdcoo_home, formulation3, solver);
 
 formulation4 = 'K3';
 solver = 'LU';
@@ -91,15 +91,15 @@ options_solv.atol2 = 1.0e-10;
 options_solv.itnlim = 100;
 options_pdco.Print = 1;
 
-check_eigenvalue = 0;
+check_eigenvalue = 1;
 check_limits = 0;
-check_eigenvalue_other_formulation = 0;
+check_eigenvalue_other_formulation = 1;
 check_theorem2 = 1;
-method_theorem2 = "FirstBigGap";
-check_property = 0;
+method_theorem2 = "all";
+check_property = 1;
 
-check_cond = 0;
-check_residu = 0;
+check_cond = 1;
+check_residu = 1;
 
 % digit_number = 64; % Increase precision to calculate eigenvalue, but
 % increase highly the execution time
@@ -158,12 +158,12 @@ for i = 1:n_problem
             
             o1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
             o1.solve;
-%             o2 = eval([classname2, '(slack, options_pdco,options_form,options_solv)']);
-%             o2.solve;
-%             o3 = eval([classname3, '(slack, options_pdco,options_form,options_solv)']);
-%             o3.solve;
-%             o4 = eval([classname4, '(slack, options_pdco,options_form,options_solv)']);
-%             o4.solve;
+            o2 = eval([classname2, '(slack, options_pdco,options_form,options_solv)']);
+            o2.solve;
+            o3 = eval([classname3, '(slack, options_pdco,options_form,options_solv)']);
+            o3.solve;
+            o4 = eval([classname4, '(slack, options_pdco,options_form,options_solv)']);
+            o4.solve;
             
             if check_eigenvalue
                 fig1 = show_eigenvalue(o1, name_problem, d1(j), d2(k));
@@ -191,7 +191,11 @@ for i = 1:n_problem
             end
             
             if check_theorem2
-                fig4 = show_eigenvalue_theorem2(o1, name_problem, d1(j), d2(k));
+                if method_theorem2 == "all"
+                    fig4 = compare_method_theorem_2(o1, name_problem);
+                else
+                    fig4 = show_eigenvalue_theorem2(o1, name_problem, d1(j), d2(k));
+                end
                 if save_all_graphics
                     save_figure(fig4, path_to_save+"fig4"+num2str(i))
                 end
@@ -208,7 +212,7 @@ for i = 1:n_problem
                 semilogy(o3.cond, "*", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4660 0.6740 0.1880]);
                 semilogy(o4.cond, "s", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4940 0.1840 0.5560]);
                 semilogy(lim, "LineWidth", 2, "Color", [0.3010 0.7450 0.9330])
-                legend("K2.5", "K3.5", "K2", "K3", "Bounds on K2.5", "location", "best")
+                legend("K2.5", "K3.5", "K2", "K3", "Bound on K2.5", "location", "best")
                 title("Evolution of the conditioning")
                 if save_all_graphics
                     save_figure(fig5, path_to_save+"fig5"+num2str(i))

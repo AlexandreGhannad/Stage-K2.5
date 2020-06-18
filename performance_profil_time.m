@@ -18,14 +18,14 @@ res_lp = res_lp/n;
 res_qp = res_qp/20;
 results =[res_lp ;res_qp];
 %%
-
+fontsize = 18;
 logplot = true;
 r = perf(results, logplot);
 fig = figure(1)
 set(fig, "WindowState", "maximized")
 orient(fig, "landscape")
 legend("K2.5", "K3.5", "K2", "K3", "location", "best")
-title("Performance profile")
+title("Performance profile", 'FontSize', fontsize)
 
 save_figure(fig, "Performance profile - time")
 

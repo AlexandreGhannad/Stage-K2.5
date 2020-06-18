@@ -117,8 +117,7 @@ path_to_save = "D:\git_repository\Stage-K2.5\Results\test_save\";
 clc
 results = zeros(n_problem, length(d1), length(d2), 4, 23);
 cond = zeros(4,n_problem);
-% cond = zeros(4,n_problem);
-for i = 1:n_problem
+for i = n_problem-3:n_problem
     for j = 1 : length(d1)
         for k = 1 : length(d2)
             
@@ -167,23 +166,15 @@ for i = 1:n_problem
             o4 = eval([classname4, '(slack, options_pdco,options_form,options_solv)']);
             o4.solve;
             
-%             cond(1,i, 1:length(o1.cond)) = o1.cond;
-%             cond(2,i, 1:length(o1.cond)) = o2.cond;
-%             cond(3,i, 1:length(o1.cond)) = o3.cond;
-%             cond(4,i, 1:length(o1.cond)) = o4.cond;
-            n1 = min(10, min(size(o1.M)));
-            n2 = min(10, min(size(o2.M)));
-            n3 = min(10, min(size(o3.M)));
-            n4 = min(10, min(size(o4.M)));
+            n1 = min(30, min(size(o1.M)));
+            n2 = min(30, min(size(o2.M)));
+            n3 = min(30, min(size(o3.M)));
+            n4 = min(30, min(size(o4.M)));
             
-            cond1 = max(abs(eigs(o1.M, n1, 'largestabs','MaxIterations',1000))) / min(abs(eigs(o1.M, n1, 'smallestabs','MaxIterations',1000)));
-            disp("patapof")
-            cond2 = max(abs(eigs(o2.M, n2, 'largestabs','MaxIterations',1000))) / min(abs(eigs(o2.M, n2, 'smallestabs','MaxIterations',1000)));
-            disp("patapof")
-            cond3 = max(abs(eigs(o3.M, n3, 'largestabs','MaxIterations',1000))) / min(abs(eigs(o3.M, n3, 'smallestabs','MaxIterations',1000)));
-            disp("patapof")
-            cond4 = max(abs(eigs(o4.M, n4, 'largestabs','MaxIterations',1000))) / min(abs(eigs(o4.M, n4, 'smallestabs','MaxIterations',1000)));
-            disp("patapof")
+            cond1 = max(abs(eigs(o1.M, n1, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o1.M, n1, 'smallestabs','MaxIterations',3000)));
+            cond2 = max(abs(eigs(o2.M, n2, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o2.M, n2, 'smallestabs','MaxIterations',3000)));
+            cond3 = max(abs(eigs(o3.M, n3, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o3.M, n3, 'smallestabs','MaxIterations',3000)));
+            cond4 = max(abs(eigs(o4.M, n4, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o4.M, n4, 'smallestabs','MaxIterations',3000)));
             cond(1,i) = cond1;
             cond(2,i) = cond2;
             cond(3,i) = cond3;

@@ -4,20 +4,21 @@
 % given.
 
 function fig = show_residu(residu, evolution_mu, d1, d2)
+fontsize = 30;
 fig = figure();
 set(fig, "WindowState", "maximized")
 semilogy(residu, "k.")
 hold on
 semilogy(evolution_mu, "b")
-xlabel("Iteration")
-ylabel("Complementary residu")
+xlabel("Iteration", 'FontSize', fontsize)
+ylabel("Complementary residu", 'FontSize', fontsize)
 
 if exist("d1") & exist("d2")
-    title("Evolution of the complementary residu, (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")")
+    title("Evolution of the complementary residu, (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
 elseif exist("d1")
-    title("Evolution of the complementary residu, (d1 = " + sprintf("%7.1e", d1) + ")")
+    title("Evolution of the complementary residu, (d1 = " + sprintf("%7.1e", d1) + ")", 'FontSize', fontsize)
 elseif exist("d2")
-    title("Evolution of the complementary residu, (d2 = " + sprintf("%7.1e", d2) + ")")
+    title("Evolution of the complementary residu, (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
 else
     title("Evolution of the complementary residu)")
 end

@@ -168,7 +168,7 @@ for i = 1:n_problem
             if check_eigenvalue
                 fig1 = show_eigenvalue(o1, name_problem, d1(j), d2(k));
                 if save_all_graphics
-                    save_figure(fig1, path_to_save+"fig"+num2str(j)+num2str(k))
+                    save_figure(fig1, path_to_save+"Eigenvalue_d1="+num2str(d1(j))+"_d2="+num2str(d2(k)))
                 end
             end
             
