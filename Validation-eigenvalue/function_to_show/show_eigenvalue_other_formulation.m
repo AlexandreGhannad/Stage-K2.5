@@ -8,19 +8,19 @@
 
 
 function fig = show_eigenvalue_other_formulation(eigenvalue, name_problem, formulation, d1, d2)
-fontsize = 30;
+fontsize = 35;
 fig = figure();
 set(fig, "WindowState", "maximized")
 bisemilogy(eigenvalue)
 xlabel("Iteration", 'FontSize', fontsize)
 ylabel("Eigenvalues", 'FontSize', fontsize)
 if exist("d1") & exist("d2")
-    title(name_problem + " ("+formulation+"), (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
+    title(name_problem + " "+formulation+", d1 = " + sprintf("%7.1e", d1) + ", d2 = " + sprintf("%7.1e", d2), 'FontSize', fontsize)
 elseif exist("d1")
-    title(name_problem + " ("+formulation+"), (d1 = " + sprintf("%7.1e", d1) + ")", 'FontSize', fontsize)
+    title(name_problem + " "+formulation+", d1 = " + sprintf("%7.1e", d1), 'FontSize', fontsize)
 elseif exist("d2")
-    title(name_problem + " ("+formulation+"), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
+    title(name_problem + " "+formulation+", d2 = " + sprintf("%7.1e", d2), 'FontSize', fontsize)
 else
-    title(name_problem + " ("+formulation+")", 'FontSize', fontsize)
+    title(name_problem + " "+formulation, 'FontSize', fontsize)
 end
 end

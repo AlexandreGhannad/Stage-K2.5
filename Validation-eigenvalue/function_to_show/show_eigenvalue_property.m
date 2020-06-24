@@ -14,7 +14,7 @@
 
 
 function fig = show_eigenvalue_property(o, name_problem, d1, d2)
-fontsize = 30;
+fontsize = 35;
 fig = figure();
 set(fig, "WindowState", "maximized")
 
@@ -68,7 +68,7 @@ if o.check_limits
     
     xlabel("Iteration", 'FontSize', fontsize)
     ylabel("Intern values of the bounds", 'FontSize', fontsize)
-    legend({"lambda max", "lambda min", "sigma max", "sigma min", "delta"}, 'Location', 'best')
+    legend({"lambda max", "lambda min", "sigma max", "sigma min", "delta"}, 'Location', 'best', 'FontSize', fontsize)
     
 else
     % Plot Eigenvalue

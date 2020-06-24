@@ -11,7 +11,7 @@
 
 function fig = show_eigenvalue(o, name_problem, d1, d2)
 % Create the figure in fullscreen size
-fontsize = 30;
+fontsize = 35;
 fig = figure();
 set(fig, "WindowState", "maximized")
 
@@ -56,13 +56,13 @@ if o.check_limits
     
     n = length(eigenvalue);
     if exist("d1") & exist("d2")
-        title("Problem:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
+        title(name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
     elseif exist("d1")
-        title("Problem:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")", 'FontSize', fontsize)
+        title(name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")", 'FontSize', fontsize)
     elseif exist("d2")
-        title("Problem:"+name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
+        title(name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
     else
-        title("Problem:"+name_problem+", size="+num2str(n), 'FontSize', fontsize)
+        title(name_problem+", size="+num2str(n), 'FontSize', fontsize)
     end
     
     subplot(212)
@@ -78,7 +78,7 @@ if o.check_limits
     
     xlabel("Iteration")
     ylabel("Intern values of the bounds")
-    legend(["lambda max", "lambda min", "sigma max", "sigma min", "xmax", "xmin", "zmax", "zmin"], 'Location', 'best')
+    legend(["lambda max", "lambda min", "sigma max", "sigma min", "xmax", "xmin", "zmax", "zmin"], 'Location', 'best', 'FontSize', fontsize-10)
     
 else
     % Allocation
@@ -92,13 +92,13 @@ else
     
     n = length(eigenvalue);
     if exist("d1") & exist("d2")
-        title("Problem:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
+        title(name_problem+", size="+num2str(n)+", d1 = " + sprintf("%7.1e", d1) + ", d2 = " + sprintf("%7.1e", d2), 'FontSize', fontsize)
     elseif exist("d1")
-        title("Problem:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + ")", 'FontSize', fontsize)
+        title(name_problem+", size="+num2str(n)+", d1 = " + sprintf("%7.1e", d1), 'FontSize', fontsize)
     elseif exist("d2")
-        title("Problem:"+name_problem+", size="+num2str(n)+", (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
+        title(name_problem+", size="+num2str(n)+", d2 = " + sprintf("%7.1e", d2), 'FontSize', fontsize)
     else
-        title("Problem:"+name_problem+", size="+num2str(n), 'FontSize', fontsize)
+        title(name_problem+", size="+num2str(n), 'FontSize', fontsize)
     end
 end
 end

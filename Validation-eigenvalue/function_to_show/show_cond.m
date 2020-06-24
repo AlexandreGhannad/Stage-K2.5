@@ -13,14 +13,14 @@
 
 
 function fig = show_cond(cond, limit, d1, d2, cond2, formulation2, cond3, formulation3, cond4, formulation4)
-fontsize = 18;
+fontsize = 35;
 % Display the conditionning of K2.5
 fig = figure();
 set(fig, "WindowState", "maximized")
 semilogy(cond, "k.")
 hold on
-xlabel("Iteration", 'FontSize', fontsize)
-ylabel("conditionning", 'FontSize', fontsize)
+xlabel("Iteration", 'FontSize', fontsize-10)
+ylabel("conditionning", 'FontSize', fontsize-10)
 title("Evolution of the conditionning", 'FontSize', fontsize)
 
 % Display the theoritical limit if it is given
@@ -48,21 +48,21 @@ end
 if exist("limits") & exist("cond2")
     if tmp == 1
         % If bounds have a zero, add a warning to the legend
-        legend({"Conditionning", "Bound on the conditionning (Warning: 0 in bounds)",formulation2}, 'Location', 'best')
+        legend({"Conditionning", "Bound on the conditionning (Warning: 0 in bounds)",formulation2}, 'Location', 'best', 'FontSize', fontsize-10)
     else
-        legend({"Conditionning", "Bound on the conditionning",formulation2}, 'Location', 'best')
+        legend({"Conditionning", "Bound on the conditionning",formulation2}, 'Location', 'best', 'FontSize', fontsize-10)
     end 
 elseif exist("limits") & not(exist("cond2"))
     if tmp == 1
         % If bounds have a zero, add a warning to the legend
-        legend({"Conditionning (Warning: 0 in bounds)", "Bound on the conditionning"}, 'Location', 'best')
+        legend({"Conditionning (Warning: 0 in bounds)", "Bound on the conditionning"}, 'Location', 'best', 'FontSize', fontsize-10)
     else
-        legend({"Conditionning", "Bound on the conditionning"}, 'Location', 'best')
+        legend({"Conditionning", "Bound on the conditionning"}, 'Location', 'best', 'FontSize', fontsize-10)
     end
 elseif not(exist("limits")) & exist("cond2")
-    legend({"Conditionning", formulation2}, 'Location', 'best')
+    legend({"Conditionning", formulation2}, 'Location', 'best', 'FontSize', fontsize-10)
 else
-    legend({"Conditionning"}, 'Location', 'best')
+    legend({"Conditionning"}, 'Location', 'best', 'FontSize', fontsize-10)
 end
 
 % Display the title

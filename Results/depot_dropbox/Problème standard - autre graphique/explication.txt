@@ -1,0 +1,14 @@
+Deux problèmes ont été traités, nsic2 et small009. Les graphiques présents sont :
+-l’évolution des valeurs propres pour les quatre formulations, avec les bornes pour K2.5 ;
+-la vérification des bornes de la propriété 1 ;
+-la vérification des bornes du théorème 2 (avec une ou plusieurs méthodes) ;
+-le graphique de l’évolution du conditionnement
+-le graphique de l’évolution du résidu
+
+Le graphique de l’évolution des valeurs propres pour chaque formulation permet de comparer un peu comment varie l’étendu des valeurs propres (ce qui correspond au conditionnement).
+
+La vérification de la propriété 1 est permet de comparer théorème 1 et propriété 1. De même pour le théorème 2. Toutes les méthodes de détection des contraintes actives et inactives sont illustrées.
+
+Le graphique du conditionnement permet de comparer la stabilité de chaque formulation.
+
+Le graphique du résidu n’est pas très bien dans le sens où la seule valeur en relation avec le résidu que j’ai trouvé est o.mu. Si celui-ci suit la même évolution à partir d’un certain moment, il lui est toujours inférieur d’une valeur relativement stable. Je suppose donc qu’il y a un facteur multiplicateur entre mu et la limite du résidu, mais je ne sais pas lequel pour l’instant.

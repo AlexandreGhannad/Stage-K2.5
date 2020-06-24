@@ -20,7 +20,7 @@ plot(iter1, "k.", "MarkerSize", 30)
 hold on
 plot(iter2, ".", "MarkerSize", 20, "Color", [0 0.4470 0.7410])
 plot(iter3, ".", "MarkerSize", 10, "Color", [0.8500 0.3250 0.0980])
-legend(formulation)
+legend(formulation, 'FontSize', fontsize-10)
 ylabel("Iteration")
 title("Comparison of iteration (" + method + ")");
 %% Time
@@ -32,7 +32,7 @@ plot(time1, "k.", "MarkerSize", 15, "Color", [0.4660 0.6740 0.1880])
 hold on
 plot(time2, ".", "MarkerSize", 15, "Color", [0 0.4470 0.7410])
 plot(time3, ".", "MarkerSize", 15, "Color", [0.8500 0.3250 0.0980])
-legend(formulation)
+legend(formulation, 'FontSize', fontsize-10)
 ylabel("Time")
 title("Comparison of execution time (" + method + ")");
 %% Residu
@@ -44,7 +44,7 @@ plot(comp_res1, "k.", "MarkerSize", 30)
 hold on
 plot(comp_res2, ".", "MarkerSize", 20, "Color", [0 0.4470 0.7410])
 plot(comp_res3, ".", "MarkerSize", 10, "Color", [0.8500 0.3250 0.0980])
-legend(formulation)
+legend(formulation, 'FontSize', fontsize-10)
 ylabel("Complementary residu")
 title("Comparison of execution time (" + method + ")");
 %% Reason of arrest
@@ -56,7 +56,7 @@ plot(reason1, "k.", "MarkerSize", 30)
 hold on
 plot(reason2, ".", "MarkerSize", 20, "Color", [0 0.4470 0.7410])
 plot(reason3, ".", "MarkerSize", 10, "Color", [0.8500 0.3250 0.0980])
-legend(formulation)
+legend(formulation, 'FontSize', fontsize-10)
 ylabel("Reason of arrest")
 title("Comparison of execution time (" + method + ")");
 

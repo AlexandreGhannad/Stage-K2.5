@@ -1,0 +1,1 @@
+no trouve ici le graphique de performance comparant les 4 formulations. Les couleurs sont normalement les mêmes que dans le dossier "Temps d'exécution"

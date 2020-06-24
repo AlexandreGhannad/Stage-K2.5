@@ -1,0 +1,11 @@
+Il y a trois dossiers nommés selon les formulations comparées. On trouve à chaque fois 8 graphiques. Les 4 premiers et les 4 suivants se distinguent par l’ordonnancement. Les 4 premiers sont ordonnés selon les temps d’exécution de K2.5. Les 4 suivants sont ordonnés selon la taille des problèmes
+
+Le premier graphique et le second ont les mêmes valeurs, toutefois le second ajoute des lignes pour plus de visibilité de l’évolution de chaque formulation. Les temps d’exécution de la formulation K2.5 sont ordonnés, et on utilise ensuite la même permutation pour ordonner les temps de chaque formulation. 
+
+Le troisième graphique ne garde que les meilleurs et pires temps du graphique 1 pour plus de lisibilité. Les symboles et couleurs sont gardées.
+
+Le quatrième graphique oppose deux à deux chaque formulation. Sur certains graphiques, la formulation K2.5 est absente. On ordonne alors selon la première formulation dans le titre (par exemple, si l’on a K3.5 vs K2, on ordonne selon K3.5). L’ordonnancement change, mais uniquement pour une raison de visibilité, les mêmes problèmes sont utilisés.
+
+Les graphiques 5 à 8 sont similaires, toutefois l’ordonnément est toujours selon la taille du problème.
+
+Les dossiers avec seulement 3 formulations sont là pour avoir des graphiques plus clairs (3 formulations au lieu de 4 permettent d’avoir les deux premiers graphiques plus lisibles).

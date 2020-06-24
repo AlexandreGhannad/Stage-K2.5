@@ -4,7 +4,7 @@
 % given.
 
 function fig = show_residu(residu, evolution_mu, d1, d2)
-fontsize = 30;
+fontsize = 35;
 fig = figure();
 set(fig, "WindowState", "maximized")
 semilogy(residu, "k.")

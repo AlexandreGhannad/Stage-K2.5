@@ -1,0 +1,3 @@
+Un profile d eperformance a été réalisé avec le conditionnement. Le conditionnement choisi est celui de la matrice o.M pour la dernière itération lors de la résolution d'un problème. Les problèmes employés sont tous ceux linéaire et quadratique disponible, à l'exception de cre-c.mps et qforbran.qps.
+
+Malgré l'augmetation du nombre d'itération et le calcul de plus de valeurs propres, certain conditionnement n'ont pas pu être calculé (j'ai utilisé le calcul par rapport entre la plus grande et la plus petite valeurs propres), doù le fait que toutes les courbes n'atteignent pas 1.

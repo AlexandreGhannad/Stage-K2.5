@@ -1,0 +1,11 @@
+Le PDF "eigenvalues_all_linear_problems" contient le graphique des valeurs propres et bornes de tous les problèmes linéaires (si vous voulez en regarder quelques-uns). Il n’a pas pour but d’être dans l’article (ou sinon en annexe), mais de pouvoir sélectionner d’autre problèmes si vous le voulez.
+
+"Problème singulier -variation de la régularisation" contient les graphiques du problème qbrandy (problème singulier ne respectant pas la LICQ) avec variation de la valeur de d2.
+
+"Problème standard – autre graphique" contient les dossiers des problèmes nsic2 et small009. Les graphiques sont ceux de valeur propre des différentes formulations, de comparaison du conditionnement, de l’évolution du résidu et ceux du théorème 2 et de la proposition 1. Les graphiques se font tous avec la même régularisation.
+
+"Problème standard – variation de la régularisation" contient les graphiques de valeurs propres et bornes des problèmes nsic2 et small009 en faisant varier d1 et d2.
+
+"temps d’exécution" contient les graphiques de comparaison des temps d’exécution.
+
+"temps d’exécution – graphique de performance" contient le graphique de performance comparant les temps d’exécution.

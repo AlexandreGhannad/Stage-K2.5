@@ -23,11 +23,20 @@ classdef LDL < handle
             % Use MA57 via Matlab's sparse ldl.
             % MA57 uses multiple cores if available.
             thresh = 0;      % tells MA57 to keep its sparsity-preserving order
-            [o.L, D, P, S] = ldl(o.M, thresh);
-            if nnz(D) ~= size(o.M, 1);
-                error('[L, D, P, S] = ldl(K, 0) gave non-diagonal D')
+            if o.d2 ~= 0
+                [o.L, D, P, S] = ldl(o.M, thresh);
+                if nnz(D) ~= size(o.M, 1);
+                    error('[L, D, P, S] = ldl(K, 0) gave non-diagonal D')
+                end
+                o.sol = S * (P * (o.L' \ (D \ (o.L \ (P' * (S * o.rhs))))));
+            else
+                [o.L, D, P, S] = ldl(o.M);
+                o.sol = S * (P * (o.L' \ (D \ (o.L \ (P' * (S * o.rhs))))));
             end
-            o.sol = S * (P * (o.L' \ (D \ (o.L \ (P' * (S * o.rhs))))));
+            
+%             [o.L, D] = ldlt(o.M);
+%             o.sol = o.L' \ (D \ (o.L\ o.rhs));
+            
         end
 
         function Print_results(o)
