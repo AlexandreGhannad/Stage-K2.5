@@ -8,5 +8,9 @@ orient(fig, "landscape")
 set(fig,'PaperSize',[45 25], "WindowState", "maximized"); %set the paper size to what you want
 % print(fig, filename,'-dpdf', "-r200")
 % print(fig, filename,'-dpdf', "-r800")
+
+% fig.PaperUnits = 'centimeters';
+% fig.PaperPosition = [0 0 29.7 21];
+% set(fig, 'PaperPositionMode', 'auto');
 print(fig, '-depsc2', filename+".eps");
 end

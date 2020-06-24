@@ -6,7 +6,12 @@
 function save_figure_pdf(fig, filename)
 orient(fig, "landscape")
 set(fig, "WindowState", "maximized"); %set the paper size to what you want
-print(fig, filename,'-dpdf', "-r200")
+
+% fig.PaperUnits = 'centimeters';
+% fig.PaperPosition = [0 0 29.7 21];
+% set(fig, 'PaperPositionMode', 'auto');
+
+print(fig, filename,'-dpdf', "-r200", "-fillpage")
 % print(fig, filename,'-dpdf', "-r800")
 % print(fig, '-depsc2', filename+".eps");
 end
