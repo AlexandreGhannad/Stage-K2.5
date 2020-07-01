@@ -6,7 +6,6 @@
 function save_figure_pdf(fig, filename)
 orient(fig, "landscape")
 set(fig, "WindowState", "maximized"); %set the paper size to what you want
-
 % fig.PaperUnits = 'centimeters';
 % fig.PaperPosition = [0 0 29.7 21];
 % set(fig, 'PaperPositionMode', 'auto');

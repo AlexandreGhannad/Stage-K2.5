@@ -12,8 +12,8 @@ fontsize = 35;
 fig = figure();
 set(fig, "WindowState", "maximized")
 bisemilogy(eigenvalue)
-xlabel("Iteration", 'FontSize', fontsize)
-ylabel("Eigenvalues", 'FontSize', fontsize)
+xlabel("Iteration", 'FontSize', fontsize-10)
+ylabel("Eigenvalues", 'FontSize', fontsize-10)
 if exist("d1") & exist("d2")
     title(name_problem + " "+formulation+", d1 = " + sprintf("%7.1e", d1) + ", d2 = " + sprintf("%7.1e", d2), 'FontSize', fontsize)
 elseif exist("d1")

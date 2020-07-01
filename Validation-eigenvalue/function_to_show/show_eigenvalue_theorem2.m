@@ -52,8 +52,8 @@ if o.check_limits
     ind = [1 2 3 4 5];
     bisemilogy_general(data, specs, ind, windows);
     
-    xlabel("Iteration", 'FontSize', fontsize)
-    ylabel("Eigenvalues and bounds", 'FontSize', fontsize)
+    xlabel("Iteration", 'FontSize', fontsize-10)
+    ylabel("Eigenvalues and bounds", 'FontSize', fontsize-10)
     
     n = length(eigenvalue);    
     if exist("d1") & exist("d2")
@@ -112,8 +112,8 @@ else
     ind = [1 2 3 4 5];
     bisemilogy_general(data, specs, ind, windows);
         
-    xlabel("Iteration", 'FontSize', fontsize)
-    ylabel("Eigenvalues and bounds", 'FontSize', fontsize)
+    xlabel("Iteration", 'FontSize', fontsize-10)
+    ylabel("Eigenvalues and bounds", 'FontSize', fontsize-10)
     legend({"Inner bounds", "Outer bounds", "Eigenvalues"}, 'Location', 'best', 'FontSize', fontsize)
     
     n = length(eigenvalue);    

@@ -45,8 +45,8 @@ if o.check_limits
     ind = [1 2 3 4 5];
     bisemilogy_general(data, specs, ind, windows);
     
-    xlabel("Iteration", 'FontSize', fontsize)
-    ylabel("Eigenvalues and bounds", 'FontSize', fontsize)
+    xlabel("Iteration", 'FontSize', fontsize-10)
+    ylabel("Eigenvalues and bounds", 'FontSize', fontsize-10)
     n = length(eigenvalue);
     if exist("d1") & exist("d2")
         title("Property 1:"+name_problem+", size="+num2str(n)+", (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
@@ -66,16 +66,16 @@ if o.check_limits
     semilogy(sigma_min, "LineWidth", 2, "Color", [0 1 0])
     semilogy(delta, "LineWidth", 2, "Color", [0.9290 0.6940 0.1250])
     
-    xlabel("Iteration", 'FontSize', fontsize)
-    ylabel("Intern values of the bounds", 'FontSize', fontsize)
-    legend({"lambda max", "lambda min", "sigma max", "sigma min", "delta"}, 'Location', 'best', 'FontSize', fontsize)
+    xlabel("Iteration", 'FontSize', fontsize-10)
+    ylabel("Intern values of the bounds", 'FontSize', fontsize-10)
+    legend({"lambda max", "lambda min", "sigma max", "sigma min", "delta"}, 'Location', 'best', 'FontSize', fontsize-10)
     
 else
     % Plot Eigenvalue
     bisemilogy(eigenvalue, limit)
     
-    xlabel("Iteration", 'FontSize', fontsize)
-    ylabel("Eigenvalues and bounds", 'FontSize', fontsize)
+    xlabel("Iteration", 'FontSize', fontsize-10)
+    ylabel("Eigenvalues and bounds", 'FontSize', fontsize-10)
     
     n = length(eigenvalue);
     if exist("d1") & exist("d2")

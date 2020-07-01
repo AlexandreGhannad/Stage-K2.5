@@ -10,8 +10,8 @@ set(fig, "WindowState", "maximized")
 semilogy(residu, "k.")
 hold on
 semilogy(evolution_mu, "b")
-xlabel("Iteration", 'FontSize', fontsize)
-ylabel("Complementary residu", 'FontSize', fontsize)
+xlabel("Iteration", 'FontSize', fontsize-10)
+ylabel("Complementary residu", 'FontSize', fontsize-10)
 
 if exist("d1") & exist("d2")
     title("Evolution of the complementary residu, (d1 = " + sprintf("%7.1e", d1) + "), (d2 = " + sprintf("%7.1e", d2) + ")", 'FontSize', fontsize)
