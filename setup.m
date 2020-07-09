@@ -18,6 +18,8 @@ p = genpath(fullfile(pdcoo_home, 'Problems'));
 addpath(p);
 p = genpath(fullfile(pdcoo_home, 'Validation-eigenvalue'));
 addpath(p);
+p = genpath(fullfile(pdcoo_home, 'space_problem'));
+addpath(p);
 if exist('Variants', 'dir') ~= 7
     mkdir('Variants');
 end
