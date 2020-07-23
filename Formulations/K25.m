@@ -83,14 +83,14 @@ classdef K25 < handle
             
             w = w - r3 + r4;
             
-            if o.nfix > 0 && o.explicitA
-                [ih, jh, vh] = find(o.H);
-                for k = o.fix'
-                    vh(ih == k & ih ~= jh) = 0;
-                    vh(jh == k & ih ~= jh) = 0;
-                end
-                o.H = sparse(ih, jh, vh);
-            end
+%             if o.nfix > 0 && o.explicitA
+%                 [ih, jh, vh] = find(o.H);
+%                 for k = o.fix'
+%                     vh(ih == k & ih ~= jh) = 0;
+%                     vh(jh == k & ih ~= jh) = 0;
+%                 end
+%                 o.H = sparse(ih, jh, vh);
+%             end
             
             if ~o.explicitA
                 o.M = opFunction(o.m + o.n, o.m + o.n, @opK25);

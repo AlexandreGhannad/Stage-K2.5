@@ -71,8 +71,8 @@ elseif choice_list_problem == 4
     list_problem = list_problem(3:end);
 elseif choice_list_problem == 5
     % Personal list to change
-    path_problem = pwd + "/";
-    list_problem ={'spaceprob_150_35.mps'};
+    path_problem = pwd + "/space_problem/";
+    list_problem ={'space_problem_n=25_m=15.mps'};
     warning("Precise your path of the problem if you use your personal list")
 end
 

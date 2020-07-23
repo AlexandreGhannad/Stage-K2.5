@@ -1,4 +1,4 @@
-function FFT = test(F ,m, n, rho1)
+function FFT = test(F ,m, n, rho1, transpose)
 N = 2*m*n/rho1;
 
 wN = exp(2*pi*1i/N);

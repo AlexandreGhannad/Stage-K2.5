@@ -198,16 +198,21 @@ classdef pdcoO < handle
         % intervals of theorem 2, = 0 else
         method % Specific to K2.5, to use the theorem 2
         features_theorem2;
-        n_theorem2 % Options for the method broken_lines and power_lines 
-        % of the function detect_active_inactive_constraints. 
+        n_theorem2 % Options for the method broken_lines and power_lines
+        % of the function detect_active_inactive_constraints.
         
         check_property % Input specific for K2.5 :
         % = 1 if you want to verify that eigenvalues belongs to theoritical
         % intervals of theorem 2, =0 else
         features_property;
         
+        mem
         xmem
         zmem
+        objmem
+        mask
+        check_mask
+        
         
         digit_number % allow to use more digits to calculate eigenvalues
         % useful for non-LICQ/ill conditionned problem with low
@@ -446,6 +451,19 @@ classdef pdcoO < handle
                 warning("To increase precision on the calculation of the eigenvalues, pdcoO uses symbolic computation. It increases greatly the time of calcul, use it only if you work on ill-conditionned problem with small régulation")
             else
                 o.digit_number = [];
+            end
+            
+            if isfield(options, 'mem')
+                o.mem = options.mem;
+            else
+                o.mem = 0;
+            end
+            
+            if isfield(options, 'mask')
+                o.mask = options.mask;
+                o.check_mask = 1;
+            else
+                o.check_mask = 0;
             end
             
         end
@@ -821,6 +839,11 @@ classdef pdcoO < handle
             end
             
             % Main loop.
+            
+            o.xmem = o.x;
+            o.zmem = o.z;
+            o.objmem = o.obj;
+            
             while ~converged
                 o.PDitns = o.PDitns + 1;
                 
@@ -836,7 +859,6 @@ classdef pdcoO < handle
                     o.eigenvalue = [o.eigenvalue eigs(o.M, size(o.M,1))];
                 end
                 
-                
                 % Add to save the evolution of the conditionning
                 if o.check_cond & not(isempty(o.eigenvalue))
                     lambda_min = min(abs(o.eigenvalue(:,end)));
@@ -847,7 +869,6 @@ classdef pdcoO < handle
                     lambda_max = max(abs(eigs(o.M, min(min(size(o.M)),100), "largestabs")));
                     o.cond = [o.cond lambda_max/lambda_min ];
                 end
-                
                 
                 if o.inform == 4
                     break
@@ -887,6 +908,14 @@ classdef pdcoO < handle
                     o.y = o.y + stepz * o.dy;
                     o.x(o.zlo) = o.x1(o.zlo);
                     o.x(o.zup) = -o.x2(o.zup);
+                    
+                    if o.check_mask
+                        tmp = o.x(1:length(o.mask));
+                        tmp(o.mask == 0) = 0;
+                        o.x(1:length(o.mask)) = tmp;
+                        %                     o.x(1:length(o.mask)) = o.x(1:length(o.mask)).*o.mask;
+                    end
+
                     
                     [o.obj, o.grad, o.hess] = o.slack.obj(o.x * o.beta);
                     if o.diagHess
@@ -932,7 +961,7 @@ classdef pdcoO < handle
                         stepx = o.step;
                     elseif o.nf < o.maxf
                         stepx = stepx / 2;
-                    end;
+                    end
                     stepz = stepx;
                 end
                 
@@ -941,6 +970,13 @@ classdef pdcoO < handle
                     o.nfail = o.nfail + 1;
                 else
                     o.nfail = 0;
+                end
+                
+                if o.check_mask
+                    tmp = o.x(1:length(o.mask));
+                    tmp(o.mask == 0) = 0;
+                    o.x(1:length(o.mask)) = tmp;
+                    %                     o.x(1:length(o.mask)) = o.x(1:length(o.mask)).*o.mask;
                 end
                 
                 % Set convergence measures.
@@ -988,13 +1024,21 @@ classdef pdcoO < handle
                     end
                     o.inform = 2;
                     break
-                elseif o.step <= 1.0e-10
+                elseif o.step <= 1.0e-16
                     if o.Prilev > 0
                         fprintf(o.file_id, '\nStep lengths too small');
                     end
                     o.inform = 3;
                     break
                 else
+                    
+                    if o.check_mask
+                        tmp = o.x(1:length(o.mask));
+                        tmp(o.mask == 0) = 0;
+                        o.x(1:length(o.mask)) = tmp;
+                        %                     o.x(1:length(o.mask)) = o.x(1:length(o.mask)).*o.mask;
+                    end
+                    
                     
                     % Reduce mu, and reset certain residuals.
                     stepmu = min(stepx, stepz);
@@ -1015,8 +1059,12 @@ classdef pdcoO < handle
                     complementarity_resids(o);
                     merit(o);
                     Reset_param(o);
-                    
-                    
+                end
+                
+                if o.mem
+                    o.xmem = [o.xmem o.x];
+                    o.zmem = [o.zmem o.z];
+                    o.objmem = [o.objmem o.obj];
                 end
             end
             %---------------------------------------------------------------------

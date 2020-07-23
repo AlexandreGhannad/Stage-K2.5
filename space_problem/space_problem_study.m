@@ -3,11 +3,14 @@ close all
 clear all
 clc
 %%
-rho0 = 0;
-rho1 = 1;
+rho0 = 4;
+rho1 = 20;
 epsilon = 10^-5;
 
 n = 100;
+m = 35;
+
+
 dx = 1/(2*n);
 dy = dx;
 j1 = transpose(0.5:n-0.5);
@@ -27,7 +30,6 @@ Pupil = [Xs(col) Ys(row)];
 
 F = ones(n).*mask;
 
-m = 35;
 
 j2 = transpose(0:m);
 Xis = j2*rho1/m;
@@ -90,84 +92,46 @@ subplot(122)
 surf(real(res2))
 colormap("gray")
 colorbar
+%%
+[I,J] = ndgrid(1:n,1:n);
+I = I/n;
+J = J/n;
+F = double( (I-1/2).^2 + (J-1/2).^2 <= (1/2)^2);
+
+n2 = 2^nextpow2(n);
+m2 = 2^nextpow2(m);
+Ftmp = zeros(n2);
+Ftmp(1:n, 1:n) = F;
+Fhat = fastpartialfouriertransform(fastpartialfouriertransform(Ftmp,n2,m2).',n2,m2).' ;
+Fhat = Fhat(1:m,1:m);
+
+
 %% Execution time comparison
 tic
-for i = 1 : 10
+for i = 1 : 100
     clear res1
     res1 = fhat(F,m,n, Xs, Etas, mask);
 end
 t1=toc
 
 tic
-for i = 1 : 10
+for i = 1 : 100
     clear res2
     res2 = test(Ft ,m, n, rho1);
 end
 t2=toc
 
+n2 = 2^nextpow2(n);
+m2 = 2^nextpow2(m);
+Ftmp = zeros(n2);
+Ftmp(1:n, 1:n) = F;
 
-%% Test
-% %%
-% F = Ft;
-% N2 = 2*m*n/rho1;
-% X1 = zeros(N2,N2);
-% X2 = zeros(N2,N2);
-% X3 = zeros(N2,N2);
-% X4 = zeros(N2,N2);
-% 
-% X1(1:n,1:n+1) = F(n+2:end,1:n+1);
-% X2(1:n,1:n)  = F(n+2:end,n+2:end);
-% X3(1:n+1,1:n+1)  = F(1:n+1, 1:n+1);
-% X4(1:n+1,1:n)  = F(1:n+1 , n+2:end);
-% % X1= sparse(X1);
-% % X2= sparse(X2);
-% % X3= sparse(X3);
-% % X4= sparse(X4);
-% 
-% 
-% % figure()
-% % subplot(221)
-% % surf(X1)
-% % subplot(222)
-% % surf(X2)
-% % subplot(223)
-% % surf(X3)
-% % subplot(224)
-% % surf(X4)
-% wN= exp(2*pi*1i/N2);
-% % M = 2*m+1;
-% % Y1 = (1/N2^2)*ifft( (wN*fft(X1 , M)).', M).';
-% % Y2 = ifft2(X2, M, M);
-% % Y3 = (1/N2^2)*fft2(X3, M, M);
-% % Y4 = (1/N2^2)*fft( (wN*ifft(X1 , M)).', M).';
-% %%
-% N2 = 2*m*n/rho1;
-% Ftmp = zeros(N2);
-% wN = exp(2*pi*1i/N2);
-% t = F;
-% W = zeros(2*n+1);
-% P = zeros(2*n+1);
-% for j = 1:2*n+1
-%     for k = 1:2*n+1
-%         t(j,k) = t(j,k) * wN^( (j-1)+(k-1));
-%         W(j,k) = wN^( (j-1)+(k-1));
-%         P(j,k) = (j-1)+(k-1);
-%     end
-% end
-% 
-% Ftmp(1:2*n+1, 1:2*n+1) = t;
-% tmp = ifft2(Ftmp);
-% tmp = ifftshift(tmp);
-% tmp = tmp(N2/2-m:N2/2+m, N2/2-m:N2/2+m);
-% 
-% W = zeros(2*m+1);
-% for p=-m:m
-%     for q=-m:m
-%         W(p+m+1, q+m+1) = wN^(-n*(p+q));
-%     end
-% end
-% 
-% tmp = tmp.*W;
+tic
+for i = 1 : 100
+    clear res3
+res3 = fastpartialfouriertransform(fastpartialfouriertransform(Ftmp,n2,m2).',n2,m2).' ;
+end
+t3=toc
 
 
 
