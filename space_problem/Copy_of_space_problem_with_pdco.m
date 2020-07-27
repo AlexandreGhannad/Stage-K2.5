@@ -279,18 +279,23 @@ subplot(122)
 surf(Fhat)
 
 
-%% Save
-% save("Fpdcoo", "F")
-% save("Fhatpdcoo", "Fhat")
-%%
+
+%% Reconstruction with optimization toolbox
+rho0 = 4;
+rho1 = 20;
+epsilon = 10^-5;
+
+n = 20;
+m = 10;
+
 dx = 1/(2*n);
 dy = dx;
-j1 = transpose(0:n);
+j1 = transpose(0.5:n-0.5);
 Xs = j1/(2*n);
 Ys = Xs;
-mask = zeros(n+1);
-for a = 1:n+1
-    for b = 1:n+1
+mask = zeros(n);
+for a = 1:n
+    for b = 1:n
         tmp2 = Xs(a)^2 + Ys(b)^2;
         if tmp2 < 0.25
             mask(a,b) = 1;
@@ -300,7 +305,8 @@ end
 [row,col] = ind2sub(size(mask),find(mask==1));
 Pupil = [Xs(col) Ys(row)];
 
-F2 = ones(n+1).*mask;
+F = ones(n).*mask;
+
 
 j2 = transpose(0:m);
 Xis = j2*rho1/m;
@@ -324,75 +330,46 @@ end
 %% Creation optim prob
 prob = optimproblem;
 prob.ObjectiveSense = "maximize";
-F2 = optimvar("F2", n+1,n+1);
-Fhat2 = optimvar("Fhat2", m+1,m+1);
+F = optimvar("F", n,n);
+Fhat = optimvar("Fhat", m+1,m+1);
 
-prob.Objective = ones(1,(n+1)*(n+1)) * reshape( mask.*F2, [(n+1)*(n+1),1]);
+prob.Objective = ones(1,n*n) * reshape( mask.*F, [n*n,1]);
 
-cons1 = F2 >= 0;
-cons2 = F2 <= 1;
+cons1 = F >= 0;
+cons2 = F <= 1;
 prob.Constraints.cons1 = cons1;
 prob.Constraints.cons2 = cons2;
 
-cons3 = Fhat2.*mask2 >= -epsilon*Fhat2(1,1);
-cons4 = Fhat2.*mask2 <= epsilon*Fhat2(1,1);
+cons3 = Fhat.*mask2 >= -epsilon*Fhat(1,1);
+cons4 = Fhat.*mask2 <= epsilon*Fhat(1,1);
 prob.Constraints.cons3 = cons3;
 prob.Constraints.cons4 = cons4;
 
-cons5 = Fhat2 == fhat(F2,m,n, Xs, Etas, mask);
+cons5 = Fhat == fhat(F,m,n, Xs, Etas, mask);
 prob.Constraints.cons5 = cons5;
 %% Solve
 [sol,fval,exitflag] = solve(prob);
-f = sol.F2;
-fh = sol.Fhat2;
-%% Format results
-res = zeros(2*n+1, 2*n+1);
-res(1:n, 1:n) = f(end:-1:2 , end:-1:2);
-res(1:n, n+1:end) = f(end:-1:2 , :);
-res(n+1:end, 1:n) = f(: , end:-1:2);
+f = sol.F;
+fh = sol.Fhat;
+tmp = fhat(f,m,n, Xs, Etas, mask);
+disp("gap between theoritical fhat and real fh")
+disp(norm(fh-tmp))
+
+res = zeros(2*n, 2*n);
+res(1:n, 1:n) = f(end:-1:1,end:-1:1);
+res(1:n, n+1:end) = f(end:-1:1,:);
+res(n+1:end, 1:n) = f(:,end:-1:1);
 res(n+1:end, n+1:end) = f(:,:);
 
-fh = fhat(f,m,n, Xs, Etas, mask);
-
-res2 = zeros(2*m+1, 2*m+1);
-res2(1:m, 1:m) = fh(end:-1:2 , end:-1:2);
-res2(1:m, m+1:end) = fh(end:-1:2 , :);
-res2(m+1:end, 1:m) = fh(: , end:-1:2);
-res2(m+1:end, m+1:end) = fh(:,:);
+resh = zeros(2*m+1, 2*m+1);
+resh(1:m, 1:m) = fh(end:-1:2,end:-1:2);
+resh(1:m, m+1:end) = fh(end:-1:2,:);
+resh(m+1:end, 1:m) = fh(:,end:-1:2);
+resh(m+1:end, m+1:end) = fh(:,:);
 
 
-%% fig 2
-figure();
-subplot(121)
-surf(res)
-subplot(122)
-surf(res2)
-%%
-N  = 2*m*n/rho1;
-% res3 = own_fft2(res,m,N,1);
-res3 = real(fft_one_step(fft_one_step(res,m,N)', m, N)');
-% res2=res2/norm(res2);
-% res3=res3/norm(res3);
 
-figure();
-subplot(121)
-surf(res2)
-subplot(122)
-surf(res3)
 
-figure();
-subplot(121)
-surf(res2-res3)
-subplot(122)
-surf(abs(res2-res3))
-
-figure();
-subplot(121)
-surf(log10(abs(res2)))
-colorbar
-subplot(122)
-surf(log10(abs(res3)))
-colorbar
 
 
 

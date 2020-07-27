@@ -909,12 +909,12 @@ classdef pdcoO < handle
                     o.x(o.zlo) = o.x1(o.zlo);
                     o.x(o.zup) = -o.x2(o.zup);
                     
-                    if o.check_mask
-                        tmp = o.x(1:length(o.mask));
-                        tmp(o.mask == 0) = 0;
-                        o.x(1:length(o.mask)) = tmp;
-                        %                     o.x(1:length(o.mask)) = o.x(1:length(o.mask)).*o.mask;
-                    end
+%                     if o.check_mask
+%                         tmp = o.x(1:length(o.mask));
+%                         tmp(o.mask == 0) = 0;
+%                         o.x(1:length(o.mask)) = tmp;
+%                         %                     o.x(1:length(o.mask)) = o.x(1:length(o.mask)).*o.mask;
+%                     end
 
                     
                     [o.obj, o.grad, o.hess] = o.slack.obj(o.x * o.beta);
@@ -972,12 +972,12 @@ classdef pdcoO < handle
                     o.nfail = 0;
                 end
                 
-                if o.check_mask
-                    tmp = o.x(1:length(o.mask));
-                    tmp(o.mask == 0) = 0;
-                    o.x(1:length(o.mask)) = tmp;
-                    %                     o.x(1:length(o.mask)) = o.x(1:length(o.mask)).*o.mask;
-                end
+%                 if o.check_mask
+%                     tmp = o.x(1:length(o.mask));
+%                     tmp(o.mask == 0) = 0;
+%                     o.x(1:length(o.mask)) = tmp;
+%                     %                     o.x(1:length(o.mask)) = o.x(1:length(o.mask)).*o.mask;
+%                 end
                 
                 % Set convergence measures.
                 o.regterm = norm(o.d1.*o.x)^2 + norm(o.d2.*o.y)^2;
@@ -1032,12 +1032,12 @@ classdef pdcoO < handle
                     break
                 else
                     
-                    if o.check_mask
-                        tmp = o.x(1:length(o.mask));
-                        tmp(o.mask == 0) = 0;
-                        o.x(1:length(o.mask)) = tmp;
-                        %                     o.x(1:length(o.mask)) = o.x(1:length(o.mask)).*o.mask;
-                    end
+%                     if o.check_mask
+%                         tmp = o.x(1:length(o.mask));
+%                         tmp(o.mask == 0) = 0;
+%                         o.x(1:length(o.mask)) = tmp;
+%                         %                     o.x(1:length(o.mask)) = o.x(1:length(o.mask)).*o.mask;
+%                     end
                     
                     
                     % Reduce mu, and reset certain residuals.
