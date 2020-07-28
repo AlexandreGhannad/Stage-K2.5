@@ -16,7 +16,7 @@ classdef K25 < handle
         end
         
         function y = opK25(x, ~)
-            I = ones(o.m);
+            I = eye(o.m);
             I(o.fix, o.fix) = 0;
             dx = x(1:o.n);
             dy = x(o.n+1:o.n+o.m);
