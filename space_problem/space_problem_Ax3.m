@@ -38,7 +38,7 @@ import model.slackmodel;
 options_pdco.file_id = 1;
 
 formulation1 = 'K25';
-solver = 'LDL';
+solver = 'MINRES';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
 % formulation2 = 'K35';
@@ -123,8 +123,8 @@ check_results = 0;
 save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\";
 %% Set up for space problem
-n = 50;
-m = 35;
+n = 20;
+m = 10;
 rho0 = 4;
 rho1 = 20;
 epsilon = 1e-5;

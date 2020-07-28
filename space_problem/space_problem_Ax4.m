@@ -123,8 +123,8 @@ check_results = 0;
 save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\";
 %% Set up for space problem
-n = 50;
-m = 35;
+n = 20;
+m = 10;
 rho0 = 4;
 rho1 = 20;
 epsilon = 1e-5;
@@ -139,7 +139,8 @@ F(Pupil<0.25) = 1;
 F(Pupil>=0.25) = 0;
 mask = F;
 
-Xis = (-m:m)'*rho1/m;
+Xis = ((0.5-m):(m-0.5))'*rho1/m;
+% Xis = ((0.5-m):(m-0.5))'*rho1/m;
 Etas = Xis;
 
 ComplexMap = (Xis.^2)' + Etas.^2;
@@ -148,6 +149,33 @@ DarkHole = double(ComplexMap>=rho0^2).*double(ComplexMap<=rho1^2).*double(abs(I)
 
 K = cos(2*pi*Etas*Xs')/(2*n);
 Fhat = K*F*K'; 
+
+Xs = ((0.5-n):(n-0.5))'/(2*n);
+Ys=Xs;
+Etas = (-m:m)'*rho1/m;
+Xis = Etas;
+K = cos(2*pi*Etas*Xs')/(2*n);
+Fhat = K*F*K';
+f=F(:);
+fh= Fhat(:);
+
+T = zeros( (2*m+1)^2, (2*n)^2);
+cpt = 1;
+
+for p = 1:2*n
+    for q = 1:2*n
+        for i = 1:2*m+1
+            for j = 1:2*m+1
+                x = Xs(p);
+                y = Ys(q);
+                eta = Etas(i);
+                xi = Xis(j);
+                T(cpt) = exp(2*pi*x*eta*1j)*exp(2*pi*y*xi*1j)/(2*n)^2;
+                cpt = cpt+1;
+            end
+        end
+    end
+end
 
 vecF = F(:);
 x0 = vecF;
@@ -176,7 +204,7 @@ cL = [cL2; cL3];
 cU = [cU2; cU3];
 
 name = "test";
-funhandle = @(x, mode) Ax4(x, n, m, rho1, epsilon, mode);
+funhandle = @(x, mode) Ax4(x, T, epsilon, mode);
 
 M1 = 2*(2*m+1)^2;
 N1 =  (2*n)^2;
@@ -234,17 +262,44 @@ figure()
 subplot(121)
 surf(F)
 colormap("pink")
+set(gca, "Zscale", "log")
 
 subplot(122)
 surf(Fhat)
 colormap("pink")
 
 
+%% Test creation T
+n = 2;
+m = 1;
+F = randn(2*n);
 
+Xs = ((0.5-n):(n-0.5))'/(2*n);
+Ys=Xs;
+Etas = (-m:m)'*rho1/m;
+Xis = Etas;
+K = cos(2*pi*Etas*Xs')/(2*n);
+Fhat = K*F*K';
+f=F(:);
+fh= Fhat(:);
 
+T = zeros( (2*m+1)^2, (2*n)^2);
+cpt = 1;
 
-
-
+for p = 1:2*n
+    for q = 1:2*n
+        for i = 1:2*m+1
+            for j = 1:2*m+1
+                x = Xs(p);
+                y = Ys(q);
+                eta = Etas(i);
+                xi = Xis(j);
+                T(cpt) = cos(2*pi*x*eta)*cos(2*pi*y*xi)/(2*n)^2;
+                cpt = cpt+1;
+            end
+        end
+    end
+end
 
 
 
