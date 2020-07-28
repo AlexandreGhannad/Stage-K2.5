@@ -123,8 +123,8 @@ check_results = 0;
 save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\";
 %% Set up for space problem
-n = 50;
-m = 35;
+n = 20;
+m = 10;
 rho0 = 4;
 rho1 = 20;
 epsilon = 1e-5;
@@ -145,9 +145,10 @@ Etas = Xis;
 ComplexMap = (Xis.^2)' + Etas.^2;
 [I,J]=meshgrid(Etas, Xis);
 DarkHole = double(ComplexMap>=rho0^2).*double(ComplexMap<=rho1^2).*double(abs(I)<=abs(J));
+surf(DarkHole)
 
 K = cos(2*pi*Etas*Xs')/(2*n);
-Fhat = K*F*K'; 
+Fhat = K*F*
 
 vecF = F(:);
 x0 = vecF;
@@ -176,10 +177,10 @@ cL = [cL2; cL3];
 cU = [cU2; cU3];
 
 name = "test";
-funhandle = @(x, mode) Ax4(x, n, m, rho1, epsilon, mode);
+funhandle = @(x, mode) Ax3(x, n, m, rho1, epsilon, mode);
 
-M1 = 2*(2*m+1)^2;
-N1 =  (2*n)^2;
+M1 = 2*(m+1)^2;
+N1 =  n^2;
 op = opFunction(M1, N1 ,funhandle);
 own_model = model.lpmodel_spot(name, x0, cL, cU, bL, bU, op, c);
 %% Load problem
@@ -225,8 +226,10 @@ fclose('all');
 %% Display graphics
 % x = o.x;
 x=o.xmem(:, end-1);
-vecF = x(1:(2*n)^2);
-F = reshape(vecF, [2*n 2*n]);
+vecF = x(1:n^2);
+F = reshape(vecF, [n n]);
+
+K = cos(2*pi*Etas*Xs')/(2*n);
 
 Fhat = K*F*K';
 
@@ -237,6 +240,28 @@ colormap("pink")
 
 subplot(122)
 surf(Fhat)
+colormap("pink")
+%% Display symmetrised graphics
+
+res = zeros(2*n, 2*n);
+res(1:n, 1:n) = F(end:-1:1 , end:-1:1);
+res(1:n, n+1:end) = F(end:-1:1,:);
+res(n+1:end, 1:n) = F(:,end:-1:1);
+res(n+1:end, n+1:end) = F(:,:);
+
+resh = zeros(2*m+2, 2*m+2);
+resh(1:m+1, 1:m+1) = Fhat(end:-1:1,end:-1:1);
+resh(1:m+1, m+2:end) = Fhat(end:-1:1,:);
+resh(m+2:end, 1:m+1) = Fhat(:,end:-1:1);
+resh(m+2:end, m+2:end) = Fhat(:,:);
+
+figure()
+subplot(121)
+surf(res)
+colormap("pink")
+
+subplot(122)
+surf(resh)
 colormap("pink")
 
 
