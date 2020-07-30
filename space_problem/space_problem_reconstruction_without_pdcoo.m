@@ -88,41 +88,36 @@ resh(1:m, 1:m) = fh(end:-1:2,end:-1:2);
 resh(1:m, m+1:end) = fh(end:-1:2,:);
 resh(m+1:end, 1:m) = fh(:,end:-1:2);
 resh(m+1:end, m+1:end) = fh(:,:);
-%%
+%% Display graphics
+figure()
+subplot(121)
+surf(f)
+colormap("pink")
 
-f = 30*randn(20);
+subplot(122)
+surf(fh)
+colormap("pink")
+%% Display symmetrised graphics
 res = zeros(2*n, 2*n);
-res(1:n, 1:n) = f(end:-1:1,end:-1:1);
+res(1:n, 1:n) = f(end:-1:1 , end:-1:1);
 res(1:n, n+1:end) = f(end:-1:1,:);
 res(n+1:end, 1:n) = f(:,end:-1:1);
 res(n+1:end, n+1:end) = f(:,:);
 
-mask = ones(size(f));
-fh = fhat(f,m,n, Xs, Etas, mask);
-Y1 = zeros(2*m+1, 2*m+1);
-Y1(1:m, 1:m) = fh(end:-1:2,end:-1:2);
-Y1(1:m, m+1:end) = fh(end:-1:2,:);
-Y1(m+1:end, 1:m) = fh(:,end:-1:2);
-Y1(m+1:end, m+1:end) = fh(:,:);
+resh = zeros(2*m+2, 2*m+2);
+resh(1:m+1, 1:m+1) = fh(end:-1:1,end:-1:1);
+resh(1:m+1, m+2:end) = fh(end:-1:1,:);
+resh(m+2:end, 1:m+1) = fh(:,end:-1:1);
+resh(m+2:end, m+2:end) = fh(:,:);
 
+figure()
+subplot(121)
+surf(res)
+colormap("pink")
 
-Y2 = real(fft_one_step(fft_one_step(res,m,N)', m, N)');
-err = abs(Y1/norm(Y1) - Y2/norm(Y2));
-
-figure
-subplot(221)
-surf(Y1)
-subplot(222)
-surf(Y2)
-subplot(223)
-surf(err)
-subplot(224)
-surf(err./abs(Y2/norm(Y2)))
-% set(gca, "Zscale", "log")
-% colormap("pink")
-% colorbar
-
-
+subplot(122)
+surf(resh)
+colormap("pink")
 
 
 

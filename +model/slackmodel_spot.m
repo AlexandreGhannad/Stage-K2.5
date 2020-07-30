@@ -1,4 +1,4 @@
-classdef slackmodel_spot < model.nlpmodel
+classdef slackmodel_spot < model.nlpmodel_spot
     % sous entend que le nlpmodel d entrée à un gradient des contraintes
     % de type opSpot
 
@@ -32,7 +32,7 @@ classdef slackmodel_spot < model.nlpmodel
          x0 = [ nlp.x0; c(constraints_I) ];
 
          % Instantiate from the base class.
-         self = self@model.nlpmodel(nlp.name, x0, cL, cU, bL, bU);
+         self = self@model.nlpmodel_spot(nlp.name, x0, cL, cU, bL, bU);
 
          % Identify the linear constraints.
          self.linear = nlp.linear;

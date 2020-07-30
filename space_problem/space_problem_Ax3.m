@@ -193,7 +193,8 @@ clc
 i=1;j=1;k=1;
 
 slack = model.slackmodel_spot(own_model);
-Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
+tmp = slack.gcon(slack.x0);
+Anorm = normest(tmp, 1.0e-3);
 
 % options_pdco.featol = 10^-32; 
 % options_pdco.OptTol = 10^-32;
@@ -206,7 +207,7 @@ options_pdco.zsize = max(norm(slack.gobj(slack.x0), inf) + sqrt(slack.n) * Anorm
 options_pdco.z0 = options_pdco.zsize * ones(slack.n, 1);
 options_pdco.y0 = zeros(slack.m, 1);
 options_pdco.mu0 = options_pdco.zsize;
-options_pdco.Maxiter = 300; % min(max(30, slack.n), 80);
+options_pdco.Maxiter = 50; % min(max(30, slack.n), 80);
 options_pdco.explicitA = 0;
 
 options_pdco.check_eigenvalue = check_eigenvalue;
@@ -228,25 +229,13 @@ o = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
 %% Solve
 o.solve;
 fclose('all');
-%% Display graphics
+%% Load results
 % x = o.x;
 x=o.xmem(:, end-1);
 vecF = x(1:n^2);
 F = reshape(vecF, [n n]);
-
 K = cos(2*pi*Etas*Xs')/(2*n);
-
 Fhat = K*F*K';
-
-figure()
-subplot(121)
-surf(F)
-colormap("pink")
-
-subplot(122)
-surf(Fhat)
-colormap("pink")
-%% Display symmetrised graphics
 
 res = zeros(2*n, 2*n);
 res(1:n, 1:n) = F(end:-1:1 , end:-1:1);
@@ -259,6 +248,19 @@ resh(1:m+1, 1:m+1) = Fhat(end:-1:1,end:-1:1);
 resh(1:m+1, m+2:end) = Fhat(end:-1:1,:);
 resh(m+2:end, 1:m+1) = Fhat(:,end:-1:1);
 resh(m+2:end, m+2:end) = Fhat(:,:);
+%% Display graphics
+
+
+figure()
+subplot(121)
+surf(F)
+colormap("pink")
+
+subplot(122)
+surf(Fhat)
+colormap("pink")
+%% Display symmetrised graphics
+
 
 figure()
 subplot(121)
@@ -271,7 +273,15 @@ colormap("pink")
 
 
 
+%%
 
+mode = 2;
+a = ones(2,4);
+b=a';
+c = 1:2;
+c=c';
+
+d = ((2-mode) * reshape(a, (2-mode)*size(a) + (mode-1)*size(b)) + (mode-1) * reshape(b, (2-mode)*size(a) + (mode-1)*size(b))  )* c
 
 
 

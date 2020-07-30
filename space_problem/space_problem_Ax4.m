@@ -128,6 +128,7 @@ m = 10;
 rho0 = 4;
 rho1 = 20;
 epsilon = 1e-5;
+N = 2*m*n/rho1;
 
 dx=1/(2*n);
 dy=dx;
@@ -267,42 +268,10 @@ set(gca, "Zscale", "log")
 subplot(122)
 surf(Fhat)
 colormap("pink")
+%%
 
 
-%% Test creation T
-n = 2;
-m = 1;
-F = randn(2*n);
-
-Xs = ((0.5-n):(n-0.5))'/(2*n);
-Ys=Xs;
-Etas = (-m:m)'*rho1/m;
-Xis = Etas;
-K = cos(2*pi*Etas*Xs')/(2*n);
-Fhat = K*F*K';
-f=F(:);
-fh= Fhat(:);
-
-T = zeros( (2*m+1)^2, (2*n)^2);
-cpt = 1;
-
-for p = 1:2*n
-    for q = 1:2*n
-        for i = 1:2*m+1
-            for j = 1:2*m+1
-                x = Xs(p);
-                y = Ys(q);
-                eta = Etas(i);
-                xi = Xis(j);
-                T(cpt) = cos(2*pi*x*eta)*cos(2*pi*y*xi)/(2*n)^2;
-                cpt = cpt+1;
-            end
-        end
-    end
-end
-
-
-
-
+Y1 = real(tf4(tf4(F,m,N)', m, N)');
+Y2 = real(tf4(tf4(Y1,n,N)', n, N)');
 
 

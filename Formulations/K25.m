@@ -15,16 +15,19 @@ classdef K25 < handle
             o.diagHess = false;
         end
         
-        function y = opK25(x, ~)
-            I = eye(o.m);
-            I(o.fix, o.fix) = 0;
+        function y = opK25(x, o, A)
+%             I = eye(o.m);
+%             I(o.fix, o.fix) = 0;
             dx = x(1:o.n);
             dy = x(o.n+1:o.n+o.m);
-            X = ones(size(X1s));
-            X(o.low, o.low) = X.* X1s(o.low, o.low);
-            X(o.upp, o.upp) = X.* X2s(o.upp, o.upp);
-            u = -o.H*dx + X*((I*o.A)'*dy);
-            v = ((I*o.A)*dx)*X + o.d2.^2 .* dy;
+%             X = ones(size(X1s));
+%             X(o.low, o.low) = X(o.low, o.low).* X1s(o.low, o.low);
+%             X(o.upp, o.upp) = X(o.upp, o.upp).* X2s(o.upp, o.upp);
+            if o.nfix ~= 0
+                A(:,o.fix) = 0;
+            end
+            u = -o.H*dx + A'*dy;
+            v = A*dx + o.d2.^2 .* dy;
             y = [u;v];
         end
         
@@ -95,7 +98,7 @@ classdef K25 < handle
 %             end
             
             if ~o.explicitA
-                o.M = opFunction(o.m + o.n, o.m + o.n, @opK25);
+                o.M = opFunction(o.m + o.n, o.m + o.n, @(x,mode) opK25(x,o, A));
             else
                 if o.nfix == 0
                     o.M = [ -o.H  A'
