@@ -92,16 +92,10 @@ classdef slackmodel_spot < model.nlpmodel_spot
          J = opFunction(self.m, self.n, J);
       end
       
-      function [Jprod, Jtprod] = gconprod_local(self, xs)
-         % J = self.gcon(x);
-         nI = length(find(self.nlp.cL ~= self.nlp.cU));
-         [Jxprod, Jxtprod] = self.nlp.gconprod_local(xs(~self.islack,:));
-         Js = sparse(self.m, nI);
-         Js(~self.nlp.iFix,:) = -speye(nI);
-         n = sum(~self.islack);
-         
-         Jprod = @(v) Jxprod(v(1:n)) + Js*v(n+1:end);
-         Jtprod = @(v) [Jxtprod(v); Js'*v];
+      function [Jprod, Jtprod] = gconprod_local(self, ~)
+          y = op_jacobian(self, x, mode, op)
+          Jprod = @(x) self.A*x;
+          Jtprod = @(x) self.A'*x;
       end
 
 

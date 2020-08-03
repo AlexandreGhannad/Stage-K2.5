@@ -166,8 +166,7 @@ classdef nlpmodel_spot < handle
             t = tic;
             dR = spdiags(self.dr,0,self.m,self.m);
             dC = spdiags(self.dc,0,self.n,self.n);
-            J = dR*self.gcon_local(self.dc.*x)*dC;
-            J = gcon_op(self, x);
+            J = dR * gcon_op(self, x) * dC;
             self.time_gcon = self.time_gcon + toc(t);
             %          J = dR*self.gcon_local(self.dc.*x)*dC;
             %          J2 = J1';
@@ -178,34 +177,31 @@ classdef nlpmodel_spot < handle
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        function [Jprod, Jtprod] = gconprod(self, x)
-            self.ncalls_gcon = self.ncalls_gcon + 1;
-            t = tic;
-            [Jprod_local, Jtprod_local] = self.gconprod_local(self.dc.*x);
-            Jprod = @(v) Jprod_inner(self, Jprod_local, v);
-            Jtprod = @(v) Jtprod_inner(self, Jtprod_local, v);
-            self.time_gcon = self.time_gcon + toc(t);
-            
-            function u = Jprod_inner(self, Jprod_local, v)
-                self.ncalls_jprod = self.ncalls_jprod + 1;
-                u = self.dr.*Jprod_local(self.dc.*v);
-            end
-            
-            function u = Jtprod_inner(self, Jtprod_local, v)
-                self.ncalls_jtprod = self.ncalls_jtprod + 1;
-                u = self.dc.*Jtprod_local(self.dr.*v);
-            end
-        end
-        
         function J = gcon_op(self, x)
-            [Jprod, Jtprod] = gconprod(self, x);
+            [Jprod, Jtprod] = gconprod_local(self, x);
             J = opFunction(self.m, self.n, {Jprod, Jtprod});
         end
         
-        function [Jprod, Jtprod] = gconprod_local(self, ~)
-            Jprod = @(x) self.A*x;
-            Jtprod = @(x) self.A'*x;
-        end
+%         function [Jprod, Jtprod] = gconprod(self, x)
+%             self.ncalls_gcon = self.ncalls_gcon + 1;
+%             t = tic;
+%             [Jprod_local, Jtprod_local] = self.gconprod_local();
+%             Jprod = @(v) Jprod_inner(self, Jprod_local, v);
+%             Jtprod = @(v) Jtprod_inner(self, Jtprod_local, v);
+%             self.time_gcon = self.time_gcon + toc(t);
+%             
+%             function u = Jprod_inner(self, Jprod_local, v)
+%                 self.ncalls_jprod = self.ncalls_jprod + 1;
+%                 u = self.dr.*Jprod_local(self.dc.*v);
+%             end
+%             
+%             function u = Jtprod_inner(self, Jtprod_local, v)
+%                 self.ncalls_jtprod = self.ncalls_jtprod + 1;
+%                 u = self.dc.*Jtprod_local(self.dr.*v);
+%             end
+%         end
+        
+
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
@@ -441,6 +437,11 @@ classdef nlpmodel_spot < handle
     
     methods
         
+        function [Jprod, Jtprod] = gconprod_local(self, ~)
+            Jprod = @(x) self.A*x;
+            Jtprod = @(x) self.A'*x;
+        end
+        
         function [f, g, H] = obj(self, x)
             f = self.fobj(x);
             if nargout > 1
@@ -470,6 +471,7 @@ classdef nlpmodel_spot < handle
             c = self.fcon(x);
             c = c(select);
         end
+        
         function J = gcon_select(self, x, select)
             %GCON_SELECT
             J = self.gcon(x);

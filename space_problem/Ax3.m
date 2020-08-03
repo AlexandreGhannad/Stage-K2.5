@@ -14,15 +14,20 @@ if transpose == 1
 elseif transpose == 2
     m2 = m+1;
     n2 = n-1;
-    
+       
     F1 = reshape(x(1:m2^2), [m2 m2]);
     F2 = reshape(x(m2^2+1:end), [m2 m2]);
     
-    Xs = (0.5:(m2-0.5))'/(2*m2);
-    Etas = (0:n2)'*rho1/n2;
-    K = cos(2*pi*Etas*Xs')/(2*m2);
-    Fhat1 = K*F1*K';
-    Fhat2 = K*F2*K';
+%     Xs = (0.5:(m2-0.5))'/(2*m2);
+%     Etas = (0:n2)'*rho1/n2;
+%     K = cos(2*pi*Etas*Xs')/(2*m2);
+
+    Xs = (0.5:(n-0.5))'/(2*n);
+    Etas = (0:m)'*rho1/m;
+    K = cos(2*pi*Etas*Xs')/(2*n);
+    
+    Fhat1 = K'*F1*K;
+    Fhat2 = K'*F2*K;
     Fhat1 = Fhat1(:) - epsilon * Fhat1(1);
     Fhat2 = Fhat2(:) + epsilon * Fhat2(1);
     

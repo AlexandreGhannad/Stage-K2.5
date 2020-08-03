@@ -42,10 +42,10 @@ classdef lpmodel_spot < model.nlpmodel_spot
             J = self.A;
         end
         
-%         function [Jprod, Jtprod] = gconprod_local(self, x)
-%             Jprod = @(x) self.A*x;
-%             Jtprod = @(x) self.A'*x;          
-%         end
+        function [Jprod, Jtprod] = gconprod_local(self, x)
+            Jprod = @(x) self.A*x;
+            Jtprod = @(x) self.A'*x;          
+        end
         
         function Hc = hcon_local(self, ~, ~)
             Hc = zeros(self.n);
