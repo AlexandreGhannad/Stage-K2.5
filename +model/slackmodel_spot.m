@@ -91,6 +91,13 @@ classdef slackmodel_spot < model.nlpmodel_spot
          J = @(x, mode) op_jacobian(self, x, mode, Jx);
          J = opFunction(self.m, self.n, J);
       end
+%       
+%       function J = gconprod_local
+%           
+%       end
+%       
+%       function J = gconprod
+%       end
 
       function HL = hlag_local(self, xs, y)
          x = xs(~self.islack, :);
