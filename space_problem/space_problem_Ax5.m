@@ -38,7 +38,7 @@ import model.slackmodel;
 options_pdco.file_id = 1;
 
 formulation1 = 'K25';
-solver = 'LDL';
+solver = 'MINRES';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
 % formulation2 = 'K35';
@@ -91,8 +91,8 @@ d2=0;
 % d2 = 10^-2;
 % d1 = [10^-8 10^-4 10^-2 10^-0];
 % d2 = [10^-8 10^-4 10^-2 10^-0];
-d1 = 10^-8;
-d2 = 10^-8;
+% d1 = 10^-8;
+% d2 = 10^-8;
 
 options_pdco.OptTol = 1.0e-10;
 options_solv.atol1 = 1.0e-10;
@@ -124,10 +124,11 @@ save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\";
 %% Set up for space problem
 n = 20;
-m = 10;
+m = 15;
 rho0 = 4;
 rho1 = 20;
 epsilon = 1e-5;
+N = 2*m*n/rho1;
 
 dx=1/(2*n);
 dy=dx;
@@ -153,7 +154,9 @@ for i =1:m+1
     end
 end
 
-Fhat = fhat(F,m,n, Xs, Etas, mask);
+Fhat = spot.utils.idct(full(F), N);
+Fhat = spot.utils.idct(Fhat', N)';
+Fhat = Fhat(1:m+1, 1:m+1);
 
 vecF = F(:);
 x0 = vecF;
@@ -182,21 +185,21 @@ cL = [cL2; cL3];
 cU = [cU2; cU3];
 
 name = "test";
-funhandle = @(x, mode) Ax3(x, n, m, rho1, epsilon, mode);
+funhandle = @(x, mode) Ax5(x, n, m, N, epsilon, mode);
 
 M1 = 2*(m+1)^2;
 N1 =  n^2;
 op = opFunction(M1, N1 ,funhandle);
-own_model = model.lpmodel(name, x0, cL, cU, bL, bU, op, c);
+own_model = model.lpmodel_spot(name, x0, cL, cU, bL, bU, op, c);
 %% Load problem
 clc
 i=1;j=1;k=1;
 
-slack = model.slackmodel(own_model);
+slack = model.slackmodel_spot(own_model);
 tmp = slack.gcon(slack.x0);
 Anorm = normest(tmp, 1.0e-3);
 
-options_pdco.Maxiter = 500; % min(max(30, slack.n), 80);
+options_pdco.Maxiter = 100; % min(max(30, slack.n), 80);
 
 % options_pdco.featol = 10^-32; 
 % options_pdco.OptTol = 10^-32;
@@ -235,9 +238,9 @@ fclose('all');
 x=o.xmem(:, end-1);
 vecF = x(1:n^2);
 F = reshape(vecF, [n n]);
-K = cos(2*pi*Etas*Xs')/(2*n);
-Fhat = K*F*K';
-
+Fhat = spot.utils.dct(full(F), N);
+Fhat = spot.utils.dct(Fhat', N)';
+Fhat = Fhat(1:m+1, 1:m+1);
 res = zeros(2*n, 2*n);
 res(1:n, 1:n) = F(end:-1:1 , end:-1:1);
 res(1:n, n+1:end) = F(end:-1:1,:);
@@ -250,8 +253,6 @@ resh(1:m+1, m+2:end) = Fhat(end:-1:1,:);
 resh(m+2:end, 1:m+1) = Fhat(:,end:-1:1);
 resh(m+2:end, m+2:end) = Fhat(:,:);
 %% Display graphics
-
-
 figure()
 subplot(121)
 surf(F)
@@ -272,10 +273,22 @@ subplot(122)
 surf(resh)
 colormap("pink")
 
+% figure()
+% subplot(121)
+% surf(res_70_35_without_spot)
+% colormap("pink")
+% 
+% subplot(122)
+% surf(resh_70_35_without_spot)
+% colormap("pink")
 
 
-
-
+for i = 1:80
+    f=figure(1)
+    surf(reshape(o.xmem(401+121:401+121+120,i), [11 11]))
+    title(num2str(i))
+    pause(0.2)
+end
 
 
 
