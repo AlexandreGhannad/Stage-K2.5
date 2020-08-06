@@ -123,8 +123,8 @@ check_results = 0;
 save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\";
 %% Set up for space problem
-n = 20;
-m = 15;
+n = 30;
+m = 30;
 rho0 = 4;
 rho1 = 20;
 epsilon = 1e-5;
@@ -132,7 +132,7 @@ N = 2*m*n/rho1;
 
 dx=1/(2*n);
 dy=dx;
-Xs = (0.5:(n-0.5))'/(2*n);
+Xs = (-n:n)'/(2*n);
 Ys=Xs;
 Pupil=(Xs.^2)'+(Ys.^2);
 F = Pupil;
@@ -154,9 +154,7 @@ for i =1:m+1
     end
 end
 
-Fhat = spot.utils.idct(full(F), N);
-Fhat = spot.utils.idct(Fhat', N)';
-Fhat = Fhat(1:m+1, 1:m+1);
+Fhat = use_fft_for_Ax5(F, n, m, N);
 
 vecF = F(:);
 x0 = vecF;
@@ -187,8 +185,8 @@ cU = [cU2; cU3];
 name = "test";
 funhandle = @(x, mode) Ax5(x, n, m, N, epsilon, mode);
 
-M1 = 2*(m+1)^2;
-N1 =  n^2;
+M1 = 2*(2*m+1)^2;
+N1 =  (2*n+1)^2;
 op = opFunction(M1, N1 ,funhandle);
 own_model = model.lpmodel_spot(name, x0, cL, cU, bL, bU, op, c);
 %% Load problem
