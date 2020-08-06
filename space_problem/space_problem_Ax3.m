@@ -279,9 +279,20 @@ colormap("pink")
 % surf(resh_70_35_without_spot)
 % colormap("pink")
 
+%% test dct
+n=20;
+m=10;
+rho1 = 20;
+N = 2*n*m/rho1;
+% X = zeros(21,21);
+% X(2:end, 2:end) = F;
+X = F;
 
+Y = fft2(X, N, N);
+% Y = real(fft(X', N)');
+% Y = real(fft(Y, N));
+y = real(Y(1:m+1, 1:m+1));
 
-
-
+surf(y)
 
 
