@@ -38,7 +38,7 @@ import model.slackmodel;
 options_pdco.file_id = 1;
 
 formulation1 = 'K25';
-solver = 'LDL';
+solver = 'MINRES';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
 % formulation2 = 'K35';
@@ -91,8 +91,8 @@ d2=0;
 % d2 = 10^-2;
 % d1 = [10^-8 10^-4 10^-2 10^-0];
 % d2 = [10^-8 10^-4 10^-2 10^-0];
-d1 = 10^-8;
-d2 = 10^-8;
+% d1 = 10^-8;
+% d2 = 10^-8;
 
 options_pdco.OptTol = 1.0e-10;
 options_solv.atol1 = 1.0e-10;
@@ -123,15 +123,16 @@ check_results = 0;
 save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\";
 %% Set up for space problem
-n = 40;
-m = 35;
+n = 30;
+m = 30;
 rho0 = 4;
 rho1 = 20;
 epsilon = 1e-5;
+N = 2*m*n/rho1;
 
 dx=1/(2*n);
 dy=dx;
-Xs = (0.5:(n-0.5))'/(2*n);
+Xs = (-n:n)'/(2*n);
 Ys=Xs;
 Pupil=(Xs.^2)'+(Ys.^2);
 F = Pupil;
@@ -139,21 +140,14 @@ F(Pupil<0.25) = 1;
 F(Pupil>=0.25) = 0;
 mask = F;
 
-Xis = (0:m)'*rho1/m;
+Xis = (-m:m)'*rho1/m;
 Etas = Xis;
 
 ComplexMap = (Xis.^2)' + Etas.^2;
-DarkHole = zeros(size(ComplexMap));
-for i =1:m+1
-    for j = 1:m+1
-        tmp = ComplexMap(i,j);
-        if tmp >=rho0^2 && tmp <= rho1^2 && Etas(j) <= Xis(i)
-            DarkHole(i,j) = 1;
-        end
-    end
-end
+[I,J]=meshgrid(Etas, Xis);
+DarkHole = double(ComplexMap>=rho0^2).*double(ComplexMap<=rho1^2).*double(abs(I)<=abs(J));
 
-Fhat = fhat(F,m,n, Xs, Etas, mask);
+Fhat = use_fft_for_Ax5(F, n, m, N);
 
 vecF = F(:);
 x0 = vecF;
@@ -182,17 +176,19 @@ cL = [cL2; cL3];
 cU = [cU2; cU3];
 
 name = "test";
-funhandle = @(x, mode) Ax3(x, n, m, rho1, epsilon, mode);
+funhandle = @(x, mode) Ax6(x, n, m, N, epsilon, mode);
 
-M1 = 2*(m+1)^2;
-N1 =  n^2;
+M1 = 2*(2*m+1)^2;
+N1 =  (2*n+1)^2;
 op = opFunction(M1, N1 ,funhandle);
-own_model = model.lpmodel(name, x0, cL, cU, bL, bU, op, c);
+own_model = model.lpmodel_spot(name, x0, cL, cU, bL, bU, op, c);
+% own_model = model.lpmodel(name, x0, cL, cU, bL, bU, op, c);
 %% Load problem
 clc
 i=1;j=1;k=1;
 
-slack = model.slackmodel(own_model);
+slack = model.slackmodel_spot(own_model);
+% slack = model.slackmodel(own_model);
 tmp = slack.gcon(slack.x0);
 Anorm = normest(tmp, 1.0e-3);
 
@@ -233,25 +229,11 @@ fclose('all');
 %% Load results
 % x = o.x;
 x=o.xmem(:, end-1);
-vecF = x(1:n^2);
-F = reshape(vecF, [n n]);
-K = cos(2*pi*Etas*Xs')/(2*n);
-Fhat = K*F*K';
+vecF = x(1:(2*n+1)^2);
+F = reshape(vecF, [2*n+1 2*n+1]);
 
-res = zeros(2*n, 2*n);
-res(1:n, 1:n) = F(end:-1:1 , end:-1:1);
-res(1:n, n+1:end) = F(end:-1:1,:);
-res(n+1:end, 1:n) = F(:,end:-1:1);
-res(n+1:end, n+1:end) = F(:,:);
-
-resh = zeros(2*m+2, 2*m+2);
-resh(1:m+1, 1:m+1) = Fhat(end:-1:1,end:-1:1);
-resh(1:m+1, m+2:end) = Fhat(end:-1:1,:);
-resh(m+2:end, 1:m+1) = Fhat(:,end:-1:1);
-resh(m+2:end, m+2:end) = Fhat(:,:);
+Fhat = use_fft_for_Ax5(F, n, m, N);
 %% Display graphics
-
-
 figure()
 subplot(121)
 surf(F)
@@ -260,20 +242,6 @@ colormap("pink")
 subplot(122)
 surf(Fhat)
 colormap("pink")
-%% Display symmetrised graphics
-
-
-figure()
-subplot(121)
-surf(res)
-colormap("pink")
-
-subplot(122)
-surf(resh)
-colormap("pink")
-
-
-
 
 
 

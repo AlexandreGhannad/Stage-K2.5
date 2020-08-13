@@ -3,12 +3,12 @@ close all
 clear all
 clc
 %%
-rho0 = 4;
-rho1 = 20;
+rho0 = 4/20;
+rho1 = 1;
 epsilon = 10^-5;
 
-n = 20;
-m = 10;
+n = 70;
+m = 35;
 
 dx = 1/(2*n);
 dy = dx;

@@ -11,10 +11,7 @@ y3 = y(ind2, ind1);
 y4 = y(ind2, ind2);
 y = [y4 y3 ; y2 y1];
 
-for k = -m:m
-    for l = -m:m
-        y(k+m+1, l+m+1) = y(k+m+1, l+m+1) * exp(-2*pi*1i* n*(k+l) / N);
-    end
-end
-y = 4*real(y);
+t = (-m:m)' + (-m:m);
+t = exp(-2*pi*1i*n*t / N);
+y = real(t.*y);
 end

@@ -123,8 +123,8 @@ check_results = 0;
 save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\";
 %% Set up for space problem
-n = 30;
-m = 30;
+n = 50;
+m = 35;
 rho0 = 4;
 rho1 = 20;
 epsilon = 1e-5;
@@ -140,19 +140,12 @@ F(Pupil<0.25) = 1;
 F(Pupil>=0.25) = 0;
 mask = F;
 
-Xis = (0:m)'*rho1/m;
+Xis = (-m:m)'*rho1/m;
 Etas = Xis;
 
 ComplexMap = (Xis.^2)' + Etas.^2;
-DarkHole = zeros(size(ComplexMap));
-for i =1:m+1
-    for j = 1:m+1
-        tmp = ComplexMap(i,j);
-        if tmp >=rho0^2 && tmp <= rho1^2 && Etas(j) <= Xis(i)
-            DarkHole(i,j) = 1;
-        end
-    end
-end
+[I,J]=meshgrid(Etas, Xis);
+DarkHole = double(ComplexMap>=rho0^2).*double(ComplexMap<=rho1^2).*double(abs(I)<=abs(J));
 
 Fhat = use_fft_for_Ax5(F, n, m, N);
 
@@ -197,7 +190,7 @@ slack = model.slackmodel_spot(own_model);
 tmp = slack.gcon(slack.x0);
 Anorm = normest(tmp, 1.0e-3);
 
-options_pdco.Maxiter = 100; % min(max(30, slack.n), 80);
+options_pdco.Maxiter = 50; % min(max(30, slack.n), 80);
 
 % options_pdco.featol = 10^-32; 
 % options_pdco.OptTol = 10^-32;
@@ -234,22 +227,10 @@ fclose('all');
 %% Load results
 % x = o.x;
 x=o.xmem(:, end-1);
-vecF = x(1:n^2);
-F = reshape(vecF, [n n]);
-Fhat = spot.utils.dct(full(F), N);
-Fhat = spot.utils.dct(Fhat', N)';
-Fhat = Fhat(1:m+1, 1:m+1);
-res = zeros(2*n, 2*n);
-res(1:n, 1:n) = F(end:-1:1 , end:-1:1);
-res(1:n, n+1:end) = F(end:-1:1,:);
-res(n+1:end, 1:n) = F(:,end:-1:1);
-res(n+1:end, n+1:end) = F(:,:);
+vecF = x(1:(2*n+1)^2);
+F = reshape(vecF, [2*n+1 2*n+1]);
 
-resh = zeros(2*m+2, 2*m+2);
-resh(1:m+1, 1:m+1) = Fhat(end:-1:1,end:-1:1);
-resh(1:m+1, m+2:end) = Fhat(end:-1:1,:);
-resh(m+2:end, 1:m+1) = Fhat(:,end:-1:1);
-resh(m+2:end, m+2:end) = Fhat(:,:);
+Fhat = use_fft_for_Ax5(F, n, m, N);
 %% Display graphics
 figure()
 subplot(121)
@@ -259,34 +240,8 @@ colormap("pink")
 subplot(122)
 surf(Fhat)
 colormap("pink")
-%% Display symmetrised graphics
 
 
-figure()
-subplot(121)
-surf(res)
-colormap("pink")
-
-subplot(122)
-surf(resh)
-colormap("pink")
-
-% figure()
-% subplot(121)
-% surf(res_70_35_without_spot)
-% colormap("pink")
-% 
-% subplot(122)
-% surf(resh_70_35_without_spot)
-% colormap("pink")
-
-
-for i = 1:80
-    f=figure(1)
-    surf(reshape(o.xmem(401+121:401+121+120,i), [11 11]))
-    title(num2str(i))
-    pause(0.2)
-end
 
 
 
