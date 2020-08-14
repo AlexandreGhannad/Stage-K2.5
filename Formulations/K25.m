@@ -31,6 +31,16 @@ classdef K25 < handle
             y = [u;v];
         end
         
+%         function y = opK25(x, o, A)
+%             I = eye(size(A,2));
+%             if o.nfix ~= 0
+%                 I(o.fix, o.fix) = 0;
+%             end
+%             u = -o.H*x(1:o.n); + I*(A'*x(o.n+1:o.n+o.m));
+%             v = A*(I1*x(1:o.n)); + o.d2.^2 .* x(o.n+1:o.n+o.m);
+%             y = [u;v];
+%         end
+        
         function Solve_Newton(o)
             %-----------------------------------------------------------------
             %  Solve (*) for [dx ; dy].

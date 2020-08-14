@@ -181,12 +181,23 @@ cL3(tmp == 1) = 0;
 cL = [cL2; cL3];
 cU = [cU2; cU3];
 
+% Creation operateur T
+T = zeros(2*(m+1)^2, n^2);
+x = zeros(n^2,1);
+for i =  1: n^2
+    x = zeros(n^2,1);
+    x(i) = 1;
+    T(:,i) = Ax3(x, n, m, rho1, epsilon, 1);
+end
+
+
 name = "test";
-funhandle = @(x, mode) Ax3(x, n, m, rho1, epsilon, mode);
+funh = @(x) T*x;
+funht = @(x) T'*x;
 
 M1 = 2*(m+1)^2;
 N1 =  n^2;
-op = opFunction(M1, N1 ,funhandle);
+op = opFunction(M1, N1 ,{funh, funht});
 own_model = model.lpmodel_spot(name, x0, cL, cU, bL, bU, op, c);
 %% Load problem
 clc
@@ -278,5 +289,6 @@ colormap("pink")
 % subplot(122)
 % surf(resh_70_35_without_spot)
 % colormap("pink")
+
 
 

@@ -123,8 +123,8 @@ check_results = 0;
 save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\";
 %% Set up for space problem
-n = 40;
-m = 35;
+n = 50;
+m = 30;
 rho0 = 4;
 rho1 = 20;
 epsilon = 1e-5;
@@ -196,7 +196,7 @@ slack = model.slackmodel(own_model);
 tmp = slack.gcon(slack.x0);
 Anorm = normest(tmp, 1.0e-3);
 
-options_pdco.Maxiter = 20; % min(max(30, slack.n), 80);
+options_pdco.Maxiter = 500; % min(max(30, slack.n), 80);
 
 % options_pdco.featol = 10^-32; 
 % options_pdco.OptTol = 10^-32;
@@ -255,22 +255,22 @@ resh(m+2:end, m+2:end) = Fhat(:,:);
 figure()
 subplot(121)
 surf(F)
-colormap("pink")
+colormap("gray")
 
 subplot(122)
 surf(Fhat)
-colormap("pink")
+colormap("gray")
 %% Display symmetrised graphics
 
 
 figure()
 subplot(121)
 surf(res)
-colormap("pink")
+colormap("gray")
 
 subplot(122)
 surf(resh)
-colormap("pink")
+colormap("gray")
 
 
 
