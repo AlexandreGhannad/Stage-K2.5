@@ -38,7 +38,7 @@ import model.slackmodel;
 options_pdco.file_id = 1;
 
 formulation1 = 'K25';
-solver = 'LDL';
+solver = 'MINRES';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
 % formulation2 = 'K35';
@@ -218,6 +218,8 @@ i=1;j=1;k=1;
 slack = model.slackmodel_spot(own_model);
 Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
 
+options_pdco.Maxiter = 20; % min(max(30, slack.n), 80);
+
 % options_pdco.featol = 10^-32; 
 % options_pdco.OptTol = 10^-32;
 
@@ -229,7 +231,6 @@ options_pdco.zsize = max(norm(slack.gobj(slack.x0), inf) + sqrt(slack.n) * Anorm
 options_pdco.z0 = options_pdco.zsize * ones(slack.n, 1);
 options_pdco.y0 = zeros(slack.m, 1);
 options_pdco.mu0 = options_pdco.zsize;
-options_pdco.Maxiter = 300; % min(max(30, slack.n), 80);
 options_pdco.explicitA = 0;
 
 options_pdco.check_eigenvalue = check_eigenvalue;

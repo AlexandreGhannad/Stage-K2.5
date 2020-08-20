@@ -123,8 +123,8 @@ check_results = 0;
 save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\";
 %% Set up for space problem
-n = 30;
-m = 30;
+n = 20;
+m = 10;
 rho0 = 4;
 rho1 = 20;
 epsilon = 1e-5;

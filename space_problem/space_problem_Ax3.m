@@ -123,8 +123,8 @@ check_results = 0;
 save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\";
 %% Set up for space problem
-n = 40;
-m = 35;
+n = 30;
+m = 20;
 rho0 = 4;
 rho1 = 20;
 epsilon = 1e-5;
@@ -196,7 +196,7 @@ slack = model.slackmodel_spot(own_model);
 tmp = slack.gcon(slack.x0);
 Anorm = normest(tmp, 1.0e-3);
 
-options_pdco.Maxiter = 100; % min(max(30, slack.n), 80);
+options_pdco.Maxiter = 10; % min(max(30, slack.n), 80);
 
 % options_pdco.featol = 10^-32; 
 % options_pdco.OptTol = 10^-32;

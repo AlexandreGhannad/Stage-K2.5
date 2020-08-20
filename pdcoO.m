@@ -212,6 +212,7 @@ classdef pdcoO < handle
         objmem
         mask
         check_mask
+        save_evolution
         
         
         digit_number % allow to use more digits to calculate eigenvalues
@@ -465,6 +466,13 @@ classdef pdcoO < handle
             else
                 o.check_mask = 0;
             end
+            
+            if isfield(options, 'save_evolution')
+                o.save_evolution = options.save_evolution;
+            else
+                o.check_mask = 0;
+            end
+            
             
         end
         
@@ -858,6 +866,10 @@ classdef pdcoO < handle
                 if o.check_eigenvalue_other_formulation && isequal(tmp1,tmp2)
                     o.eigenvalue = [o.eigenvalue eigs(o.M, size(o.M,1))];
                 end
+                
+%                 if o.save_evolution
+%                     display_and_save_evolution(o.x, o.PDitns);
+%                 end
                 
                 % Add to save the evolution of the conditionning
                 if o.check_cond & not(isempty(o.eigenvalue))

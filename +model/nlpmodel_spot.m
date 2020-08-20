@@ -168,6 +168,12 @@ classdef nlpmodel_spot < handle
             dC = spdiags(self.dc,0,self.n,self.n);
             J1 = @(y) (dR * (gcon_op(self, self.dc.*x) * (dC * y)));
             J2 = @(y) (dC * (gcon_op(self, self.dc.*x)' * (dR * y)));
+
+%             dR = self.dr;
+%             dC = self.dc;
+%             J1 = @(y) (dR .* (gcon_op(self, self.dc.*x) * (dC .* y)));
+%             J2 = @(y) (dC .* (gcon_op(self, self.dc.*x)' * (dR .* y)));
+            
             J = opFunction(self.m, self.n, {J1 , J2});
             self.time_gcon = self.time_gcon + toc(t);
             %          J = dR*self.gcon_local(self.dc.*x)*dC;

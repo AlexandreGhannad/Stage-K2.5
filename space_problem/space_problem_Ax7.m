@@ -123,8 +123,8 @@ check_results = 0;
 save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\";
 %% Set up for space problem
-n = 20;
-m = 20;
+n = 50;
+m = 50;
 rho0 = 4;
 rho1 = 20;
 N = 2*m*n/rho1;
@@ -183,7 +183,7 @@ cL = [cL2; cL3];
 cU = [cU2; cU3];
 
 name = "test";
-funhandle = @(x, mode) Ax7(x, n, m, N, epsilon, mode);
+funhandle = @(x, mode) Ax7(x, n, m, epsilon, mode);
 
 M1 = 2*(m+1)^2;
 N1 =  n^2;
@@ -197,7 +197,7 @@ slack = model.slackmodel_spot(own_model);
 tmp = slack.gcon(slack.x0);
 Anorm = normest(tmp, 1.0e-3);
 
-options_pdco.Maxiter = 150; % min(max(30, slack.n), 80);
+options_pdco.Maxiter = 100; % min(max(30, slack.n), 80);
 
 % options_pdco.featol = 10^-32; 
 % options_pdco.OptTol = 10^-32;
@@ -233,7 +233,7 @@ o.solve;
 fclose('all');
 %% Load results
 % x = o.x;
-x=o.xmem(:, end-1);
+x=o.xmem(:, end);
 vecF = x(1:n^2);
 F = reshape(vecF, [n n]);
 K = cos(2*pi*Etas*Xs')/(2*n);
