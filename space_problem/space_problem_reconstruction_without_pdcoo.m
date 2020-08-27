@@ -3,8 +3,8 @@ close all
 clear all
 clc
 %%
-rho0 = 4/20;
-rho1 = 1;
+rho0 = 4;
+rho1 = 20;
 epsilon = 10^-5;
 
 n = 70;
@@ -89,14 +89,14 @@ resh(1:m, m+1:end) = fh(end:-1:2,:);
 resh(m+1:end, 1:m) = fh(:,end:-1:2);
 resh(m+1:end, m+1:end) = fh(:,:);
 %% Display graphics
-figure()
-subplot(121)
-surf(f)
-colormap("pink")
-
-subplot(122)
-surf(fh)
-colormap("pink")
+% figure()
+% subplot(121)
+% surf(f)
+% colormap("pink")
+% 
+% subplot(122)
+% surf(fh)
+% colormap("pink")
 %% Display symmetrised graphics
 res = zeros(2*n, 2*n);
 res(1:n, 1:n) = f(end:-1:1 , end:-1:1);
@@ -111,13 +111,14 @@ resh(m+2:end, 1:m+1) = fh(:,end:-1:1);
 resh(m+2:end, m+2:end) = fh(:,:);
 
 figure()
-subplot(121)
-surf(res)
-colormap("pink")
-
-subplot(122)
-surf(resh)
-colormap("pink")
+imshow(res)
+% subplot(121)
+% surf(res)
+% colormap("pink")
+% 
+% subplot(122)
+% surf(resh)
+% colormap("pink")
 
 
 

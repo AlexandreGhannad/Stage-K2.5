@@ -15,19 +15,20 @@ classdef K25 < handle
             o.diagHess = false;
         end
         
-        function y = opK25(x, o, A)
+        function y = opK25(x, o, A, X1s, X2s)
 %             I = eye(o.m);
 %             I(o.fix, o.fix) = 0;
             dx = x(1:o.n);
             dy = x(o.n+1:o.n+o.m);
-%             X = ones(size(X1s));
-%             X(o.low, o.low) = X(o.low, o.low).* X1s(o.low, o.low);
-%             X(o.upp, o.upp) = X(o.upp, o.upp).* X2s(o.upp, o.upp);
+            X = sparse(eye(size(X1s)));
+            X(o.low, o.low) = X(o.low, o.low).* X1s(o.low, o.low);
+            X(o.upp, o.upp) = X(o.upp, o.upp).* X2s(o.upp, o.upp);
             if o.nfix ~= 0
                 A(:,o.fix) = 0;
             end
-            u = -o.H*dx + A'*dy;
-            v = A*dx + o.d2.^2 .* dy;
+            
+            u = -o.H*dx + X*(A'*dy);
+            v = A*(X*dx) + o.d2.^2 .* dy;
             y = [u;v];
         end
         
@@ -108,7 +109,7 @@ classdef K25 < handle
 %             end
             
             if ~o.explicitA
-                o.M = opFunction(o.m + o.n, o.m + o.n, @(x,mode) opK25(x,o, A));
+                o.M = opFunction(o.m + o.n, o.m + o.n, @(x,mode) opK25(x,o, o.A, X1s, X2s));
             else
                 if o.nfix == 0
                     o.M = [ -o.H  A'
