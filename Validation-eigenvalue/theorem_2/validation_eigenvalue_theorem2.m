@@ -91,6 +91,7 @@ else
     ind2 = detect_active_inactive_constraint(x, "FirstBigGap");
     ind3 = detect_active_inactive_constraint(x, "broken_lines", z);
     ind4 = detect_active_inactive_constraint(x, "power_lines", z);
+    ind5 = detect_active_inactive_constraint(x, "Threshold");
     
     A = o.A;
     hess_eigen = eigs(o.hess, size(o.hess, 1));
@@ -98,6 +99,7 @@ else
     xmin2 = min(abs(x(ind2)));
     xmin3 = min(abs(x(ind3)));
     xmin4 = min(abs(x(ind4)));
+    xmin5 = min(abs(x(ind5)));
     
     % Maximal and minimal eigenvalue of H
     lambda_max = max(hess_eigen);
@@ -164,8 +166,16 @@ else
     rho_min_positive = 0.5 * ( o.d2^2 - eta_max + ( (eta_max+o.d2^2)^2 + 4*xmin4 * sigma_min^2 )^0.5 );
     rho_max_positive = 0.5 * ( o.d2^2 - eta_min + ( (eta_min+o.d2^2)^2 + 4*xmax * sigma_max^2 )^0.5 );
     features4 = [ rho_min_negative;rho_max_negative;rho_min_positive;rho_max_positive];
+ 
+    eta_max = (lambda_max + o.d1^2) * xmax;
+    eta_min = (lambda_min + o.d1^2) * xmin5;
+    rho_min_negative = 0.5 * ( o.d2^2 - eta_max - ( (eta_max+o.d2^2)^2 + 4*xmax * sigma_max^2 )^0.5 );
+    rho_max_negative = -eta_min;
+    rho_min_positive = 0.5 * ( o.d2^2 - eta_max + ( (eta_max+o.d2^2)^2 + 4*xmin5 * sigma_min^2 )^0.5 );
+    rho_max_positive = 0.5 * ( o.d2^2 - eta_min + ( (eta_min+o.d2^2)^2 + 4*xmax * sigma_max^2 )^0.5 );
+    features5 = [ rho_min_negative;rho_max_negative;rho_min_positive;rho_max_positive];
     
-    features_theorem2 = [features1 ; features2; features3; features4];
+    features_theorem2 = [features1 ; features2; features3; features4; features5];
     
     if not(o.check_eigenvalue)
         eigenvalue = eigs(o.M, size(o.M,1));

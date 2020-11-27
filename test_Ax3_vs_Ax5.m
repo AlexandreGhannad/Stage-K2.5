@@ -56,34 +56,44 @@ t2 = t2(:);
 % plot(t2./t1/4)
 
 %% test speed operation
-n = 100:20:1500;
+n = 99:500;
 l = length(n);
 t1 = zeros(size(n));
 t2 = zeros(size(n));
 for i = 1:l
     nn = n(i)
-    for k = 1 : 10
+    niter = 30;
+    for k = 1 : niter
         x1 = randn(nn);
         tic
         x2 = randn(nn);
         y = x1*x2*x1;
         t1(i) = t1(i) + toc;
         
-        nnn = round(nn);
+        nnn = round(3.5*nn);
         x2 = randn(nnn);
         tic
         y = fft2(x2);
         t2(i) = t2(i) + toc;  
     end
 end
+t1 = t1/niter;
+t2 = t2/niter;
 clear y x1 x2
 %% Display
+tmp = n;
+tmp = tmp(2:end);
 x1 = n.*n.*n;
+x1 = x1(2:end);
 X1 = [x1' ones(size(x1'))];
 x2 = n.*n.*log(n);
+x2 = x2(2:end);
 X2 = [x2' ones(size(x2'))];
 y1 = t1';
+y1 = y1(2:end);
 y2 = t2';
+y2 = y2(2:end);
+
 theta1 = X1 \ y1;
 theta2 = X2 \ y2;
 y1fit = X1 * theta1;
@@ -92,17 +102,28 @@ y2fit = X2 * theta2;
 figure(1)
 clf(1)
 subplot(121)
-plot(x1, y1, '*'); hold on; 
-plot(x1, y1fit, '-');
+plot(x1, y1, '*', "Color", [0 0.4470 0.7410]); hold on; 
+plot(x1, y1fit, '-', "Color", [0.8500 0.3250 0.0980]);
+title("Complexité algorithmique de la multiplication matricielle")
+legend("Temps d'exécution", "Régression", "Location", "best")
 subplot(122)
-plot(x2, y2, '*'); hold on; 
-plot(x2, y2fit, '-');
+plot(x2, y2, '*', "Color", [0.6350 0.0780 0.1840]); hold on; 
+plot(x2, y2fit, '-', "Color", [0.8500 0.3250 0.0980]);
+title("Complexité algorithmique de la FFT")
+legend("Temps d'exécution", "Régression", "Location", "best")
 
 figure(2)
 clf(2)
-plot(n,y1)
+plot(tmp,y1, "Color", [0 0.4470 0.7410])
 hold on
-plot(n,y2)
+plot(tmp,y2, "Color", [0.6350 0.0780 0.1840])
+title("Comparaison temps d'exécution")
+legend("Multiplication matriciel", "FFT", "Location", "best")
+
+figure(3)
+clf(3)
+plot(tmp,y1./y2, "Color", [0 0.4470 0.7410])
+title("Rapport des temps d'exécution")
 
 %% Combinaison : n=160,m=33
 

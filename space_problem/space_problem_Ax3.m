@@ -38,7 +38,7 @@ import model.slackmodel;
 options_pdco.file_id = 1;
 
 formulation1 = 'K25';
-solver = 'MINRES';
+solver = 'LDL';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
 % formulation2 = 'K35';
@@ -123,8 +123,8 @@ check_results = 0;
 save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\";
 %% Set up for space problem
-n = 40;
-m = 20;
+n = 70;
+m = 35;
 rho0 = 4;
 rho1 = 20;
 epsilon = 1e-5;
@@ -187,12 +187,12 @@ funhandle = @(x, mode) Ax3(x, n, m, rho1, epsilon, mode);
 M1 = 2*(m+1)^2;
 N1 =  n^2;
 op = opFunction(M1, N1 ,funhandle);
-own_model = model.lpmodel_spot(name, x0, cL, cU, bL, bU, op, c);
+own_model = model.lpmodel(name, x0, cL, cU, bL, bU, op, c);
 %% Load problem
 clc
 i=1;j=1;k=1;
 
-slack = model.slackmodel_spot(own_model);
+slack = model.slackmodel(own_model);
 tmp = slack.gcon(slack.x0);
 Anorm = normest(tmp, 1.0e-3);
 

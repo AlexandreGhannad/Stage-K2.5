@@ -51,7 +51,7 @@ switch method
         if ismember(0,z)
             ind = 1:length(x);
         else
-            [t, perm] = sort(abs(x), "descend");
+            [~, perm] = sort(abs(x), "descend");
             ztmp = abs(z(perm));
             if not(exist("n"))
                 n = [round(length(z)/4) round(length(z)/2) round(3*length(z)/4)];

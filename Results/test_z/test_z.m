@@ -33,15 +33,8 @@ formulation1 = 'K25';
 solver = 'LDL';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
-
-% path_problem = pwd + "/Problems/lp_prob";
-% list_problem = dir(path_problem);
-% list_problem = {list_problem.name};
-% list_problem = list_problem(3:end);
-% n_problem = length(list_problem);
-
-
-list_problem = {};
+list_problem = {"blend.mps"};
+n_problem = length(list_problem);
 
 options_pdco.d1 = 1.0e-2;
 options_pdco.d2 = 1.0e-2;
@@ -114,7 +107,7 @@ for i = 1:n_problem
     
     zlist(i,1:length(Problem1.z)) = Problem1.z;
     xlist(i,1:length(Problem1.x)) = Problem1.x;
-
+    
 end
 %%
 xlist = abs(xlist);
@@ -135,4 +128,246 @@ for i = 1 : n_problem
     hold on
     semilogy(xlist(i,:))
 end
+%% Représentation des méthodes
+save_fig = 0;
+x = Problem1.x;
+z = Problem1.z;
+x = abs(x) / norm(x);
+z = abs(z) / norm(z);
+[x , perm] = sort(x, "descend");
+z = z(perm);
+
+fontsize = 35;
+fig = figure(1);
+clf(1)
+semilogy(z, "LineWidth", 3)
+hold on
+semilogy(x, "LineWidth", 3)
+legend("Valeur absolue de z", "Valeur absolue de x", "Location", "best", "FontSize", fontsize-10)
+title("Valeur absolue des vecteurs x et z de bandm.mps", "FontSize", fontsize)
+if save_fig
+    save_figure_png(fig, "Représentation de x et z pour blend.mps");
+end
+%% methode 1 : threshold
+fig = figure(1);
+clf(1)
+semilogy(z, "LineWidth", 3)
+hold on
+semilogy(x, "LineWidth", 3)
+n = norm(x) * 10^-8;
+semilogy([0 length(z)],[n n], "k--", "LineWidth", 3)
+legend("Valeur absolue de z", "Valeur absolue de z", "Borne", "Location", "best", "FontSize", fontsize-10)
+title("Valeur absolue des vecteurs x et z de bandm.mps", "FontSize", fontsize)
+if save_fig
+    save_figure_png(fig, "threshold");
+end
+%% Méthode 2: MaxGap
+fig = figure(1);
+clf(1)
+semilogy(z, "LineWidth", 3)
+hold on
+semilogy(x, "LineWidth", 3)
+% Find the big gap
+[t, perm] = sort(abs(x));
+gap = t(2:end)./t(1:end-1);
+[~,l] = max(gap);
+ind = perm(l);
+semilogy([ind ind],[min(x) max(x)], "k--", "LineWidth", 3)
+
+legend("Valeur absolue de z", "Valeur absolue de z", "Borne", "Location", "best", "FontSize", fontsize-10)
+title("Valeur absolue des vecteurs x et z de bandm.mps", "FontSize", fontsize)
+if save_fig
+    save_figure_png(fig, "MaxGap");
+end
+%% Méthode 3: FirstBigGap
+fig = figure(1);
+clf(1)
+semilogy(z, "LineWidth", 3)
+hold on
+semilogy(x, "LineWidth", 3)
+
+[t, perm] = sort(abs(x));
+gap = t(2:end)./t(1:end-1);
+l = find(gap >= 100);
+if not(isempty(l))
+    l = l(1);
+else
+    l = 0;
+end
+if l ~= 0
+    ind = perm(l);
+    semilogy([ind ind],[min(x) max(x)], "k--", "LineWidth", 3)
+end
+
+legend("Valeur absolue de z", "Valeur absolue de z", "Borne", "Location", "best", "FontSize", fontsize-10)
+title("Valeur absolue des vecteurs x et z de bandm.mps", "FontSize", fontsize)
+if save_fig
+    save_figure_png(fig, "FirstBigGap");
+end
+%% Méthode 4: broken lines
+fig = figure(1);
+clf(1)
+semilogy(z, "LineWidth", 3)
+hold on
+semilogy(x, "LineWidth", 3)
+
+method = "broken_lines";
+coef0 = [-1 1 1];
+obj = @(y) norm(y-log10(z));
+tmp = Inf;
+cpt = 0;
+err = Inf;
+for n = 10:length(z)-10
+    Cf = find_abc(z', n, method, coef0);
+    y = broken_lines(Cf(1:3),n,length(z));
+    err = obj(y);
+    if err < tmp
+        tmp = err;
+        cpt = n;
+    end
+end
+Cf = find_abc(z', cpt, method, coef0);
+y = broken_lines(Cf(1:3),cpt,length(z));
+semilogy(exp(y*log(10)), "LineWidth", 3)
+
+
+legend("Valeur absolue de z", "Valeur absolue de z", "Ligne brisée", "Location", "best", "FontSize", fontsize-10)
+title("Valeur absolue des vecteurs x et z de bandm.mps", "FontSize", fontsize)
+if save_fig
+    save_figure_png(fig, "broken lines");
+end
+%% Méthode 5: power lines
+fig = figure(1);
+clf(1)
+semilogy(z, "LineWidth", 3)
+hold on
+semilogy(x, "LineWidth", 3)
+
+method = "normal_power_lines";
+coef0 = [1 1 1 1 1];
+obj = @(y) norm(y-log10(z));
+tmp = Inf;
+cpt = 0;
+L = zeros(size(10:length(z)-10));
+for n = 70:80
+    Cf = find_abc(z', n, method, coef0);
+    y = power_lines(Cf,n,length(z));
+    err = obj(y);
+    L(n-9) = err;
+    if err < tmp
+        tmp = err;
+        cpt = n;
+    end
+end
+% cpt = 74
+Cf = find_abc(z', cpt, method, coef0);
+y = normal_power_lines(Cf,cpt,length(z));
+semilogy(exp(y*log(10)), "LineWidth", 3)
+semilogy(y, "LineWidth", 3)
+
+
+legend("Valeur absolue de z", "Valeur absolue de z", "Ligne de puissance", "Location", "best", "FontSize", fontsize-10)
+title("Valeur absolue des vecteurs x et z de bandm.mps", "FontSize", fontsize)
+if save_fig
+    save_figure_png(fig, "power lines");
+end
+
+%% Représentation des méthodes
+save_fig = 0;
+x = Problem1.x;
+z = Problem1.z;
+x = abs(x) / norm(x);
+z = abs(z) / norm(z);
+[x , perm] = sort(x, "descend");
+z = z(perm);
+
+fontsize = 35;
+fig = figure(1);
+clf(1)
+semilogy(z, "LineWidth", 3)
+hold on
+semilogy(x, "LineWidth", 3)
+
+% method 1
+n = norm(x) * 10^-8;
+semilogy([0 length(z)],[n n], "k--", "LineWidth", 3)
+
+% method 2
+[t, perm] = sort(abs(x));
+gap = t(2:end)./t(1:end-1);
+[~,l] = max(gap);
+ind = perm(l);
+semilogy([ind ind],[min(x) max(x)], ":", "LineWidth", 3, "Color", [0.6350 0.0780 0.1840])
+
+% method 3
+[t, perm] = sort(abs(x));
+gap = t(2:end)./t(1:end-1);
+l = find(gap >= 100);
+if not(isempty(l))
+    l = l(1);
+else
+    l = 0;
+end
+if l ~= 0
+    ind = perm(l);
+    semilogy([ind ind],[min(x) max(x)], "k--", "LineWidth", 3)
+end
+
+% method 4
+method = "broken_lines";
+coef0 = [-1 1 1];
+obj = @(y) norm(y-log10(z));
+tmp = Inf;
+cpt = 0;
+err = Inf;
+for n = 10:length(z)-10
+    Cf = find_abc(z', n, method, coef0);
+    y = broken_lines(Cf(1:3),n,length(z));
+    err = obj(y);
+    if err < tmp
+        tmp = err;
+        cpt = n;
+    end
+end
+Cf = find_abc(z', cpt, method, coef0);
+y = broken_lines(Cf(1:3),cpt,length(z));
+semilogy(exp(y*log(10)), "LineWidth", 3)
+
+% method 5
+method = "normal_power_lines";
+coef0 = [1 1 1 1 1];
+obj = @(y) norm(y-log10(z));
+tmp = Inf;
+cpt = 0;
+L = zeros(size(10:length(z)-10));
+for n = 70:80
+    Cf = find_abc(z', n, method, coef0);
+    y = power_lines(Cf,n,length(z));
+    err = obj(y);
+    L(n-9) = err;
+    if err < tmp
+        tmp = err;
+        cpt = n;
+    end
+end
+% cpt = 74
+Cf = find_abc(z', cpt, method, coef0);
+y = normal_power_lines(Cf,cpt,length(z));
+semilogy(exp(y*log(10)), "LineWidth", 3, "Color", [0.4940 0.1840 0.5560])
+semilogy(y, "LineWidth", 3)
+
+
+title("Valeur absolue des vecteurs x et z de bandm.mps", "FontSize", fontsize)
+legend("Valeur absolue de z", "Valeur absolue de z",...
+    "Méthode 1", "Méthode 2", "Méthode 3", "Méthode 4", "Méthode 5",...
+    "Location", "best", "FontSize", fontsize-10)
+
+if save_fig
+    save_figure_png(fig, "power lines");
+end
+
+
+
+
+
 
