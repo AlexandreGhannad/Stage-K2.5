@@ -115,9 +115,9 @@ save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\Results\test_save\";
 %% Loop
 clc
-results = zeros(n_problem, length(d1), length(d2), 4, 23);
+results = zeros(4, n_problem);
 cond = zeros(4,n_problem);
-for i = n_problem-3:n_problem
+for i = 1:n_problem
     for j = 1 : length(d1)
         for k = 1 : length(d2)
             
@@ -166,15 +166,21 @@ for i = n_problem-3:n_problem
             o4 = eval([classname4, '(slack, options_pdco,options_form,options_solv)']);
             o4.solve;
             
-            n1 = min(30, min(size(o1.M)));
-            n2 = min(30, min(size(o2.M)));
-            n3 = min(30, min(size(o3.M)));
-            n4 = min(30, min(size(o4.M)));
+%             n1 = min(30, min(size(o1.M)));
+%             n2 = min(30, min(size(o2.M)));
+%             n3 = min(30, min(size(o3.M)));
+%             n4 = min(30, min(size(o4.M)));
             
-            cond1 = max(abs(eigs(o1.M, n1, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o1.M, n1, 'smallestabs','MaxIterations',3000)));
-            cond2 = max(abs(eigs(o2.M, n2, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o2.M, n2, 'smallestabs','MaxIterations',3000)));
-            cond3 = max(abs(eigs(o3.M, n3, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o3.M, n3, 'smallestabs','MaxIterations',3000)));
-            cond4 = max(abs(eigs(o4.M, n4, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o4.M, n4, 'smallestabs','MaxIterations',3000)));
+%             cond1 = max(abs(eigs(o1.M, n1, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o1.M, n1, 'smallestabs','MaxIterations',3000)));
+%             cond2 = max(abs(eigs(o2.M, n2, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o2.M, n2, 'smallestabs','MaxIterations',3000)));
+%             cond3 = max(abs(eigs(o3.M, n3, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o3.M, n3, 'smallestabs','MaxIterations',3000)));
+%             cond4 = max(abs(eigs(o4.M, n4, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o4.M, n4, 'smallestabs','MaxIterations',3000)));
+            
+            cond1 = condest(o1.M);
+            cond2 = condest(o2.M);
+            cond3 = condest(o3.M);
+            cond4 = condest(o4.M);
+            
             cond(1,i) = cond1;
             cond(2,i) = cond2;
             cond(3,i) = cond3;
@@ -185,7 +191,7 @@ end
 fclose('all');
 
 %% 
-i = 30
+i = 1:131;
 cond(cond == 0) = NaN;
 fig = figure();
 set(fig, "WindowState", "maximized")

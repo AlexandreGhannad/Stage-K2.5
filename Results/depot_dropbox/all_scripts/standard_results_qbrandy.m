@@ -95,9 +95,9 @@ options_pdco.Print = 1;
 check_eigenvalue = 1;
 check_limits = 0;
 check_eigenvalue_other_formulation = 1;
-check_theorem2 = 1;
+check_theorem2 = 0;
 method_theorem2 = "all";
-check_property = 1;
+check_property = 0;
 
 check_cond = 1;
 check_residu = 1;

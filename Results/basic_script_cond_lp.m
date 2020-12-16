@@ -177,10 +177,16 @@ for i = 1:n_problem
             n3 = min(30, min(size(o3.M)));
             n4 = min(30, min(size(o4.M)));
             
-            cond1 = max(abs(eigs(o1.M, n1, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o1.M, n1, 'smallestabs','MaxIterations',3000)));
-            cond2 = max(abs(eigs(o2.M, n2, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o2.M, n2, 'smallestabs','MaxIterations',3000)));
-            cond3 = max(abs(eigs(o3.M, n3, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o3.M, n3, 'smallestabs','MaxIterations',3000)));
-            cond4 = max(abs(eigs(o4.M, n4, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o4.M, n4, 'smallestabs','MaxIterations',3000)));
+%             cond1 = max(abs(eigs(o1.M, n1, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o1.M, n1, 'smallestabs','MaxIterations',3000)));
+%             cond2 = max(abs(eigs(o2.M, n2, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o2.M, n2, 'smallestabs','MaxIterations',3000)));
+%             cond3 = max(abs(eigs(o3.M, n3, 'largestabs','MaxIterations',3000))) / min(abs(eigs(o3.M, n3, 'smallestabs','MaxIterations',3000)));
+%             cond4 = max(abs(svds(o4.M, n4, 'largest','MaxIterations',3000))) / min(abs(svds(o4.M, n4, 'smallest','MaxIterations',3000)));
+            
+            cond1 = condest(o1.M);
+            cond2 = condest(o2.M);
+            cond3 = condest(o3.M);
+            cond4 = condest(o4.M);
+            
             cond(1,i) = cond1;
             cond(2,i) = cond2;
             cond(3,i) = cond3;
@@ -191,14 +197,14 @@ end
 fclose('all');
 
 %% 
-% i = 50
-% cond(cond ==0) = NaN;
-% fig = figure();
-% set(fig, "WindowState", "maximized")
-% semilogy(squeeze(cond(1,i,:)), ".", "MarkerSize", 10, "LineWidth", 1, "Color", [0 0.4470 0.7410]);
-% hold on
-% semilogy(squeeze(cond(2,i,:)), "+", "MarkerSize", 7, "LineWidth", 1, "Color", [0.8500 0.3250 0.0980]);
-% semilogy(squeeze(cond(3,i,:)), "*", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4660 0.6740 0.1880]);
-% semilogy(squeeze(cond(4,i,:)), "s", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4940 0.1840 0.5560]);
-% legend("K2.5", "K3.5", "K2", "K3", "Bounds on K2.5", "location", "best")
-% title("Evolution of the conditioning")
+i = 1:89;
+cond(cond ==0) = NaN;
+fig = figure();
+set(fig, "WindowState", "maximized")
+semilogy(squeeze(cond(1,i,:)), ".", "MarkerSize", 10, "LineWidth", 1, "Color", [0 0.4470 0.7410]);
+hold on
+semilogy(squeeze(cond(2,i,:)), "+", "MarkerSize", 7, "LineWidth", 1, "Color", [0.8500 0.3250 0.0980]);
+semilogy(squeeze(cond(3,i,:)), "*", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4660 0.6740 0.1880]);
+semilogy(squeeze(cond(4,i,:)), "s", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4940 0.1840 0.5560]);
+legend("K2.5", "K3.5", "K2", "K3", "Bounds on K2.5", "location", "best")
+title("Evolution of the conditioning")

@@ -873,13 +873,15 @@ classdef pdcoO < handle
                 
                 % Add to save the evolution of the conditionning
                 if o.check_cond & not(isempty(o.eigenvalue))
-                    lambda_min = min(abs(o.eigenvalue(:,end)));
-                    lambda_max = max(abs(o.eigenvalue(:,end)));
-                    o.cond = [o.cond lambda_max/lambda_min];
+%                     lambda_min = min(abs(o.eigenvalue(:,end)));
+%                     lambda_max = max(abs(o.eigenvalue(:,end)));
+%                     o.cond = [o.cond lambda_max/lambda_min];
+                        o.cond = [o.cond cond(full(o.M))];
                 elseif o.check_cond & isempty(o.eigenvalue)
-                    lambda_min = min(abs(eigs(o.M, min(min(size(o.M)),100), "smallestabs")));
-                    lambda_max = max(abs(eigs(o.M, min(min(size(o.M)),100), "largestabs")));
-                    o.cond = [o.cond lambda_max/lambda_min ];
+%                     lambda_min = min(abs(eigs(o.M, min(min(size(o.M)),100), "smallestabs")));
+%                     lambda_max = max(abs(eigs(o.M, min(min(size(o.M)),100), "largestabs")));
+%                     o.cond = [o.cond lambda_max/lambda_min ];
+                    o.cond = [o.cond cond(full(o.M))];
                 end
                 
                 if o.inform == 4

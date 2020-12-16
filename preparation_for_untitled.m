@@ -115,7 +115,7 @@ save_results = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\Results\test_save\";
 %% Loop
 clc
-Maxiter = 100
+Maxiter = 5
 i=1;j=1;k=1;
 name_problem = list_problem{i};
 fprintf('%s\n', name_problem);
