@@ -876,12 +876,16 @@ classdef pdcoO < handle
 %                     lambda_min = min(abs(o.eigenvalue(:,end)));
 %                     lambda_max = max(abs(o.eigenvalue(:,end)));
 %                     o.cond = [o.cond lambda_max/lambda_min];
-                        o.cond = [o.cond cond(full(o.M))];
+                    o.cond = [o.cond cond(full(o.M))];
                 elseif o.check_cond & isempty(o.eigenvalue)
 %                     lambda_min = min(abs(eigs(o.M, min(min(size(o.M)),100), "smallestabs")));
 %                     lambda_max = max(abs(eigs(o.M, min(min(size(o.M)),100), "largestabs")));
 %                     o.cond = [o.cond lambda_max/lambda_min ];
                     o.cond = [o.cond cond(full(o.M))];
+
+%                     lambda_min = min(abs(svds(o.M, min(min(size(o.M)),20), "smallest")));
+%                     lambda_max = max(abs(svds(o.M, min(min(size(o.M)),20), "largest")));
+%                     o.cond = [o.cond lambda_max/lambda_min ];
                 end
                 
                 if o.inform == 4
@@ -1076,8 +1080,14 @@ classdef pdcoO < handle
                 end
                 
                 if o.mem
-                    o.xmem = [o.xmem o.x];
-                    o.zmem = [o.zmem o.z];
+                    xx = ones(size(o.x));
+                    zz = ones(size(o.x));
+                    xx(o.low) =  xx(o.low) .* o.x1(o.low);
+                    xx(o.upp) =  xx(o.upp) .* o.x2(o.upp);
+                    zz(o.low) =  zz(o.low) .* o.z1(o.low);
+                    zz(o.upp) =  zz(o.upp) .* o.z2(o.upp);
+                    o.xmem = [o.xmem xx];
+                    o.zmem = [o.zmem zz];
                     o.objmem = [o.objmem o.obj];
                 end
             end

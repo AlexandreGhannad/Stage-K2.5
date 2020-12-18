@@ -98,8 +98,10 @@ check_theorem2 = 0;
 method_theorem2 = "MaxGap";
 check_property = 0;
 
-check_cond = 0;
+check_cond = 1;
 check_residu = 0;
+
+mem = 1;
 
 % digit_number = 64; % Increase precision to calculate eigenvalue, but
 % increase highly the execution time
@@ -150,6 +152,7 @@ for i = 1:n_problem
             options_pdco.check_property = check_property;
             options_pdco.check_cond = check_cond;
             options_pdco.check_residu = check_residu;
+            options_pdco.mem = mem;
             
             %             options_pdco.digit_number = digit_number;
             %             options_pdco.n_theorem2 = n_theorem2;
@@ -227,3 +230,16 @@ if save_results
     results = squeeze(results);
     save(path_to_save+"results.mat", "results")
 end
+%% Graphic of low values
+t1 = o1.cond;
+t2 = min(o1.xmem);
+t3 = min(o1.zmem);
+
+semilogy(t1)
+hold on
+semilogy(t2)
+semilogy(t3)
+
+
+
+
