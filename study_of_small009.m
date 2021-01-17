@@ -101,6 +101,8 @@ check_property = 0;
 check_cond = 1;
 check_residu = 0;
 
+mem = 1;
+
 % digit_number = 64; % Increase precision to calculate eigenvalue, but
 % increase highly the execution time
 
@@ -151,6 +153,8 @@ for i = 1:n_problem
             options_pdco.check_cond = check_cond;
             options_pdco.check_residu = check_residu;
             
+            options_pdco.mem = mem;
+            
             %             options_pdco.digit_number = digit_number;
             %             options_pdco.n_theorem2 = n_theorem2;
             
@@ -165,65 +169,50 @@ for i = 1:n_problem
             o4 = eval([classname4, '(slack, options_pdco,options_form,options_solv)']);
             o4.solve;
             
-            if check_eigenvalue
-                fig1 = show_eigenvalue(o1, name_problem, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig1, path_to_save+"fig1"+num2str(i))
-                end
-            end
-            
-            if check_eigenvalue_other_formulation
-                fig21 = show_eigenvalue_other_formulation(o2.eigenvalue, name_problem, "K3.5", d1(j), d2(k));
-                fig22 = show_eigenvalue_other_formulation(o3.eigenvalue, name_problem, "K2", d1(j), d2(k));
-                fig23 = show_eigenvalue_other_formulation(o4.eigenvalue, name_problem, "K3", d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig21, path_to_save+"fig21"+num2str(i))
-                    save_figure(fig22, path_to_save+"fig22"+num2str(i))
-                    save_figure(fig23, path_to_save+"fig23"+num2str(i))
-                end
-            end
-            
-            if check_property
-                fig3 = show_eigenvalue_property(o1, name_problem, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig3, path_to_save+"fig3"+num2str(i))
-                end
-            end
-            
-            if check_theorem2
-                fig4 = show_eigenvalue_theorem2(o1, name_problem, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig4, path_to_save+"fig4"+num2str(i))
-                end
-            end
-            
-            if check_cond
-                fig51 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o2.cond, "K3.5");
-                fig52 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o3.cond, "K2");
-                fig53 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o4.cond, "K3");
-                if save_all_graphics
-                    save_figure(fig51, path_to_save+"fig51"+num2str(i))
-                    save_figure(fig52, path_to_save+"fig52"+num2str(i))
-                    save_figure(fig53, path_to_save+"fig53"+num2str(i))
-                end
-            end
-            
-            if check_residu
-                fig6 = show_residu(o1.opt_residu, o1.evolution_mu, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig6, path_to_save+"fig6"+num2str(i))
-                end
-            end
-            
-            if check_results
-                res = squeeze(results(i,j,k,:,:));
-                results(i,j,k,:,:) = save_features(res, o1,o2,o3,o4);
-            end
         end
     end
 end
-fclose('all');
-if save_results
-    results = squeeze(results);
-    save(path_to_save+"results.mat", "results")
-end
+%% Graphic
+close all
+fontsize = 25;
+fig1 = figure(1)
+semilogy(o1.cond);
+hold on
+semilogy(min(o1.xmem));
+semilogy(min(o1.zmem));
+title("K25", "Fontsize", fontsize)
+legend("Conditioning", "X min", "Z min", "Fontsize", fontsize-10, "Location", "best");
+
+
+fig2 = figure(2)
+semilogy(o2.cond);
+hold on
+semilogy(min(o2.xmem));
+semilogy(min(o2.zmem));
+title("K35", "Fontsize", fontsize)
+legend("Conditioning", "X min", "Z min", "Fontsize", fontsize, "Location", "best");
+
+fig3 = figure(3)
+semilogy(o3.cond);
+hold on
+semilogy(min(o3.xmem));
+semilogy(min(o3.zmem));
+title("K2", "Fontsize", fontsize)
+legend("Conditioning", "X min", "Z min", "Fontsize", fontsize, "Location", "best");
+
+fig4 = figure(4)
+semilogy(o4.cond);
+hold on
+semilogy(min(o4.xmem));
+semilogy(min(o4.zmem));
+title("K3", "Fontsize", fontsize)
+legend("Conditioning", "X min", "Z min", "Fontsize", fontsize, "Location", "best");
+
+path_to_save = "D:\Documents\Nantes\CentraleNantes\Deuxième_année\Stage\Review article\18-12-2020\small009\";
+save_figure(fig1, path_to_save + "small009_K25_Conditioning_Xmin_Zmin)")
+save_figure(fig2, path_to_save + "small009_K35_Conditioning_Xmin_Zmin)")
+save_figure(fig3, path_to_save + "small009_K2_Conditioning_Xmin_Zmin)")
+save_figure(fig4, path_to_save + "small009_K3_Conditioning_Xmin_Zmin)")
+
+
+

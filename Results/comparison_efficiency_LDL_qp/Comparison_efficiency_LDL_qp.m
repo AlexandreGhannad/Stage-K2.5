@@ -1,4 +1,3 @@
-
 %% Clean
 clear all
 close all
@@ -88,8 +87,8 @@ for i = 1:n_problem
     % Read .mps file
     mps_name = pwd + "\Problems\qp_prob\" + mps_name;
     mps_stru = readmps(mps_name);
-    lp = mpstolp(mps_stru);
-    slack = slackmodel(lp);
+    qp = qpstoqp(mps_stru);
+    slack = slackmodel(qp);
     Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
     
     options_pdco.x0 = slack.x0;
@@ -190,8 +189,8 @@ clear all
 clc
 load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results"+num2str(1)+".mat")
 res = zeros(size(results));
-cpt = length(dir("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\")) - 3;
-for i = 1 : cpt
+cpt = length(dir("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\")) - 4;
+for i = 1 : 20
     load("D:\git_repository\Stage-K2.5\Results\comparison_efficiency_LDL_qp\results"+num2str(i)+".mat")
     res = res + results;
 end
@@ -200,7 +199,7 @@ results = res/cpt;
 iter = double(squeeze(results(:,1,:)))';
 reason = double(squeeze(results(:,2,:)))';
 complementarity_resid = double(squeeze(results(:,3,:)))';
-time = double(squeeze(results(:,4,:)))';
+time = double(squeeze(results(:,:,3)))';
 
 figure(1)
 clf(1)

@@ -877,15 +877,27 @@ classdef pdcoO < handle
 %                     lambda_max = max(abs(o.eigenvalue(:,end)));
 %                     o.cond = [o.cond lambda_max/lambda_min];
                     o.cond = [o.cond cond(full(o.M))];
+%                     if issymmetric(o.M)
+%                         lambda_min = min(eigs(o.M, min(min(size(o.M)),100), "smallestabs"));
+%                         lambda_max = max(eigs(o.M, min(min(size(o.M)),100), "largestabs"));
+%                     else
+%                         lambda_min = min(abs(svds(o.M, min(min(size(o.M)),100), "smallest")));
+%                         lambda_max = max(abs(svds(o.M, min(min(size(o.M)),100), "largest")));
+%                     end
+%                     o.cond = [o.cond abs(lambda_max/lambda_min) ];
                 elseif o.check_cond & isempty(o.eigenvalue)
 %                     lambda_min = min(abs(eigs(o.M, min(min(size(o.M)),100), "smallestabs")));
 %                     lambda_max = max(abs(eigs(o.M, min(min(size(o.M)),100), "largestabs")));
 %                     o.cond = [o.cond lambda_max/lambda_min ];
                     o.cond = [o.cond cond(full(o.M))];
-
-%                     lambda_min = min(abs(svds(o.M, min(min(size(o.M)),20), "smallest")));
-%                     lambda_max = max(abs(svds(o.M, min(min(size(o.M)),20), "largest")));
-%                     o.cond = [o.cond lambda_max/lambda_min ];
+%                     if issymmetric(o.M)
+%                         lambda_min = min(eigs(o.M, min(min(size(o.M)),100), "smallestabs"));
+%                         lambda_max = max(eigs(o.M, min(min(size(o.M)),100), "largestabs"));
+%                     else
+%                         lambda_min = min(abs(svds(o.M, min(min(size(o.M)),100), "smallest")));
+%                         lambda_max = max(abs(svds(o.M, min(min(size(o.M)),100), "largest")));
+%                     end
+%                     o.cond = [o.cond abs(lambda_max/lambda_min) ];
                 end
                 
                 if o.inform == 4

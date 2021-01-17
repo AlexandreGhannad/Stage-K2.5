@@ -142,8 +142,8 @@ for i = 1:n_problem
             % Read .mps file
             mps_name = path_problem + name_problem;
             mps_stru = readmps(mps_name);
-            lp = mpstolp(mps_stru);
-            slack = slackmodel(lp);
+            qp = qpstoqp(mps_stru);
+            slack = slackmodel(qp);
             Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
             
             options_pdco.d1 = d1(j);
@@ -374,8 +374,8 @@ for i = 1:n_problem
             % Read .mps file
             mps_name = path_problem + name_problem;
             mps_stru = readmps(mps_name);
-            lp = mpstolp(mps_stru);
-            slack = slackmodel(lp);
+            qp = qpstoqp(mps_stru);
+            slack = slackmodel(qp);
             Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
             
             options_pdco.d1 = d1(j);
@@ -2130,8 +2130,8 @@ for i = 1:n_problem
             % Read .mps file
             mps_name = path_problem + name_problem;
             mps_stru = readmps(mps_name);
-            lp = mpstolp(mps_stru);
-            slack = slackmodel(lp);
+            qp = qpstoqp(mps_stru);
+            slack = slackmodel(qp);
             Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
             
             options_pdco.d1 = d1(j);

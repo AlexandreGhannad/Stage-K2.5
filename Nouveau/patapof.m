@@ -99,7 +99,7 @@ check_theorem2 = 0;
 method_theorem2 = "all";
 check_property = 0;
 
-check_cond = 1;
+check_cond = 0;
 check_residu = 0;
 
 % digit_number = 64; % Increase precision to calculate eigenvalue, but
@@ -108,7 +108,7 @@ check_residu = 0;
 % n_theorem2 % Only helpful with brokenl_lines and power_lines method.
 % Moreover, require knowledge on the method and on the problem.
 
-save_all_graphics = 1;
+save_all_graphics = 0;
 path_to_save = "D:\git_repository\Stage-K2.5\Results\depot_dropbox\Problème singulier -  autre graphique\";
 
 check_results = 0;
@@ -127,7 +127,13 @@ for i = 1:n_problem
             mps_name = path_problem + name_problem;
             mps_stru = readmps(mps_name);
             qp = qpstoqp(mps_stru);
-            slack = slackmodel(qp);
+            slack= slackmodel(qp);
+ 
+%             mps_stru = readmps(mps_name);
+%             lp = mpstolp(mps_stru);
+%             slack= slackmodel(lp);
+            
+
             Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
             
             options_pdco.d1 = d1(j);
@@ -159,12 +165,12 @@ for i = 1:n_problem
             
             o1 = eval([classname1, '(slack, options_pdco,options_form,options_solv)']);
             o1.solve;
-            o2 = eval([classname2, '(slack, options_pdco,options_form,options_solv)']);
-            o2.solve;
-            o3 = eval([classname3, '(slack, options_pdco,options_form,options_solv)']);
-            o3.solve;
-            o4 = eval([classname4, '(slack, options_pdco,options_form,options_solv)']);
-            o4.solve;
+%             o2 = eval([classname2, '(slack, options_pdco,options_form,options_solv)']);
+%             o2.solve;
+%             o3 = eval([classname3, '(slack, options_pdco,options_form,options_solv)']);
+%             o3.solve;
+%             o4 = eval([classname4, '(slack, options_pdco,options_form,options_solv)']);
+%             o4.solve;
             
             if check_eigenvalue
                 fig1 = show_eigenvalue(o1, name_problem, d1(j), d2(k));

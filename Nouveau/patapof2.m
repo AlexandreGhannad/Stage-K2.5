@@ -59,7 +59,7 @@ fontsize = 25;
 options_pdco.file_id = 1;
 
 formulation1 = 'K25';
-solver = 'QR';
+solver = 'LDL';
 classname1 = build_variant(pdcoo_home, formulation1, solver);
 
 % formulation2 = 'K35';
@@ -154,8 +154,8 @@ for i = 1:n_problem
             % Read .mps file
             mps_name = path_problem + name_problem;
             mps_stru = readmps(mps_name);
-            qp = qpstoqp(mps_stru);
-            slack = slackmodel(qp);
+            lp = mpstolp(mps_stru);
+            slack = slackmodel(lp);
             Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
             
             options_pdco.d1 = d1(j);

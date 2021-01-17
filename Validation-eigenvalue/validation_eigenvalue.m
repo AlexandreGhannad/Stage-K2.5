@@ -91,7 +91,10 @@ if isempty(o.digit_number)
 else
     eigenvalue = vpa(eig(vpa(full(o.M), o.digit_number)), o.digit_number);
 end
-%% Creation fo some results to evaluate the theorem
+if norm(imag(eigenvalue)) < norm(eigenvalue) * 10^-8
+    eigenvalue = real(eigenvalue);
+end
+%% Creation of some results to evaluate the theorem
 test_inf = eigenvalue > rho_min_negative & eigenvalue < rho_max_negative;
 test_sup = eigenvalue > rho_min_positive & eigenvalue < rho_max_positive;
 result = test_inf | test_sup;
