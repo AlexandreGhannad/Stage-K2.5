@@ -74,6 +74,7 @@ elseif choice_list_problem == 5
     % Personal list to change
     path_problem = pwd + "/Problems/qp_prob/";
     list_problem ={'cvxqp1_l.qps'};
+%     list_problem ={'aug2d.qps'};
     warning("Precise your path of the problem if you use your personal list")
 end
 

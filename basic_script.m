@@ -48,7 +48,7 @@ formulation4 = 'K3';
 solver = 'LU';
 classname4 = build_variant(pdcoo_home, formulation4, solver);
 
-choice_list_problem = 1;
+choice_list_problem = 2;
 if choice_list_problem == 1
     % Only linear afiro
     path_problem = pwd + "/Problems/lp_prob/";
@@ -56,7 +56,7 @@ if choice_list_problem == 1
 elseif choice_list_problem == 2
     % Only quadratic afiro
     path_problem = pwd + "/Problems/qp_prob/";
-    list_problem ={'afiro.qps'};
+    list_problem ={'qetamacr.qps'};
 elseif choice_list_problem == 3
     % All the linear problem available
     path_problem = pwd + "/Problems/lp_prob/";
@@ -98,7 +98,7 @@ check_theorem2 = 0;
 method_theorem2 = "MaxGap";
 check_property = 0;
 
-check_cond = 0;
+check_cond = 1;
 check_residu = 0;
 
 % digit_number = 64; % Increase precision to calculate eigenvalue, but
@@ -125,8 +125,8 @@ for i = 1:n_problem
             % Read .mps file
             mps_name = path_problem + name_problem;
             mps_stru = readmps(mps_name);
-            lp = mpstolp(mps_stru);
-            slack = slackmodel(lp);
+            qp = qpstoqp(mps_stru);
+            slack = slackmodel(qp);
             Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
             
             options_pdco.d1 = d1(j);
@@ -198,14 +198,21 @@ for i = 1:n_problem
             end
             
             if check_cond
-                fig51 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o2.cond, "K3.5");
-                fig52 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o3.cond, "K2");
-                fig53 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o4.cond, "K3");
-                if save_all_graphics
-                    save_figure(fig51, path_to_save+"fig51"+num2str(i))
-                    save_figure(fig52, path_to_save+"fig52"+num2str(i))
-                    save_figure(fig53, path_to_save+"fig53"+num2str(i))
-                end
+                fontsize = 35;
+                fig5 = figure();
+                set(fig5, "WindowState", "maximized")
+                lim = o1.limit;
+                lim = max(abs(lim))./min(abs(lim));
+                semilogy(o1.cond, ".", "MarkerSize", 10, "LineWidth", 1, "Color", [0 0.4470 0.7410]);
+                hold on
+                semilogy(o2.cond, "+", "MarkerSize", 7, "LineWidth", 1, "Color", [0.8500 0.3250 0.0980]);
+                semilogy(o3.cond, "*", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4660 0.6740 0.1880]);
+                semilogy(o4.cond, "s", "MarkerSize", 7, "LineWidth", 1, "Color", [0.4940 0.1840 0.5560]);
+                semilogy(lim, "LineWidth", 2, "Color", [0.3010 0.7450 0.9330])
+                legend("K2.5", "K3.5", "K2", "K3", "Bound on K2.5", "location", "best")
+                title("Evolution of the conditioning")
+                ax = fig5.CurrentAxes;
+                set(ax,'FontSize',fontsize)
             end
             
             if check_residu
