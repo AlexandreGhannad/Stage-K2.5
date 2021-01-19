@@ -18,14 +18,14 @@ res_lp = res_lp/n;
 res_qp = res_qp/20;
 results =[res_lp ;res_qp];
 %%
-fontsize = 35;
+fontsize = 25;
 logplot = true;
 r = perf(results, logplot);
 fig = figure(1)
 set(fig, "WindowState", "maximized")
 orient(fig, "landscape")
-legend("K2.5", "K3.5", "K2", "K3", "location", "best", 'FontSize', fontsize-10)
-title("Performance profile", 'FontSize', fontsize)
+legend("K2.5", "K3.5", "K2", "K3", "location", "best", 'FontSize', fontsize)
+title("Execution time profile", 'FontSize', fontsize)
 ax = fig.CurrentAxes;
 set(ax, "FontSize", fontsize)
 

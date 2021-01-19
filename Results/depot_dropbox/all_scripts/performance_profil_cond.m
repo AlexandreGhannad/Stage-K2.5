@@ -11,20 +11,17 @@ cond_qp = cond;
 results =[cond_lp' ;cond_qp'];
 %%
 
-fontsize = 35;
+fontsize = 25;
 logplot = true;
 r = perf(results, logplot);
 fig = figure(1)
 set(fig, "WindowState", "maximized")
 orient(fig, "landscape")
-legend("K2.5", "K3.5", "K2", "K3", "location", "best", 'FontSize', fontsize-10)
+legend("K2.5", "K3.5", "K2", "K3", "location", "best", 'FontSize', fontsize)
 title("Conditioning profile", 'FontSize', fontsize)
 ax = fig.CurrentAxes;
-set(ax, "FontSize", fontsize-10)
+set(ax, "FontSize", fontsize)
 
-pause(2)
-
-mtf(fig)
 
 path = "D:\git_repository\Stage-K2.5\Results\depot_dropbox\Profil de performance - conditionnement\";
 

@@ -29,6 +29,7 @@ options_pdco.file_id = 1;
 %% Setup 2
 import model.lpmodel;
 import model.slackmodel;
+import model.qpmodel;
 
 options_pdco.file_id = 1;
 
