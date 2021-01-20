@@ -26,11 +26,6 @@ import model.lpmodel;
 import model.slackmodel;
 
 options_pdco.file_id = 1;
-%% Setup 2
-import model.lpmodel;
-import model.slackmodel;
-
-options_pdco.file_id = 1;
 
 formulation1 = 'K25';
 solver = 'LDL';
@@ -44,9 +39,40 @@ formulation3 = 'K2';
 solver = 'LDL';
 classname3 = build_variant(pdcoo_home, formulation3, solver);
 
-formulation4 = 'K3';
-solver = 'LU';
-classname4 = build_variant(pdcoo_home, formulation4, solver);
+list_problem ={'afiro.mps'};
+n_problem = length(list_problem);
+
+options_pdco.d1 = 1.0e-2;
+options_pdco.d2 = 1.0e-2;
+options_pdco.OptTol = 1.0e-10;
+options_solv.atol1 = 1.0e-10;
+options_solv.atol2 = 1.0e-10;
+options_solv.itnlim = 100;
+options_pdco.Print = 1;
+
+fprintf(options_pdco.file_id, ...
+    '\n    Name    Objectif   Presid   Dresid   Cresid   PDitns   Inner     Time      D2 * r\n\n');
+%% Setup 2
+import model.lpmodel;
+import model.slackmodel;
+fontsize = 25;
+options_pdco.file_id = 1;
+
+formulation1 = 'K25';
+solver = 'QR';
+classname1 = build_variant(pdcoo_home, formulation1, solver);
+
+% formulation2 = 'K35';
+% solver = 'LDL';
+% classname2 = build_variant(pdcoo_home, formulation2, solver);
+% 
+% formulation3 = 'K2';
+% solver = 'LDL';
+% classname3 = build_variant(pdcoo_home, formulation3, solver);
+% 
+% formulation4 = 'K3';
+% solver = 'LU';
+% classname4 = build_variant(pdcoo_home, formulation4, solver);
 
 choice_list_problem = 5;
 if choice_list_problem == 1
@@ -59,7 +85,7 @@ elseif choice_list_problem == 2
     list_problem ={'afiro.qps'};
 elseif choice_list_problem == 3
     % All the linear problem available
-    path_problem = pwd + "/Problems/lp_prob/";
+    path_problem = pwd + "/Problems/lp_prob";
     list_problem = dir(path_problem);
     list_problem = {list_problem.name};
     list_problem = list_problem(3:end);
@@ -71,8 +97,8 @@ elseif choice_list_problem == 4
     list_problem = list_problem(3:end);
 elseif choice_list_problem == 5
     % Personal list to change
-    path_problem = pwd + "/space_problem/";
-    list_problem ={'space_problem_n=25_m=15.mps'};
+    path_problem = pwd + "/Problems/qp_prob/";
+    list_problem ={'qbrandy.qps'};
     warning("Precise your path of the problem if you use your personal list")
 end
 
@@ -80,10 +106,11 @@ n_problem = length(list_problem);
 %% Choose option for the test
 n_problem = min(n_problem, 2000); % Change the number if you want to test only a few problems
 
-d1=0;
-d2=0;
-% d1 = 10^-2;
+d1 = 10^-2;
 % d2 = 10^-2;
+% d1 = [10^-8 10^-4 10^-2 10^-0];
+d2 = [10^-8];
+
 % d1 = [10^-8 10^-4 10^-2 10^-0];
 % d2 = [10^-8 10^-4 10^-2 10^-0];
 
@@ -93,7 +120,7 @@ options_solv.atol2 = 1.0e-10;
 options_solv.itnlim = 100;
 options_pdco.Print = 1;
 
-check_eigenvalue = 0;
+check_eigenvalue = 1;
 check_limits = 0;
 check_eigenvalue_other_formulation = 0;
 check_theorem2 = 0;
@@ -103,18 +130,18 @@ check_property = 0;
 check_cond = 0;
 check_residu = 0;
 
-% digit_number = 64; % Increase precision to calculate eigenvalue, but
+digit_number = 16; % Increase precision to calculate eigenvalue, but
 % increase highly the execution time
 
 % n_theorem2 % Only helpful with brokenl_lines and power_lines method.
 % Moreover, require knowledge on the method and on the problem.
 
 save_all_graphics = 0;
-path_to_save = "D:\git_repository\Stage-K2.5\";
+path_to_save = "D:\git_repository\Stage-K2.5\Results\depot_dropbox\Problème singulier - variation de la régularisation\";
 
 check_results = 0;
 save_results = 0;
-path_to_save = "D:\git_repository\Stage-K2.5\";
+path_to_save = "D:\git_repository\Stage-K2.5\Results\depot_dropbox\Problème singulier - variation de la régularisation\";
 %% Loop
 clc
 results = zeros(n_problem, length(d1), length(d2), 4, 23);
@@ -127,8 +154,8 @@ for i = 1:n_problem
             % Read .mps file
             mps_name = path_problem + name_problem;
             mps_stru = readmps(mps_name);
-            lp = mpstolp(mps_stru);
-            slack = slackmodel(lp);
+            qp = qpstoqp(mps_stru);
+            slack = slackmodel(qp);
             Anorm = normest(slack.gcon(slack.x0), 1.0e-3);
             
             options_pdco.d1 = d1(j);
@@ -153,7 +180,7 @@ for i = 1:n_problem
             options_pdco.check_cond = check_cond;
             options_pdco.check_residu = check_residu;
             
-            %             options_pdco.digit_number = digit_number;
+            options_pdco.digit_number = digit_number;
             %             options_pdco.n_theorem2 = n_theorem2;
             
             options_form = struct();
@@ -169,57 +196,23 @@ for i = 1:n_problem
             
             if check_eigenvalue
                 fig1 = show_eigenvalue(o1, name_problem, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig1, path_to_save+"fig1"+num2str(i))
+                ax = fig1.CurrentAxes;
+                set(ax,'FontSize',fontsize)
+                
+                if d2(k) == 10^-8
+                    ax = fig1.CurrentAxes;
+                    lbl = ax.YTickLabel;
+                    y = lbl;
+                    t = [1:4:22 23 25:4:45];
+                    y(:) = {''}
+                    y(t) = lbl(t);                    
+                    ax.YTickLabel = y;
                 end
-            end
-            
-            if check_eigenvalue_other_formulation
-                fig21 = show_eigenvalue_other_formulation(o2.eigenvalue, name_problem, "K3.5", d1(j), d2(k));
-                fig22 = show_eigenvalue_other_formulation(o3.eigenvalue, name_problem, "K2", d1(j), d2(k));
-                fig23 = show_eigenvalue_other_formulation(o4.eigenvalue, name_problem, "K3", d1(j), d2(k));
+                
                 if save_all_graphics
-                    save_figure(fig21, path_to_save+"fig21"+num2str(i))
-                    save_figure(fig22, path_to_save+"fig22"+num2str(i))
-                    save_figure(fig23, path_to_save+"fig23"+num2str(i))
+                    save_figure(fig1, path_to_save+"eps\Eigenvalue_d1="+num2str(d1(j))+"_d2="+num2str(d2(k)))
+                    save_figure_pdf(fig1, path_to_save+"pdf\Eigenvalue_d1="+num2str(d1(j))+"_d2="+num2str(d2(k))+".pdf")
                 end
-            end
-            
-            if check_property
-                fig3 = show_eigenvalue_property(o1, name_problem, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig3, path_to_save+"fig3"+num2str(i))
-                end
-            end
-            
-            if check_theorem2
-                fig4 = show_eigenvalue_theorem2(o1, name_problem, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig4, path_to_save+"fig4"+num2str(i))
-                end
-            end
-            
-            if check_cond
-                fig51 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o2.cond, "K3.5");
-                fig52 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o3.cond, "K2");
-                fig53 = show_cond(o1.cond, o1.limit, d1(j), d2(k), o4.cond, "K3");
-                if save_all_graphics
-                    save_figure(fig51, path_to_save+"fig51"+num2str(i))
-                    save_figure(fig52, path_to_save+"fig52"+num2str(i))
-                    save_figure(fig53, path_to_save+"fig53"+num2str(i))
-                end
-            end
-            
-            if check_residu
-                fig6 = show_residu(o1.opt_residu, o1.evolution_mu, d1(j), d2(k));
-                if save_all_graphics
-                    save_figure(fig6, path_to_save+"fig6"+num2str(i))
-                end
-            end
-            
-            if check_results
-                res = squeeze(results(i,j,k,:,:));
-                results(i,j,k,:,:) = save_features(res, o1,o2,o3,o4);
             end
         end
     end
@@ -229,59 +222,28 @@ if save_results
     results = squeeze(results);
     save(path_to_save+"results.mat", "results")
 end
-%% Display graphics
-x = o1.x;
-xp = x(x>=0);
-l = length(xp);
-n=25;
-j = 0.5:n-0.5;
-xs = j/(2*n);
-ys=xs;
-pupil = zeros(n);
-for a = 1:n
-    for b = 1:n
-        pupil(a,b) = xs(a)^2+ys(b)^2;
-    end
+%% Save figure eigenvalue double precision
+load('Problem1.mat')
+Problem1.eigenvalue = double(Problem1.eigenvalue);
+fig1 = show_eigenvalue(Problem1, name_problem, 10^-2, 10^-8);
+ax = fig1.CurrentAxes;
+set(ax,'FontSize',fontsize)
+
+d1 = 10^-2;
+d2 = 10^-8;
+j=1; k=1;
+
+ax = fig1.CurrentAxes;
+lbl = ax.YTickLabel;
+y = lbl;
+t1 = 2:2:14;
+t2 = 17:2:29;
+y(t1) = {''};
+y(t2) = {''};
+ax.YTickLabel = y;
+
+if save_all_graphics
+    save_figure(fig1, path_to_save+"eps\Eigenvalue_d1="+num2str(d1(j))+"_d2="+num2str(d2(k))+"_avec_precision")
+    save_figure_pdf(fig1, path_to_save+"pdf\Eigenvalue_d1="+num2str(d1(j))+"_d2="+num2str(d2(k))+"_avec_precision.pdf")
 end
-ind = find(pupil<0.25);
-
-res = zeros(2*n);
-tmp = zeros(n);
-
-tmp(ind) = xp;
-res(1:n, 1:n) = tmp(end:-1:1,end:-1:1);
-res(1:n, n+1:end) = tmp(end:-1:1,:);
-res(n+1:end, 1:n) = tmp(:,end:-1:1);
-res(n+1:end, n+1:end) = tmp(:,:);
-
-% figure(1)
-% surf(log(res))
-% colormap('gray')
-% 
-% figure(2)
-% surf(log(tmp))
-% colormap('gray')
-
-figure(1);
-subplot(121)
-surf(res)
-set(gca,'ZScale','log')
-colormap('gray')
-colorbar;
-
-subplot(122)
-surf(tmp)
-set(gca,'ZScale','log')
-colormap('gray')
-colorbar;
-
-figure(2);
-subplot(121)
-surf(res)
-colormap('gray')
-colorbar
-
-subplot(122)
-surf(tmp)
-colormap('gray')
 
