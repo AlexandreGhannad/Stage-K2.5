@@ -24,10 +24,10 @@ classdef LDL < handle
             % MA57 uses multiple cores if available.
             thresh = 0;      % tells MA57 to keep its sparsity-preserving order
             if o.d2 ~= 0
-                [o.L, D, P, S] = ldl(o.M, thresh);
-%                 if nnz(D) ~= size(o.M, 1);
-%                     error('[L, D, P, S] = ldl(K, 0) gave non-diagonal D')
-%                 end
+                xx
+                if nnz(D) ~= size(o.M, 1);
+                    error('[L, D, P, S] = ldl(K, 0) gave non-diagonal D')
+                end
                 o.sol = S * (P * (o.L' \ (D \ (o.L \ (P' * (S * o.rhs))))));
             else
                 [o.L, D, P, S] = ldl(o.M);

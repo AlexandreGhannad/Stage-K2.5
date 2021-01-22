@@ -222,7 +222,6 @@ if save_results
     results = squeeze(results);
     save(path_to_save+"results.mat", "results")
 end
-save("results_quadruple_precision")
 %% Save figure eigenvalue double precision
 load('Problem1.mat')
 Problem1.eigenvalue = double(Problem1.eigenvalue);
