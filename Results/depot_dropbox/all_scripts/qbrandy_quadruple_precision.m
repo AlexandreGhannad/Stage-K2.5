@@ -224,27 +224,27 @@ if save_results
 end
 save("results_quadruple_precision")
 %% Save figure eigenvalue double precision
-load('Problem1.mat')
-Problem1.eigenvalue = double(Problem1.eigenvalue);
-fig1 = show_eigenvalue(Problem1, name_problem, 10^-2, 10^-8);
-ax = fig1.CurrentAxes;
-set(ax,'FontSize',fontsize)
 
-d1 = 10^-2;
-d2 = 10^-8;
-j=1; k=1;
-
-ax = fig1.CurrentAxes;
-lbl = ax.YTickLabel;
-y = lbl;
-t1 = 2:2:14;
-t2 = 17:2:29;
-y(t1) = {''};
-y(t2) = {''};
-ax.YTickLabel = y;
-
-if save_all_graphics
-    save_figure(fig1, path_to_save+"eps\Eigenvalue_d1="+num2str(d1(j))+"_d2="+num2str(d2(k))+"_avec_precision")
-    save_figure_pdf(fig1, path_to_save+"pdf\Eigenvalue_d1="+num2str(d1(j))+"_d2="+num2str(d2(k))+"_avec_precision.pdf")
-end
-
+% load('Problem1.mat')
+% Problem1.eigenvalue = double(Problem1.eigenvalue);
+% fig1 = show_eigenvalue(Problem1, name_problem, 10^-2, 10^-8);
+% ax = fig1.CurrentAxes;
+% set(ax,'FontSize',fontsize)
+% 
+% d1 = 10^-2;
+% d2 = 10^-8;
+% j=1; k=1;
+% 
+% ax = fig1.CurrentAxes;
+% lbl = ax.YTickLabel;
+% y = lbl;
+% t1 = 2:2:14;
+% t2 = 17:2:29;
+% y(t1) = {''};
+% y(t2) = {''};
+% ax.YTickLabel = y;
+% 
+% if save_all_graphics
+%     save_figure(fig1, path_to_save+"eps\Eigenvalue_d1="+num2str(d1(j))+"_d2="+num2str(d2(k))+"_avec_precision")
+%     save_figure_pdf(fig1, path_to_save+"pdf\Eigenvalue_d1="+num2str(d1(j))+"_d2="+num2str(d2(k))+"_avec_precision.pdf")
+% end

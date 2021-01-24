@@ -29,11 +29,10 @@ title("Execution time profile", 'FontSize', fontsize)
 ax = fig.CurrentAxes;
 set(ax, "FontSize", fontsize)
 
-
 path = "D:\git_repository\Stage-K2.5\Results\depot_dropbox\Profil de performance - temps d'exécution\";
 
-save_figure(fig, path+"Profil de performance - temps d'exécution")
-save_figure_pdf(fig, path+"Profil de performance - temps d'exécution.pdf")
+save_figure(fig, path+"Performance profile - execution time")
+save_figure_pdf(fig, path+"Performance profile - execution time.pdf")
 
 
 
